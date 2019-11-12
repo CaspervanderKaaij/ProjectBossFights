@@ -27,14 +27,16 @@ public class PlayerController : MonoBehaviour {
     public float jumpStrength = 20;
     public float gravityStrength = -29.81f;
     [Header ("Dash")]
+    [SerializeField] GameObject[] dashVisible;
     [SerializeField] GameObject[] dashInvisible;
     [SerializeField] float dashTime = 0.4f;
     [SerializeField] float dashSpeed = 4;
+    bool canAirDash = true;
 
     void Start () {
         cc = GetComponent<CharacterController> ();
         angleGoal = transform.eulerAngles.y;
-        playerCam = cameraTransform.GetComponent<PlayerCam>();
+        playerCam = cameraTransform.GetComponent<PlayerCam> ();
     }
 
     void Update () {
@@ -50,7 +52,7 @@ public class PlayerController : MonoBehaviour {
                 break;
             case State.Dash:
                 isGrounded = false;
-                Dash();
+                Dash ();
                 FinalMove ();
                 break;
         }
@@ -141,7 +143,7 @@ public class PlayerController : MonoBehaviour {
     bool IsGrounded () {
         RaycastHit hit;
         // Debug.DrawRay (transform.position + new Vector3 (0, 0.1f, 0), Vector3.down * 0.5f, Color.red, 0);
-        if (Physics.Raycast (transform.position + new Vector3 (0, 0.1f, 0), Vector3.down, out hit, 0.5f, LayerMask.GetMask ("Default"), QueryTriggerInteraction.Ignore) || cc.isGrounded == true) {
+        if (Physics.Raycast (transform.position + new Vector3 (0, 0.1f, 0), Vector3.down, out hit, 0.3f, LayerMask.GetMask ("Default"), QueryTriggerInteraction.Ignore) || cc.isGrounded == true) {
             if (movev3.y < 0) {
                 CancelInvoke ("CayoteTime");
                 Invoke ("CayoteTime", 0.05f);
@@ -156,28 +158,57 @@ public class PlayerController : MonoBehaviour {
     }
 
     void DashInput () {
-        if (Input.GetButtonDown (dashInput) == true) {
-            curState = State.Dash;
-            Invoke ("StopDash", dashTime);
-            curAccDec = 1;
-            transform.eulerAngles = new Vector3(transform.eulerAngles.x,angleGoal,transform.eulerAngles.z);
-            playerCam.enabled = false;
+        if (isGrounded == true) {
+            canAirDash = true;
+        }
+        if (Input.GetButtonDown (dashInput) == true && IsInvoking ("IgnoreDashInput") == false) {
+            bool willDash = false;
+            if (isGrounded == false) {
+                if (canAirDash == true) {
+                    canAirDash = false;
+                    willDash = true;
+                }
+            } else {
+                willDash = true;
+            }
+            if (willDash == true) {
 
-            for (int i = 0; i < dashInvisible.Length; i++)
-            {
-                dashInvisible[i].SetActive(false);
+                curState = State.Dash;
+                Invoke ("StopDash", dashTime);
+                curAccDec = 1;
+                transform.eulerAngles = new Vector3 (transform.eulerAngles.x, angleGoal, transform.eulerAngles.z);
+                playerCam._enabled = false;
+
+                for (int i = 0; i < dashInvisible.Length; i++) {
+                    dashInvisible[i].SetActive (false);
+                }
+                for (int i = 0; i < dashVisible.Length; i++) {
+                    dashVisible[i].SetActive (true);
+                }
+
+                playerCam.SmallShake (dashTime);
+
             }
         }
+    }
+
+    void IgnoreDashInput () {
+
     }
 
     void StopDash () {
         if (curState == State.Dash) {
             curState = State.Normal;
-            playerCam.enabled = true;
-            for (int i = 0; i < dashInvisible.Length; i++)
-            {
-                dashInvisible[i].SetActive(true);
+            playerCam._enabled = true;
+            for (int i = 0; i < dashInvisible.Length; i++) {
+                dashInvisible[i].SetActive (true);
             }
+            for (int i = 0; i < dashVisible.Length; i++) {
+                dashVisible[i].SetActive (false);
+            }
+            playerCam.MediumShake (0.2f);
+            Invoke ("IgnoreDashInput", 0.2f);
+
         }
     }
 
