@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 [RequireComponent (typeof (CharacterController))]
 
 public class PlayerController : MonoBehaviour {
@@ -12,7 +13,8 @@ public class PlayerController : MonoBehaviour {
     public Animator anim;
     public enum State {
         Normal,
-        Dash
+        Dash,
+        Dialogue
     }
     public State curState = State.Normal;
     [Header ("Input")]
@@ -20,6 +22,7 @@ public class PlayerController : MonoBehaviour {
     public string vertInput = "Vertical";
     public string jumpInput = "Jump";
     public string dashInput = "Dash";
+    public string shootInput = "Shoot";
     [Header ("Stats")]
     public MoveStats[] moveStats;
     public int curMoveStats = 0;
@@ -32,6 +35,15 @@ public class PlayerController : MonoBehaviour {
     [SerializeField] float dashTime = 0.4f;
     [SerializeField] float dashSpeed = 4;
     bool canAirDash = true;
+    [Header ("Shooting")]
+    public GunWeapon gunWeapon;
+    [Header ("UI")]
+    [Header ("HUD")]
+    public Text curModeText;
+    [Header ("Dialogue")]
+    [SerializeField] GameObject textIcon;
+    [HideInInspector] public List<Interact> interactables;
+    [SerializeField] Dialogue diaUI;
 
     void Start () {
         cc = GetComponent<CharacterController> ();
@@ -49,6 +61,10 @@ public class PlayerController : MonoBehaviour {
                 Gravity ();
                 FinalMove ();
                 DashInput ();
+                if (textIcon.activeSelf == false) {
+                    ShootInput ();
+                }
+                InteractCheck ();
                 break;
             case State.Dash:
                 isGrounded = false;
@@ -192,6 +208,13 @@ public class PlayerController : MonoBehaviour {
         }
     }
 
+    void ShootInput () {
+        curModeText.text = "Shoot Mode";
+        if (Input.GetButtonDown (shootInput)) {
+            gunWeapon.GetInput ();
+        }
+    }
+
     void IgnoreDashInput () {
 
     }
@@ -209,11 +232,44 @@ public class PlayerController : MonoBehaviour {
             playerCam.MediumShake (0.2f);
             Invoke ("IgnoreDashInput", 0.2f);
 
+            if (IsGrounded () == false) {
+                canAirDash = false;
+            }
+
         }
     }
 
     void FinalMove () {
         cc.Move (movev3 * Time.deltaTime);
+    }
+
+    //UI
+    void InteractCheck () {
+        textIcon.SetActive ((interactables.Count > 0));
+        if (interactables.Count > 0) {
+            curModeText.text = "Interact";
+        }
+        if (Input.GetButtonDown (shootInput) == true && interactables.Count > 0 && isGrounded == true) {
+            Interact chosenOne = interactables[0];
+            for (int i = 0; i < interactables.Count; i++) {
+                if (interactables[i].priority > chosenOne.priority) {
+                    chosenOne = interactables[i];
+                }
+            }
+
+            chosenOne.Activate (this);
+        }
+    }
+
+    public void StartUIDialogue (DialogueHolder holder) {
+        diaUI.curDia = 0;
+        curState = State.Dialogue;
+        textIcon.SetActive (false);
+
+        diaUI.curHolder = holder;
+
+        diaUI.GetComponent<Animator>().Play(0);
+
     }
 
 }

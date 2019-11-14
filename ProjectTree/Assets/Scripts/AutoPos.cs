@@ -25,7 +25,7 @@ public class AutoPos : MonoBehaviour {
                 transform.position = Vector3.Lerp (transform.position, v3, Time.deltaTime * speed);
                 break;
             case Type.MoveTowards:
-                transform.position = Vector3.MoveTowards (transform.position, v3, Time.deltaTime * speed);
+                transform.localPosition = Vector3.MoveTowards (transform.localPosition, v3, Time.deltaTime * speed);
                 break;
         }
     }
