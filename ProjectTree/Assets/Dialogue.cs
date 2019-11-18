@@ -9,6 +9,7 @@ public class Dialogue : MonoBehaviour {
     public DialogueHolder curHolder;
     [HideInInspector] public int curDia;
     PlayerController player;
+    [HideInInspector] public bool firstInput = false;
     void Start () {
         player = FindObjectOfType<PlayerController> ();
     }
@@ -17,13 +18,17 @@ public class Dialogue : MonoBehaviour {
         if (curHolder != null) {
             textBack.enabled = true;
             text.text = curHolder.dialogue[curDia];
-            if (Input.GetButtonDown (player.shootInput) == true) {
-                curDia++;
-                if(curDia + 1 > curHolder.dialogue.Length){
-                    curHolder = null;
+            if (Input.GetButtonUp (player.shootInput) == true) {
+                if (firstInput == false) {
+                    curDia++;
+                    if (curDia + 1 > curHolder.dialogue.Length) {
+                        curHolder = null;
+                    }
+                } else {
+                    firstInput = false;
                 }
             }
-        } else if(textBack.enabled == true) {
+        } else if (textBack.enabled == true) {
             text.text = "";
             textBack.enabled = false;
             player.curState = PlayerController.State.Normal;

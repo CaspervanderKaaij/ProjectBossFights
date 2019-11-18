@@ -10,9 +10,11 @@ public class PlayerCam : MonoBehaviour {
     public float camSpeed = 5;
     public bool _enabled = true;
     float shakeSTR = 0;
+    [HideInInspector] public RippleEffect ripple;
     void Start () {
         goalPos = player.position + offset;
         transform.position = goalPos;
+        ripple = GetComponent<RippleEffect>();
     }
 
     void Update () {
