@@ -6,6 +6,7 @@ public class PlayerCam : MonoBehaviour {
     public Transform player;
     [Header ("Cam Stats")]
     public Vector3 offset = Vector3.zero;
+    public Vector3 angleGoal;
     public float dontMoveDistance = 2;
     public float camSpeed = 5;
     public bool _enabled = true;
@@ -15,6 +16,7 @@ public class PlayerCam : MonoBehaviour {
         goalPos = player.position + offset;
         transform.position = goalPos;
         ripple = GetComponent<RippleEffect>();
+        angleGoal = transform.eulerAngles;
     }
 
     void Update () {
@@ -34,6 +36,9 @@ public class PlayerCam : MonoBehaviour {
             goalPos = Vector3.MoveTowards (goalPos, player.position + offset, Time.deltaTime * realSpeed);
         }
         transform.position = Vector3.Lerp (transform.position, goalPos, Time.deltaTime * realSpeed);
+
+
+        transform.rotation = Quaternion.Lerp(transform.rotation,Quaternion.Euler(angleGoal),Time.deltaTime * 5);
     }
 
     void Shake () {

@@ -12,8 +12,9 @@ public class Hitbox : MonoBehaviour {
     public GameObject destroyOnDeath;
     public float destroyDelay = 0;
 
-    public void GetHit (int otherTeam, float damage) {
+    public void GetHit (int otherTeam, float damage,Hurtbox hBox) {
         if (otherTeam != team) {
+            hBox.hitEv.Invoke();
             hp -= damage;
             if (hp > 0) {
                 hitEv.Invoke ();

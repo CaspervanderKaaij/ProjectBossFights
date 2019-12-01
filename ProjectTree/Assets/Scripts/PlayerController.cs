@@ -27,6 +27,7 @@ public class PlayerController : MonoBehaviour {
     public string jumpInput = "Jump";
     public string dashInput = "Dash";
     public string shootInput = "Shoot";
+    public string parryInput = "Parry";
     [Header ("Stats")]
     public MoveStats[] moveStats;
     public int curMoveStats = 0;
@@ -34,8 +35,11 @@ public class PlayerController : MonoBehaviour {
     bool wasGrounded = true;
     public float jumpStrength = 20;
     public float gravityStrength = -29.81f;
+    [SerializeField] AudioClip landAudio;
     [HideInInspector] public float willpower = 100;
     public float willpowerRefillSpeed = 10;
+    [SerializeField] FootstepSound footstep;
+    [SerializeField] AudioClip parryAudio;
     [Header ("Dash")]
     [SerializeField] GameObject[] dashVisible;
     [SerializeField] GameObject[] dashInvisible;
@@ -43,6 +47,7 @@ public class PlayerController : MonoBehaviour {
     [SerializeField] float dashSpeed = 4;
     bool canAirDash = true;
     [SerializeField] float dashWPCost = 10;
+    [SerializeField] AudioClip[] dashAudio;
     public enum Weapon {
         Gun,
         Spear
@@ -53,6 +58,10 @@ public class PlayerController : MonoBehaviour {
     [SerializeField] AttackStats[] attacks;
     public bool canBuffer = false;
     int bufferedAttack = 0;
+    [Header ("Hitboxes")]
+    [SerializeField] GameObject hitboxParent;
+    List<GameObject> hitboxes = new List<GameObject> ();
+    [SerializeField] AudioClip hitEffectAudio;
     [Header ("Shooting")]
     public GunWeapon gunWeapon;
     [SerializeField] float shootWPCost = 5;
@@ -60,6 +69,9 @@ public class PlayerController : MonoBehaviour {
     [SerializeField] GameObject stopDashParticle;
     [SerializeField] GameObject getHitParticle;
     [SerializeField] ParticleSystem walkParticles;
+    [SerializeField] GameObject hitEffectParticle;
+    [Header ("Voice Lines")]
+    public AudioClip[] voiceLines;
 
     [Header ("UI")]
     [Header ("HUD")]
@@ -82,6 +94,9 @@ public class PlayerController : MonoBehaviour {
         hitbox = GetComponent<Hitbox> ();
         maxHP = hitbox.hp;
         timescaleManager = FindObjectOfType<TimescaleManager> ();
+        for (int i = 0; i < hitboxParent.transform.childCount; i++) {
+            hitboxes.Add (hitboxParent.transform.GetChild (i).gameObject);
+        }
     }
 
     void Update () {
@@ -96,7 +111,8 @@ public class PlayerController : MonoBehaviour {
                 SetWillpowerBar ();
                 SetHPBar ();
                 DashInput ();
-                if (textIcon.activeSelf == false) {
+                GetParryInput ();
+                if (interactables.Count == 0) {
                     switch (curWeapon) {
                         case Weapon.Gun:
                             ShootInput ();
@@ -107,6 +123,7 @@ public class PlayerController : MonoBehaviour {
                     }
                 }
                 InteractCheck ();
+                DebugMoves ();
                 break;
             case State.Dash:
                 isGrounded = false;
@@ -128,6 +145,11 @@ public class PlayerController : MonoBehaviour {
                     SpearInput ();
                 }
                 break;
+            case State.Dialogue:
+                curAccDec = 0;
+                isGrounded = true;
+                wasGrounded = true;
+                break;
         }
     }
 
@@ -142,6 +164,26 @@ public class PlayerController : MonoBehaviour {
     }
 
     // Movement
+
+    void GetParryInput () {
+        if (Input.GetButtonDown (parryInput) == true && isGrounded == true) {
+            curState = State.Attack;
+            movev3 = Vector3.zero;
+            anim.Play ("Parry");
+            playerCam.SmallShake (0.1f);
+            Invoke ("StopAttack", 0.4f);
+            isGrounded = true;
+            wasGrounded = true;
+            curAccDec = 0;
+            playerCam.GetComponent<RippleEffect> ().Emit ();
+            SpawnAudio.AudioSpawn (parryAudio, 1, Random.Range (0.95f, 1.05f), 1);
+            for (int i = 0; i < 10; i++) {
+                Instantiate (stopDashParticle, transform.position, Quaternion.identity);
+            }
+
+            SpawnAudio.SpawnVoice (voiceLines[0], 0, 1, 1, 0);
+        }
+    }
 
     float AnalAngle () {
         return Mathf.Atan2 (GetVertInput (), -GetHorInput ()) * Mathf.Rad2Deg;
@@ -190,6 +232,9 @@ public class PlayerController : MonoBehaviour {
             movev3.y = strength;
             CancelInvoke ("JumpBuffer");
             CancelInvoke ("CayoteTime");
+            if (Random.Range (0, 100) <= 40) {
+                SpawnAudio.SpawnVoice (voiceLines[Random.Range (1, 3)], 0, 1, 1, 0);
+            }
         }
     }
 
@@ -216,17 +261,29 @@ public class PlayerController : MonoBehaviour {
     bool IsGrounded () {
         RaycastHit hit;
         // Debug.DrawRay (transform.position + new Vector3 (0, 0.1f, 0), Vector3.down * 0.5f, Color.red, 0);
-        if (Physics.Raycast (transform.position + new Vector3 (0, 0.1f, 0), Vector3.down, out hit, 0.3f, LayerMask.GetMask ("Default"), QueryTriggerInteraction.Ignore) || cc.isGrounded == true) {
+        if (Physics.Raycast (transform.position + new Vector3 (0, 0.1f, 0), Vector3.down, out hit, 0.4f, LayerMask.GetMask ("Default"), QueryTriggerInteraction.Ignore) || cc.isGrounded == true) {
             if (movev3.y < 0) {
                 CancelInvoke ("CayoteTime");
                 Invoke ("CayoteTime", 0.05f);
             }
+            if (hit.transform != null && hit.transform.GetComponent<LandAction> () != null) {
+                hit.transform.GetComponent<LandAction> ().Activate ();
+                footstep.curSoundType = hit.transform.GetComponent<LandAction> ().footstepSoundID;
+            } else {
+                footstep.curSoundType = 0;
+            }
+            cc.Move (new Vector3 (0, -10000 * Time.deltaTime, 0));
         }
         anim.SetBool ("grounded", IsInvoking ("CayoteTime"));
-        if (IsInvoking ("CayoteTime") == true && wasGrounded == false) { }
+        if (IsInvoking ("CayoteTime") == true && wasGrounded == false) {
+            SpawnAudio.AudioSpawn (landAudio, 0, Random.Range (1, 1.5f), 0.2f);
+            curAccDec = Mathf.Min (curAccDec, 0.25f);
+
+        }
         wasGrounded = IsInvoking ("CayoteTime");
         var emmision = walkParticles.emission;
         emmision.enabled = IsInvoking ("CayoteTime");
+
         return IsInvoking ("CayoteTime");
     }
 
@@ -251,9 +308,12 @@ public class PlayerController : MonoBehaviour {
             if (willDash == true) {
 
                 curState = State.Dash;
+                SpawnAudio.AudioSpawn (dashAudio[0], 0f, Random.Range (4.5f, 4.5f), 1);
+                SpawnAudio.AudioSpawn (dashAudio[1], 0.4f, Random.Range (0.75f, 1.25f), 1);
                 willpower -= dashWPCost;
                 Invoke ("StopDash", dashTime);
                 curAccDec = 1;
+                anim.SetFloat ("curSpeed", 0);
                 transform.eulerAngles = new Vector3 (transform.eulerAngles.x, angleGoal, transform.eulerAngles.z);
                 playerCam._enabled = false;
 
@@ -269,6 +329,7 @@ public class PlayerController : MonoBehaviour {
         curModeText.text = "Shoot Mode";
         if (Input.GetAxis (shootInput) != 0 && IsInvoking ("WaitShoot") == false) {
             if (willpower > shootWPCost) {
+                anim.Play ("GunShot", 0, 0f);
                 willpower -= shootWPCost;
                 gunWeapon.GetInput ();
                 Invoke ("WaitShoot", 0.3f);
@@ -285,35 +346,44 @@ public class PlayerController : MonoBehaviour {
     }
 
     void GetAttackInput (int attack) {
-        AttackStats at = attacks[attack];
-        if (canBuffer == true && bufferedAttack != -666) {
-            at = attacks[bufferedAttack];
+        if (IsInvoking ("CantAttack") == false) {
+            AttackStats at = attacks[attack];
+            if (canBuffer == true && bufferedAttack != -666) {
+                at = attacks[bufferedAttack];
+            }
+            if (at.hasFollowAttack == true) {
+                bufferedAttack = at.followUpAttack;
+            } else {
+                bufferedAttack = -666;
+            }
+            anim.Play (at.animation);
+            SpawnAudio.SpawnVoice (voiceLines[at.voiceID], 0, 1, 1, at.voiceDelay);
+            curState = State.Attack; //here
+            curAccDec = 0;
+            Vector3 helper = transform.TransformDirection (at.localVelocity);
+            movev3.x = helper.x;
+            movev3.z = helper.z;
+            CancelInvoke ("StopAttack");
+            Invoke ("StopAttack", at.totalTime);
+            anim.SetFloat ("curSpeed", 0);
+            canBuffer = false;
+            if (at.hasFollowAttack == true) {
+                CancelInvoke ("CanBuffer");
+                Invoke ("CanBuffer", at.bufferStartTime);
+                CancelInvoke ("StopCanBuffer");
+                Invoke ("StopCanBuffer", at.bufferDuration + at.bufferStartTime);
+            } else {
+                Invoke ("CantAttack", at.totalTime + at.bufferDuration);
+            }
+            Invoke ("IsStartingUp", at.startupTime);
         }
-        if (at.hasFollowAttack == true) {
-            bufferedAttack = at.followUpAttack;
-        } else {
-            bufferedAttack = -666;
-        }
-        anim.Play (at.animation);
-        curState = State.Attack; //here
-        curAccDec = 0;
-        Vector3 helper = transform.TransformDirection (at.localVelocity);
-        movev3.x = helper.x;
-        movev3.z = helper.z;
-        CancelInvoke ("StopAttack");
-        Invoke ("StopAttack", at.totalTime);
-        anim.SetFloat ("curSpeed", 0);
-        canBuffer = false;
-        if (at.hasFollowAttack == true) {
-            CancelInvoke ("CanBuffer");
-            Invoke ("CanBuffer", at.bufferStartTime);
-            CancelInvoke ("StopCanBuffer");
-            Invoke ("StopCanBuffer", at.bufferDuration + at.bufferStartTime);
-        }
-        Invoke ("IsStartingUp", at.startupTime);
     }
 
     void IsStartingUp () {
+
+    }
+
+    void CantAttack () {
 
     }
 
@@ -329,7 +399,23 @@ public class PlayerController : MonoBehaviour {
         curState = State.Normal;
     }
 
-    void SetDashInvisible (bool isDash) {
+    public void ActivateHitbox (int num) {
+        hitboxes[num].SetActive (true);
+        SpawnAudio.AudioSpawn (dashAudio[0], 0f, Random.Range (0.75f, 1.25f), 2);
+        playerCam.SmallShake (0.2f);
+        // Instantiate(hitEffectParticle,hitboxes[num].transform.position,Quaternion.identity);
+    }
+
+    public void HitSuccessEffects (int hitter) {
+        playerCam.MediumShake (0.3f);
+        Instantiate (hitEffectParticle, hitboxes[hitter].transform.position, Quaternion.identity);
+        timescaleManager.SlowMo (0.05f, 0f);
+        SpawnAudio.AudioSpawn (hitEffectAudio, 1f, Random.Range (0.95f, 1.45f), 0.1f);
+        SpawnAudio.AudioSpawn (dashAudio[1], 0.3f, Random.Range (4.5f, 5.5f), 1);
+
+    }
+
+    public void SetDashInvisible (bool isDash) {
         for (int i = 0; i < dashInvisible.Length; i++) {
             dashInvisible[i].SetActive (!isDash);
         }
@@ -437,6 +523,15 @@ public class PlayerController : MonoBehaviour {
         hpBar.curPercent = (hitbox.hp / maxHP) * 100;
     }
 
+    //DEBUG
+
+    void DebugMoves () {
+        if (Input.GetKeyDown (KeyCode.Alpha0) == true) {
+            cc.Move (new Vector3 (0, 10, 0));
+            movev3.y = 0;
+        }
+    }
+
 }
 
 [System.Serializable]
@@ -458,4 +553,6 @@ public class AttackStats {
     public bool hasFollowAttack = false;
     public int followUpAttack = 0;
     public Vector3 localVelocity = Vector3.zero;
+    public int voiceID = 0;
+    public float voiceDelay = 0;
 }
