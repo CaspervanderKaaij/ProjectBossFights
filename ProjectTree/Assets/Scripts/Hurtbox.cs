@@ -8,9 +8,15 @@ public class Hurtbox : MonoBehaviour {
     public float damage;
     [SerializeField] float activeTime = 0;
     public UnityEvent hitEv;
+    public bool destroyOnHit = false;
     void OnTriggerEnter (Collider other) {
-        if (other.GetComponent<Hitbox> () != null) {
-            other.GetComponent<Hitbox> ().GetHit (team, damage,this);
+        if (other.GetComponent<Hitbox> () != null && this.enabled == true) {
+            other.GetComponent<Hitbox> ().GetHit (team, damage, this);
+            if (destroyOnHit == true && other.GetComponent<Hitbox> ().team != team) {
+            Destroy (gameObject);
+        }
+        } else if (destroyOnHit == true && this.enabled == true) {
+            Destroy (gameObject);
         }
     }
 

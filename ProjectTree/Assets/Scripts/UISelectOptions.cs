@@ -40,23 +40,16 @@ public class UISelectOptions : UISelect {
         }
     }
 
-    void Start () {
-        if (option == Option.Resolution) {
-            curRes = (int) Mathf.Repeat ((float) curRes - 1, 3f);
-            Res ();
-        }
-        if (option == Option.Quality) {
-            curQuality = QualitySettings.GetQualityLevel ();
-            qualityText.text = QualitySettings.names[curQuality];
-        }
-    }
-
     void AntiAlias () {
         if (Camera.main.GetComponent<PostProcessLayer> ().antialiasingMode != PostProcessLayer.Antialiasing.None) {
             Camera.main.GetComponent<PostProcessLayer> ().antialiasingMode = PostProcessLayer.Antialiasing.None;
         } else {
             Camera.main.GetComponent<PostProcessLayer> ().antialiasingMode = PostProcessLayer.Antialiasing.FastApproximateAntialiasing;
         }
+
+        SaveStuff data = SaveSystem.LoadStuff();
+        data.antiAlias = (Camera.main.GetComponent<PostProcessLayer> ().antialiasingMode != PostProcessLayer.Antialiasing.None);
+        SaveSystem.Save(data);
     }
 
     int curRes = 0; //for saving, set 0 to the saved resolution id int.
@@ -76,6 +69,10 @@ public class UISelectOptions : UISelect {
                 resText.text = "4K";
                 break;
         }
+
+        SaveStuff data = SaveSystem.LoadStuff();
+        data.resolution = curRes;
+        SaveSystem.Save(data);
     }
 
     int curQuality = 0;
@@ -83,6 +80,10 @@ public class UISelectOptions : UISelect {
         curQuality = (int) Mathf.Repeat (curQuality + 1, QualitySettings.names.Length);
         QualitySettings.SetQualityLevel (curQuality);
         qualityText.text = QualitySettings.names[curQuality];
+
+        SaveStuff data = SaveSystem.LoadStuff();
+        data.quality = curQuality;
+        SaveSystem.Save(data);
     }
 
     bool isNightcore = false;
@@ -99,6 +100,10 @@ public class UISelectOptions : UISelect {
                  FindObjectOfType<TimescaleManager> ().normalScale = 1f;
             }
         }
+
+        SaveStuff data = SaveSystem.LoadStuff();
+        data.nightcore = isNightcore;
+        SaveSystem.Save(data);
     }
     void WindowMode () {
         if (Screen.fullScreenMode == FullScreenMode.Windowed) {
@@ -106,5 +111,9 @@ public class UISelectOptions : UISelect {
         } else {
             Screen.fullScreenMode = FullScreenMode.Windowed;
         }
+
+        SaveStuff data = SaveSystem.LoadStuff();
+        data.windowMode = (Screen.fullScreenMode == FullScreenMode.Windowed);
+        SaveSystem.Save(data);
     }
 }

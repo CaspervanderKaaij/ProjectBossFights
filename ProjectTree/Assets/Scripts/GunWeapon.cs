@@ -9,4 +9,8 @@ public class GunWeapon : MonoBehaviour {
     public void GetInput () {
         GameObject g = Instantiate (toSpawn, spawnPoint.position, Quaternion.Euler (0, transform.eulerAngles.y - 90, 0));
     }
+
+    public void GetInput (Vector3 offset) {
+        GameObject g = Instantiate (toSpawn, spawnPoint.position, Quaternion.Euler (0, transform.eulerAngles.y - 90, 0) * Quaternion.Euler(offset));
+    }
 }

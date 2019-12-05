@@ -88,8 +88,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f090531372121bf4f8748f12e5583331, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isOver: 0
   inputName: Shoot
   clickEv:
+    m_PersistentCalls:
+      m_Calls: []
+  hoverEv:
+    m_PersistentCalls:
+      m_Calls: []
+  leaveEv:
     m_PersistentCalls:
       m_Calls: []
   option: 0
@@ -864,7 +871,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &9067576176621744433
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1213,8 +1220,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f090531372121bf4f8748f12e5583331, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isOver: 0
   inputName: Shoot
   clickEv:
+    m_PersistentCalls:
+      m_Calls: []
+  hoverEv:
+    m_PersistentCalls:
+      m_Calls: []
+  leaveEv:
     m_PersistentCalls:
       m_Calls: []
   option: 3
@@ -1424,8 +1438,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f090531372121bf4f8748f12e5583331, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isOver: 0
   inputName: Shoot
   clickEv:
+    m_PersistentCalls:
+      m_Calls: []
+  hoverEv:
+    m_PersistentCalls:
+      m_Calls: []
+  leaveEv:
     m_PersistentCalls:
       m_Calls: []
   option: 4
@@ -1519,8 +1540,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f090531372121bf4f8748f12e5583331, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isOver: 0
   inputName: Shoot
   clickEv:
+    m_PersistentCalls:
+      m_Calls: []
+  hoverEv:
+    m_PersistentCalls:
+      m_Calls: []
+  leaveEv:
     m_PersistentCalls:
       m_Calls: []
   option: 1
@@ -2614,8 +2642,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f090531372121bf4f8748f12e5583331, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isOver: 0
   inputName: Shoot
   clickEv:
+    m_PersistentCalls:
+      m_Calls: []
+  hoverEv:
+    m_PersistentCalls:
+      m_Calls: []
+  leaveEv:
     m_PersistentCalls:
       m_Calls: []
   option: 2

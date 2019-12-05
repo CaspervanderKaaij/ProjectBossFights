@@ -63,6 +63,20 @@ public class TimescaleManager : MonoBehaviour {
         slowmo = normalScale;
     }
 
+     public void SlowMo (float time, float scale,float delay) {
+        if (slowmo > scale) {
+            StopCoroutine ("SlowMotion");
+            StartCoroutine (SlowMotion (time, scale,delay));
+        }
+    }
+
+    IEnumerator SlowMotion (float time, float scale,float delay) {
+        yield return new WaitForSecondsRealtime (delay / normalScale);
+        slowmo = scale;
+        yield return new WaitForSecondsRealtime (time / normalScale);
+        slowmo = normalScale;
+    }
+
     void SetPaused(){
         if(Input.GetButtonDown(pauseButton) == true){
             curState = State.Paused;

@@ -5,14 +5,19 @@ using UnityEngine.Events;
 using UnityEngine.EventSystems;
 
 public class UISelect : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler {
-    bool isOver = false;
+    [HideInInspector] public bool isOver = false;
     [SerializeField] string inputName = "Shoot";
     [SerializeField] UnityEvent clickEv;
+    [SerializeField] UnityEvent hoverEv;
+    [SerializeField] UnityEvent leaveEv;
+
     public void OnPointerEnter (PointerEventData pointerEventData) {
         isOver = true;
+        hoverEv.Invoke();
     }
     public void OnPointerExit (PointerEventData pointerEventData) {
         isOver = false;
+        leaveEv.Invoke();
     }
 
     void OnDisable () {
