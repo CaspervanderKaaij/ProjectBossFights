@@ -10,6 +10,11 @@ public class SaveStuff
     public int resolution = 1;
     public bool windowMode = true;
     public int quality = 3;
+    public float mainVolume = 1;
+    public float sfxVolume = 1;
+    public float voiceVolume = 1;
+    public float musicVolume = 1;
+
     [Header("Game Rules")]
     public bool nightcore = false;
     public bool godMode = false;

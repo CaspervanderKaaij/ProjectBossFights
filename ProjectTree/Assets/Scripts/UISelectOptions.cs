@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using MyBox;
 using UnityEngine;
+using UnityEngine.Audio;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.Rendering.PostProcessing;
 using UnityEngine.UI;
-using UnityEngine.Audio;
 
 public class UISelectOptions : UISelect {
     public enum Option {
@@ -19,7 +19,7 @@ public class UISelectOptions : UISelect {
     public Option option = Option.AntiAlias;
     [ConditionalField ("option", false, Option.Resolution)] public Text resText;
     [ConditionalField ("option", false, Option.Quality)] public Text qualityText;
-     [ConditionalField ("option", false, Option.Nightcore)] public AudioMixer mixer;
+    [ConditionalField ("option", false, Option.Nightcore)] public AudioMixer mixer;
     public override void Activate () {
         switch (option) {
             case Option.AntiAlias:
@@ -47,9 +47,9 @@ public class UISelectOptions : UISelect {
             Camera.main.GetComponent<PostProcessLayer> ().antialiasingMode = PostProcessLayer.Antialiasing.FastApproximateAntialiasing;
         }
 
-        SaveStuff data = SaveSystem.LoadStuff();
+        SaveStuff data = SaveSystem.LoadStuff ();
         data.antiAlias = (Camera.main.GetComponent<PostProcessLayer> ().antialiasingMode != PostProcessLayer.Antialiasing.None);
-        SaveSystem.Save(data);
+        SaveSystem.Save (data);
     }
 
     int curRes = 0; //for saving, set 0 to the saved resolution id int.
@@ -70,9 +70,9 @@ public class UISelectOptions : UISelect {
                 break;
         }
 
-        SaveStuff data = SaveSystem.LoadStuff();
+        SaveStuff data = SaveSystem.LoadStuff ();
         data.resolution = curRes;
-        SaveSystem.Save(data);
+        SaveSystem.Save (data);
     }
 
     int curQuality = 0;
@@ -81,29 +81,31 @@ public class UISelectOptions : UISelect {
         QualitySettings.SetQualityLevel (curQuality);
         qualityText.text = QualitySettings.names[curQuality];
 
-        SaveStuff data = SaveSystem.LoadStuff();
+        SaveStuff data = SaveSystem.LoadStuff ();
         data.quality = curQuality;
-        SaveSystem.Save(data);
+        SaveSystem.Save (data);
     }
 
     bool isNightcore = false;
     void Nightcore () {
-        isNightcore = !isNightcore;
-        if(isNightcore == true){
-            mixer.SetFloat("nightcore",1.25f);
-            if(FindObjectOfType<TimescaleManager>() != null){
-                 FindObjectOfType<TimescaleManager> ().normalScale = 1.5f;
+        isNightcore = !SaveSystem.LoadStuff().nightcore;
+        if (isNightcore == true) {
+            mixer.SetFloat ("nightcore", 1.25f);
+            if (FindObjectOfType<TimescaleManager> () != null) {
+                FindObjectOfType<TimescaleManager> ().normalScale = 1.5f;
+                FindObjectOfType<TimescaleManager> ().UpdateScale();
             }
         } else {
-            mixer.SetFloat("nightcore",1);
-            if(FindObjectOfType<TimescaleManager>() != null){
-                 FindObjectOfType<TimescaleManager> ().normalScale = 1f;
+            mixer.SetFloat ("nightcore", 1);
+            if (FindObjectOfType<TimescaleManager> () != null) {
+                FindObjectOfType<TimescaleManager> ().normalScale = 1f;
+                FindObjectOfType<TimescaleManager> ().UpdateScale();
             }
         }
 
-        SaveStuff data = SaveSystem.LoadStuff();
+        SaveStuff data = SaveSystem.LoadStuff ();
         data.nightcore = isNightcore;
-        SaveSystem.Save(data);
+        SaveSystem.Save (data);
     }
     void WindowMode () {
         if (Screen.fullScreenMode == FullScreenMode.Windowed) {
@@ -112,8 +114,31 @@ public class UISelectOptions : UISelect {
             Screen.fullScreenMode = FullScreenMode.Windowed;
         }
 
-        SaveStuff data = SaveSystem.LoadStuff();
+        SaveStuff data = SaveSystem.LoadStuff ();
         data.windowMode = (Screen.fullScreenMode == FullScreenMode.Windowed);
-        SaveSystem.Save(data);
+        SaveSystem.Save (data);
+    }
+
+    void Start () {
+        switch (option) {
+
+            case Option.Quality:
+                qualityText.text = QualitySettings.names[curQuality];
+                break;
+            case Option.Resolution:
+            curRes = SaveSystem.LoadStuff().resolution;
+                switch (curRes) {
+                    case 0:
+                        resText.text = "720p";
+                        break;
+                    case 1:
+                        resText.text = "1080p";
+                        break;
+                    case 2:
+                        resText.text = "4K";
+                        break;
+                }
+                break;
+        }
     }
 }

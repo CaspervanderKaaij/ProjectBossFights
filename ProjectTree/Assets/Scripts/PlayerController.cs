@@ -37,6 +37,7 @@ public class PlayerController : MonoBehaviour {
     public int curMoveStats = 0;
     public bool isGrounded = true;
     bool wasGrounded = true;
+    public int maxJumps = 5;
     public float jumpStrength = 20;
     public float gravityStrength = -29.81f;
     [SerializeField] AudioClip landAudio;
@@ -78,6 +79,7 @@ public class PlayerController : MonoBehaviour {
     [SerializeField] AudioClip getHitAudio;
     [SerializeField] ParticleSystem walkParticles;
     [SerializeField] GameObject hitEffectParticle;
+    [SerializeField] GameObject WdRipple;
     [Header ("Voice Lines")]
     public AudioClip[] voiceLines;
 
@@ -91,12 +93,16 @@ public class PlayerController : MonoBehaviour {
     [SerializeField] Dialogue diaUI;
     [Header ("Health")]
     [SerializeField] PostProcessVolume getHitPP;
+    [SerializeField] PostProcessVolume parryPP;
     [SerializeField] GameObject lowHPPostProccesing;
     [SerializeField] UIBar hpBar;
     Hitbox hitbox;
     float maxHP;
 
     void Start () {
+        if(FindObjectOfType<StartSaveInitializer>() != null){
+            FindObjectOfType<StartSaveInitializer>().OnEnable();
+        }
         cc = GetComponent<CharacterController> ();
         angleGoal = transform.eulerAngles.y;
         playerCam = cameraTransform.GetComponent<PlayerCam> ();
@@ -172,7 +178,8 @@ public class PlayerController : MonoBehaviour {
                 if (isGrounded == true) {
                     GetAttackInput (3);
                     playerCam.MediumShake (0.1f);
-                    playerCam.ripple.Emit ();
+                    // playerCam.ripple.Emit ();
+                    Instantiate (WdRipple, hitboxes[1].transform.position, Quaternion.Euler (90, 0, 0));
                     for (int i = 0; i < 10; i++) {
                         Instantiate (stopDashParticle, transform.position, Quaternion.identity);
                     }
@@ -214,6 +221,8 @@ public class PlayerController : MonoBehaviour {
             isGrounded = true;
             wasGrounded = true;
             curAccDec = 0;
+            movev3.x = 0;
+            movev3.z = 0;
 
             SpawnAudio.SpawnVoice (voiceLines[6], 0, 1, 1, 0);
         }
@@ -225,8 +234,8 @@ public class PlayerController : MonoBehaviour {
         timescaleManager.SlowMo (0.3f, 0.2f);
         Instantiate (hitEffectParticle, hitboxes[0].transform.position, Quaternion.identity);
         SpawnAudio.SpawnVoice (voiceLines[0], 0, 1, 1, 0);
-        getHitPP.weight = 1;
-        Invoke ("SetHitPPWeight", 0);
+        parryPP.weight = 1;
+        Invoke ("SetParryPPWeight", 0);
         SpawnAudio.AudioSpawn (slamAttackAudio, 0.5f, Random.Range (4, 5), 0.5f);
     }
 
@@ -256,11 +265,31 @@ public class PlayerController : MonoBehaviour {
         anim.transform.localEulerAngles = new Vector3 (anim.transform.localEulerAngles.x, anim.transform.localEulerAngles.y, zDifference);
     }
 
+    Vector3 lastPos = Vector3.zero;
     void Dash () {
         Vector3 helper = transform.TransformDirection (0, 0, dashSpeed);
         movev3.x = helper.x;
         movev3.z = helper.z;
         movev3.y = 0;
+
+        if (lastPos != Vector3.zero && Vector3.Distance (transform.position, lastPos) < 0.5f) {
+            curState = State.Knockback;
+            SetDashInvisible (false);
+            movev3.x = -transform.forward.x * 10;
+            movev3.z = -transform.forward.z * 10;
+            movev3.y = jumpStrength / 2;
+            Invoke ("StopKnockback", 0.2f);
+            curAccDec = 0;
+            playerCam._enabled = true;
+            anim.Play ("GetHit");
+            SpawnAudio.SpawnVoice (voiceLines[Random.Range (6, 9)], 0, 1, 1, 0f);
+            spear.SetActive (false);
+            shootMagicCircle.SetActive (false);
+            Instantiate (stopDashParticle, transform.position + transform.up, Quaternion.identity);
+            playerCam.MediumShake (0.15f);
+
+        }
+        lastPos = transform.position;
     }
 
     float curAccDec = 0;
@@ -279,11 +308,16 @@ public class PlayerController : MonoBehaviour {
         anim.SetFloat ("curSpeed", AnalMagnitude ());
     }
 
+    float jumpsLeft = 2;
     void Jump (float strength) {
         if (Input.GetButtonDown (jumpInput) == true) {
             Invoke ("JumpBuffer", 0.2f);
         }
-        if (isGrounded == true && IsInvoking ("JumpBuffer") == true) {
+        if (jumpsLeft > 0 && IsInvoking ("JumpBuffer") == true) {
+            jumpsLeft--;
+            if (jumpsLeft < maxJumps - 1 && (anim.GetCurrentAnimatorStateInfo (0).IsName ("Fall") == true || anim.GetCurrentAnimatorStateInfo (0).IsName ("ShootAir") == true || anim.GetCurrentAnimatorStateInfo (0).IsName ("DoubleJump") || anim.GetCurrentAnimatorStateInfo (0).IsName ("GetHit"))) {
+                anim.Play ("DoubleJump");
+            }
             movev3.y = strength;
             CancelInvoke ("JumpBuffer");
             CancelInvoke ("CayoteTime");
@@ -317,33 +351,76 @@ public class PlayerController : MonoBehaviour {
         }
     }
 
+    float groundedTime = 0;
     bool IsGrounded () {
+
         RaycastHit hit;
         // Debug.DrawRay (transform.position + new Vector3 (0, 0.1f, 0), Vector3.down * 0.5f, Color.red, 0);
         if (Physics.Raycast (transform.position + new Vector3 (0, 0.1f, 0), Vector3.down, out hit, 0.4f, LayerMask.GetMask ("Default"), QueryTriggerInteraction.Ignore) || cc.isGrounded == true) {
-            if (movev3.y < 0) {
-                CancelInvoke ("CayoteTime");
-                Invoke ("CayoteTime", 0.05f);
-            }
-            if (hit.transform != null && hit.transform.GetComponent<LandAction> () != null) {
-                hit.transform.GetComponent<LandAction> ().Activate ();
-                footstep.curSoundType = hit.transform.GetComponent<LandAction> ().footstepSoundID;
-            } else {
-                footstep.curSoundType = 0;
-            }
-            cc.Move (new Vector3 (0, -10000 * Time.deltaTime, 0));
-        }
-        anim.SetBool ("grounded", IsInvoking ("CayoteTime"));
-        if (IsInvoking ("CayoteTime") == true && wasGrounded == false) {
-            SpawnAudio.AudioSpawn (landAudio, 0, Random.Range (1, 1.5f), 0.2f);
-            curAccDec = Mathf.Min (curAccDec, 0.25f);
+            //if (Vector3.Angle (hit.normal, transform.up) <= cc.slopeLimit) {
 
+            if ((groundHit == null || Vector3.Angle (groundHit.normal, transform.up) <= cc.slopeLimit) && (groundHit == null || groundHit.transform.tag != "NoFloor")) {
+                if (groundedTime > Time.deltaTime / 2) {
+                    groundHit = null;
+                    if (movev3.y < 0) {
+                        CancelInvoke ("CayoteTime");
+                        Invoke ("CayoteTime", 0.1f);
+                    }
+                    if (hit.transform != null && hit.transform.GetComponent<LandAction> () != null) {
+                        hit.transform.GetComponent<LandAction> ().Activate ();
+                        footstep.curSoundType = hit.transform.GetComponent<LandAction> ().footstepSoundID;
+                    } else {
+                        footstep.curSoundType = 0;
+                    }
+
+                    //print (Vector3.Angle (hit.normal, transform.up));
+                    cc.Move (new Vector3 (0, -100, 0) * Time.deltaTime);
+                } else {
+                    groundedTime += Time.deltaTime;
+                }
+            } else if ((curState == State.Normal || curState == State.SlamAttack) && IsInvoking ("CayoteTime") == false) {
+                //move backwards
+                Vector3 oldEuler = transform.eulerAngles;
+                transform.LookAt (transform.position + new Vector3 (groundHit.normal.x, 0, groundHit.normal.z));
+                cc.Move (transform.forward * Time.deltaTime * Mathf.Abs (movev3.y / 2));
+                transform.eulerAngles = oldEuler;
+                curAccDec = 0;
+                movev3.x = 0;
+                movev3.z = 0;
+                wasGrounded = false;
+            }
+
+        } else {
+            groundedTime = 0;
+        }
+
+        anim.SetBool ("grounded", IsInvoking ("CayoteTime"));
+        if (IsInvoking ("CayoteTime") == true) {
+            if (wasGrounded == false) {
+                SpawnAudio.AudioSpawn (landAudio, 0, Random.Range (1, 1.5f), 0.2f);
+                curAccDec = Mathf.Min (curAccDec, 0.25f);
+                jumpsLeft = maxJumps;
+            }
+        } else {
+            if (jumpsLeft == maxJumps) {
+                jumpsLeft = maxJumps - 1;
+            }
         }
         wasGrounded = IsInvoking ("CayoteTime");
         var emmision = walkParticles.emission;
         emmision.enabled = IsInvoking ("CayoteTime");
 
         return IsInvoking ("CayoteTime");
+    }
+
+    ControllerColliderHit groundHit;
+    void OnControllerColliderHit (ControllerColliderHit ccHit) {
+        // groundAngle = Vector3.Angle (ccHit.normal, Vector3.up);
+        groundHit = ccHit;
+    }
+
+    void PreventMoveCrash () {
+
     }
 
     void CayoteTime () {
@@ -380,6 +457,7 @@ public class PlayerController : MonoBehaviour {
                 SetDashInvisible (true);
 
                 playerCam.SmallShake (dashTime);
+                Invoke ("WaitShoot", dashTime + 0.2f);
 
             }
         }
@@ -577,7 +655,6 @@ public class PlayerController : MonoBehaviour {
 
     public void GetHit () {
         curState = State.Knockback;
-        print (hitbox.hp / maxHP);
         if (hitbox.hp / maxHP < 0.3f && lowHPPostProccesing.activeSelf == false) {
             getHitPP.weight = 1;
             Invoke ("SetHitPPWeight", 0);
@@ -591,9 +668,9 @@ public class PlayerController : MonoBehaviour {
         }
         Instantiate (getHitParticle, transform.position + transform.up, Quaternion.identity);
         SetDashInvisible (false);
-        movev3.x = -transform.forward.x * 30;
-        movev3.z = -transform.forward.z * 30;
-        Invoke ("StopKnockback", 0.1f);
+        movev3.x = -transform.forward.x * 10;
+        movev3.z = -transform.forward.z * 10;
+        Invoke ("StopKnockback", 0.2f);
         curAccDec = 0;
         playerCam._enabled = true;
         anim.Play ("GetHit");
@@ -628,7 +705,17 @@ public class PlayerController : MonoBehaviour {
         }
     }
 
+    void SetParryPPWeight () {
+        parryPP.weight = Mathf.MoveTowards (parryPP.weight, 0, Time.deltaTime / 2);
+        if (parryPP.weight != 0) {
+            Invoke ("SetParryPPWeight", 0);
+        }
+    }
+
     void FinalMove () {
+        // cc.Move (new Vector3 (movev3.x, 0, 0) * Time.deltaTime);
+        //  cc.Move (new Vector3 (0, movev3.y, 0) * Time.deltaTime);
+        //  cc.Move (new Vector3 (0, 0, movev3.z) * Time.deltaTime);
         cc.Move (movev3 * Time.deltaTime);
     }
 
@@ -686,6 +773,14 @@ public class PlayerController : MonoBehaviour {
             fidgetTimer = 0;
             anim.SetFloat ("fidget", 0);
         }
+
+        //couldn't find a good place to put this, didn't feel like adding one
+        if (spear.activeSelf == true) {
+            anim.SetLayerWeight (1, 0);
+        } else {
+            anim.SetLayerWeight (1, 1);
+        }
+
     }
 
     void SetHPBar () {

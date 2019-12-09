@@ -15,9 +15,15 @@ public class Hurtbox : MonoBehaviour {
             if (destroyOnHit == true && other.GetComponent<Hitbox> ().team != team) {
             Destroy (gameObject);
         }
-        } else if (destroyOnHit == true && this.enabled == true) {
+        } else if (destroyOnHit == true && this.enabled == true && other.GetComponent<Hurtbox>() == false) {
             Destroy (gameObject);
         }
+    }
+
+    void OnCollisionEnter(Collision other) {
+       if(other.gameObject.layer == 0 && destroyOnHit == true){
+           Destroy(gameObject);
+       } 
     }
 
     void OnEnable () {

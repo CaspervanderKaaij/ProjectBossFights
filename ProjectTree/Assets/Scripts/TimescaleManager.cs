@@ -19,6 +19,9 @@ public class TimescaleManager : MonoBehaviour {
     GameObject optionSpawned;
 
     void Start () {
+        if (SaveSystem.LoadStuff ().nightcore == true) {
+            normalScale = 1.5f;
+        }
         Time.timeScale = normalScale;
         isPaused = false;
         slowmo = normalScale;
@@ -35,19 +38,23 @@ public class TimescaleManager : MonoBehaviour {
                     Time.timeScale = slowmo;
                 }
                 //SetPaused();
-                SetOptioned();
+                SetOptioned ();
                 break;
             case State.Options:
                 isPaused = true;
                 Time.timeScale = 0;
-                SetUnpaused();
+                SetUnpaused ();
                 break;
             case State.Paused:
                 isPaused = true;
                 Time.timeScale = 0;
-                SetUnpaused();
+                SetUnpaused ();
                 break;
         }
+    }
+
+    public void UpdateScale(){
+        slowmo = normalScale;
     }
 
     public void SlowMo (float time, float scale) {
@@ -63,38 +70,38 @@ public class TimescaleManager : MonoBehaviour {
         slowmo = normalScale;
     }
 
-     public void SlowMo (float time, float scale,float delay) {
+    public void SlowMo (float time, float scale, float delay) {
         if (slowmo > scale) {
             StopCoroutine ("SlowMotion");
-            StartCoroutine (SlowMotion (time, scale,delay));
+            StartCoroutine (SlowMotion (time, scale, delay));
         }
     }
 
-    IEnumerator SlowMotion (float time, float scale,float delay) {
+    IEnumerator SlowMotion (float time, float scale, float delay) {
         yield return new WaitForSecondsRealtime (delay / normalScale);
         slowmo = scale;
         yield return new WaitForSecondsRealtime (time / normalScale);
         slowmo = normalScale;
     }
 
-    void SetPaused(){
-        if(Input.GetButtonDown(pauseButton) == true){
+    void SetPaused () {
+        if (Input.GetButtonDown (pauseButton) == true) {
             curState = State.Paused;
-            Destroy(optionSpawned);
+            Destroy (optionSpawned);
         }
     }
 
-     void SetOptioned(){
-        if(Input.GetButtonDown(pauseButton) == true){
+    void SetOptioned () {
+        if (Input.GetButtonDown (pauseButton) == true) {
             curState = State.Options;
-            optionSpawned = Instantiate(optionScreen);
+            optionSpawned = Instantiate (optionScreen);
         }
     }
 
-    void SetUnpaused(){
-        if(Input.GetButtonDown(pauseButton) == true){
+    void SetUnpaused () {
+        if (Input.GetButtonDown (pauseButton) == true) {
             curState = State.None;
-            Destroy(optionSpawned);
+            Destroy (optionSpawned);
             isPaused = false;
         }
     }

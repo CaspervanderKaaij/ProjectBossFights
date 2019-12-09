@@ -6,25 +6,45 @@ using UnityEngine.Rendering.PostProcessing;
 using UnityEngine.SceneManagement;
 
 public class StartSaveInitializer : MonoBehaviour {
+    public AudioMixer mixer;
     PlayerController player;
     SaveStuff data;
-    void OnEnable () {
+    public void OnEnable () {
         player = FindObjectOfType<PlayerController> ();
         data = SaveSystem.LoadStuff ();
 
         //settings
-        SetAntiAlias();
-        SetQuality();
-        SetResolution();
-        SetWindowMode();
+        SetAntiAlias ();
+        SetQuality ();
+        SetResolution ();
+        SetWindowMode ();
+        SetVolume ();
         //modes
         SetNightcore ();
 
-        DontDestroyOnLoad(gameObject);
-        print(Application.persistentDataPath);
+        DontDestroyOnLoad (gameObject);
+        print (Application.persistentDataPath);
     }
 
     //settings
+
+    void SetVolume () {
+        mixer.SetFloat ("masterVolume", VolumeConverter (data.mainVolume));
+        mixer.SetFloat ("musicVolume", VolumeConverter (data.musicVolume));
+        mixer.SetFloat ("voiceVolume", VolumeConverter (data.voiceVolume));
+        mixer.SetFloat ("sfxVolume", VolumeConverter (data.sfxVolume));
+    }
+
+    float VolumeConverter (float f) {
+        print(f);
+        if (f > 0.5f) {
+            f = Mathf.Log ((float) f / 10f) * 20;
+        } else {
+            f = -80;
+        }
+        print(f);
+        return f;
+    }
     void SetResolution () {
         switch (data.resolution) {
             case 0:
@@ -66,13 +86,11 @@ public class StartSaveInitializer : MonoBehaviour {
             if (FindObjectOfType<TimescaleManager> () != null) {
                 FindObjectOfType<TimescaleManager> ().normalScale = 1.5f;
             }
-            AudioMixer mixer = Resources.Load ("MainVolume") as AudioMixer;
             mixer.SetFloat ("nightcore", 1.25f);
         } else {
             if (FindObjectOfType<TimescaleManager> () != null) {
                 FindObjectOfType<TimescaleManager> ().normalScale = 1;
             }
-            AudioMixer mixer = Resources.Load ("MainVolume") as AudioMixer;
             mixer.SetFloat ("nightcore", 1f);
         }
     }

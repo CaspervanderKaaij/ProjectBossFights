@@ -19,7 +19,7 @@ public class PlayerCam : MonoBehaviour {
         angleGoal = transform.eulerAngles;
     }
 
-    void Update () {
+    void LateUpdate () {
         if (_enabled == true) {
             NormalCam ();
         }
@@ -34,6 +34,8 @@ public class PlayerCam : MonoBehaviour {
         realSpeed *= Vector3.Distance (player.position, goalPos - offset) * 10;
         if (Vector3.Distance (player.position, goalPos - offset) > dontMoveDistance) {
             goalPos = Vector3.MoveTowards (goalPos, player.position + offset, Time.deltaTime * realSpeed);
+        } else {
+            goalPos = Vector3.MoveTowards (goalPos, player.position + offset, Time.deltaTime * realSpeed / 30);
         }
         transform.position = Vector3.Lerp (transform.position, goalPos, Time.deltaTime * realSpeed);
 
