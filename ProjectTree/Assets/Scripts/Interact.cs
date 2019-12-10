@@ -14,6 +14,7 @@ public class Interact : MonoBehaviour {
             } else if(p.curState == PlayerController.State.Normal && p.isGrounded == true) {
                 Activate(p);
                 FindObjectOfType<Dialogue>().firstInput = false;
+                FindObjectOfType<Dialogue>().Invoke("NoInput",FindObjectOfType<Dialogue>().noInputTime);
             } else {
                 GetComponent<Collider>().enabled = false;
                 GetComponent<Collider>().enabled = true;

@@ -1,0 +1,49 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 6
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: CasperWater
+  m_Shader: {fileID: 4800000, guid: 166fe0b766839d74b8703bccd2fa14b9, type: 3}
+  m_ShaderKeywords: 
+  m_LightmapFlags: 0
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _Foam:
+        m_Texture: {fileID: 2800000, guid: a8e19848da524c5428b529bc99e9d3db, type: 3}
+        m_Scale: {x: 0.3, y: 0.3}
+        m_Offset: {x: 0.48, y: -0.09}
+    - _texcoord:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Floats:
+    - _BaseEdgeDistance: 0.4
+    - _BaseEdgePower: 0
+    - _EdgeDistance: 2.55
+    - _EdgePower: 0
+    - _FoamNoiseScale: 10.62
+    - _FoamTimescale: 0.06
+    - _StylizerMax: 0.13
+    - _StylizerMin: 0.11
+    - _TimeScale: 0.1
+    - _WaterDirectionScale: 1
+    - _WaveOpacity: 0.04
+    - __dirty: 0
+    m_Colors:
+    - _BaseColor: {r: 0, g: 0.42739028, b: 0.6037736, a: 1}
+    - _FoamPan1: {r: 0.15, g: 0.25, b: 0, a: 0}
+    - _FoamPan2: {r: -0.25, g: -0.15, b: 0, a: 0}
+    - _TEmp: {r: 0.12, g: 1, b: 0, a: 0}
+    - _WaterDirection: {r: 0, g: -0.1, b: 0, a: 0}
+    - _WavesSmoothstep: {r: -0.21, g: 1, b: 0, a: 0}

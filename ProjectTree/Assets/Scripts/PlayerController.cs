@@ -32,6 +32,8 @@ public class PlayerController : MonoBehaviour {
     public string dashInput = "Dash";
     public string shootInput = "Shoot";
     public string parryInput = "Parry";
+    public string switchWeaponInput = "Mouse ScrollWheel";
+    public string interactInput = "Interact";
     [Header ("Stats")]
     public MoveStats[] moveStats;
     public int curMoveStats = 0;
@@ -96,18 +98,18 @@ public class PlayerController : MonoBehaviour {
     [SerializeField] PostProcessVolume parryPP;
     [SerializeField] GameObject lowHPPostProccesing;
     [SerializeField] UIBar hpBar;
-    Hitbox hitbox;
-    float maxHP;
+    [HideInInspector] public Hitbox hitbox;
+    public float maxHP = 100;
 
     void Start () {
-        if(FindObjectOfType<StartSaveInitializer>() != null){
-            FindObjectOfType<StartSaveInitializer>().OnEnable();
+        if (FindObjectOfType<StartSaveInitializer> () != null) {
+            FindObjectOfType<StartSaveInitializer> ().OnEnable ();
         }
         cc = GetComponent<CharacterController> ();
         angleGoal = transform.eulerAngles.y;
         playerCam = cameraTransform.GetComponent<PlayerCam> ();
         hitbox = GetComponent<Hitbox> ();
-        maxHP = hitbox.hp;
+        // maxHP = hitbox.hp;
         timescaleManager = FindObjectOfType<TimescaleManager> ();
         for (int i = 0; i < hitboxParent.transform.childCount; i++) {
             hitboxes.Add (hitboxParent.transform.GetChild (i).gameObject);
@@ -358,8 +360,7 @@ public class PlayerController : MonoBehaviour {
         // Debug.DrawRay (transform.position + new Vector3 (0, 0.1f, 0), Vector3.down * 0.5f, Color.red, 0);
         if (Physics.Raycast (transform.position + new Vector3 (0, 0.1f, 0), Vector3.down, out hit, 0.4f, LayerMask.GetMask ("Default"), QueryTriggerInteraction.Ignore) || cc.isGrounded == true) {
             //if (Vector3.Angle (hit.normal, transform.up) <= cc.slopeLimit) {
-
-            if ((groundHit == null || Vector3.Angle (groundHit.normal, transform.up) <= cc.slopeLimit) && (groundHit == null || groundHit.transform.tag != "NoFloor")) {
+            if (groundHit == null || (Vector3.Angle (groundHit.normal, transform.up) <= cc.slopeLimit && groundHit.transform.tag != "NoFloor")) {
                 if (groundedTime > Time.deltaTime / 2) {
                     groundHit = null;
                     if (movev3.y < 0) {
@@ -416,7 +417,11 @@ public class PlayerController : MonoBehaviour {
     ControllerColliderHit groundHit;
     void OnControllerColliderHit (ControllerColliderHit ccHit) {
         // groundAngle = Vector3.Angle (ccHit.normal, Vector3.up);
-        groundHit = ccHit;
+        if (ccHit.transform != null) {
+            groundHit = ccHit;
+        } else {
+            groundHit = null;
+        }
     }
 
     void PreventMoveCrash () {
@@ -529,13 +534,18 @@ public class PlayerController : MonoBehaviour {
     }
 
     void SetCurWeapon () {
-        if (Input.GetKeyDown (KeyCode.E)) {
+        if (Input.GetAxis (switchWeaponInput) != 0 && IsInvoking ("NoSwitchWeapon") == false) {
             if (curWeapon == Weapon.Gun) {
                 curWeapon = Weapon.Spear;
             } else {
                 curWeapon = Weapon.Gun;
             }
+            Invoke ("NoSwitchWeapon", 0.3f);
         }
+    }
+
+    void NoSwitchWeapon () {
+
     }
 
     void SlamAttack () {
@@ -564,7 +574,7 @@ public class PlayerController : MonoBehaviour {
         anim.Play (at.animation);
         transform.rotation = Quaternion.Euler (transform.eulerAngles.x, angleGoal, transform.eulerAngles.z);
         SpawnAudio.SpawnVoice (voiceLines[at.voiceID], 0, 1, 1, at.voiceDelay);
-        curState = State.Attack; //here
+        curState = State.Attack;
         curAccDec = 0;
         Vector3 helper = transform.TransformDirection (at.localVelocity);
         movev3.x = helper.x;
@@ -727,7 +737,7 @@ public class PlayerController : MonoBehaviour {
         } else {
             textIcon.transform.localScale = Vector3.zero;
         }
-        if (Input.GetButtonDown (shootInput) == true && interactables.Count > 0 && isGrounded == true) {
+        if (Input.GetButtonDown (shootInput) == true && interactables.Count > 0 && isGrounded == true) { //here
             Interact chosenOne = interactables[0];
             for (int i = 0; i < interactables.Count; i++) {
                 if (interactables[i].priority > chosenOne.priority) {

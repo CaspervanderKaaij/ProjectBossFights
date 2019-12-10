@@ -25,12 +25,14 @@ public class Dialogue : MonoBehaviour {
         }
     }
 
+    public float noInputTime = 1;
     void PlayerBased () {
         if (curHolder != null) {
             textBack.enabled = true;
             text.text = curHolder.dialogue[curDia];
-            if (Input.GetButtonUp (player.shootInput) == true) {
+            if (Input.GetButtonUp (player.shootInput) == true && IsInvoking("NoInput") == false) {
                 if (firstInput == false) {
+                    Invoke("NoInput",noInputTime);
                     curDia++;
                     if (curDia + 1 > curHolder.dialogue.Length) {
                         curHolder = null;
@@ -53,8 +55,9 @@ public class Dialogue : MonoBehaviour {
         if (curHolder != null) {
             textBack.enabled = true;
             text.text = curHolder.dialogue[curDia];
-            if (Input.GetButtonUp ("Shoot") == true) {
+            if (Input.GetButtonUp ("Shoot") == true && IsInvoking("NoInput") == false) {
                 if (firstInput == false) {
+                    Invoke("NoInput",noInputTime);
                     curDia++;
                     if (curDia + 1 > curHolder.dialogue.Length) {
                         curHolder = null;
@@ -68,5 +71,9 @@ public class Dialogue : MonoBehaviour {
             textBack.enabled = false;
             endEv.Invoke ();
         }
+    }
+
+    void NoInput(){
+
     }
 }

@@ -51,9 +51,12 @@ public class TimescaleManager : MonoBehaviour {
                 SetUnpaused ();
                 break;
         }
+        if (noPauseTime > 0) {
+            noPauseTime -= Time.unscaledDeltaTime;
+        }
     }
 
-    public void UpdateScale(){
+    public void UpdateScale () {
         slowmo = normalScale;
     }
 
@@ -84,22 +87,27 @@ public class TimescaleManager : MonoBehaviour {
         slowmo = normalScale;
     }
 
+    float noPauseWait = 0.15f;
     void SetPaused () {
-        if (Input.GetButtonDown (pauseButton) == true) {
+        if (Input.GetButtonDown (pauseButton) == true && noPauseTime <= 0) {
+            noPauseTime = noPauseWait;
             curState = State.Paused;
             Destroy (optionSpawned);
         }
     }
+    float noPauseTime = 0;
 
     void SetOptioned () {
-        if (Input.GetButtonDown (pauseButton) == true) {
+        if (Input.GetButtonDown (pauseButton) == true && noPauseTime <= 0) {
+            noPauseTime = noPauseWait;
             curState = State.Options;
             optionSpawned = Instantiate (optionScreen);
         }
     }
 
     void SetUnpaused () {
-        if (Input.GetButtonDown (pauseButton) == true) {
+        if (Input.GetButtonDown (pauseButton) == true && noPauseTime <= 0) {
+            noPauseTime = noPauseWait;
             curState = State.None;
             Destroy (optionSpawned);
             isPaused = false;
