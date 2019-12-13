@@ -10,6 +10,7 @@ public class StartSaveInitializer : MonoBehaviour {
     PlayerController player;
     SaveStuff data;
     public void OnEnable () {
+        print("enable");
         player = FindObjectOfType<PlayerController> ();
         data = SaveSystem.LoadStuff ();
 

@@ -22,7 +22,9 @@ public class PlayerController : MonoBehaviour {
         SlamAttack,
         Gun,
         Death,
-        Parry
+        Parry,
+        WallJump,
+        WallSlide
     }
     public State curState = State.Normal;
     [Header ("Input")]
@@ -100,6 +102,8 @@ public class PlayerController : MonoBehaviour {
     [SerializeField] UIBar hpBar;
     [HideInInspector] public Hitbox hitbox;
     public float maxHP = 100;
+    [Header ("Buffs")]
+    public float speedMuliplier = 1;
 
     void Start () {
         if (FindObjectOfType<StartSaveInitializer> () != null) {
@@ -121,6 +125,7 @@ public class PlayerController : MonoBehaviour {
         shootMagicCircle.SetActive (false);
         switch (curState) {
             case State.Normal:
+                WallJump ();
                 Jump (jumpStrength);
                 isGrounded = IsGrounded ();
                 SetAngle ();
@@ -197,6 +202,15 @@ public class PlayerController : MonoBehaviour {
                 SetWillpowerBar ();
                 Jump (jumpStrength);
                 break;
+            case State.WallJump:
+                Gravity ();
+                FinalMove ();
+                break;
+            case State.WallSlide:
+                isGrounded = IsGrounded ();
+                WallSlide ();
+                FinalMove ();
+                break;
         }
         lowHPPostProccesing.SetActive ((hitbox.hp / maxHP < 0.3f));
     }
@@ -214,8 +228,9 @@ public class PlayerController : MonoBehaviour {
     // Movement
 
     void GetParryInput () {
-        if (Input.GetButtonDown (parryInput) == true && isGrounded == true && curWeapon == Weapon.Spear) {
+        if (Input.GetButtonDown (parryInput) == true && isGrounded == true) {
             curState = State.Parry;
+            curWeapon = Weapon.Spear;
             movev3 = Vector3.zero;
             anim.Play ("Parry");
             playerCam.SmallShake (0.1f);
@@ -269,12 +284,12 @@ public class PlayerController : MonoBehaviour {
 
     Vector3 lastPos = Vector3.zero;
     void Dash () {
-        Vector3 helper = transform.TransformDirection (0, 0, dashSpeed);
+        Vector3 helper = transform.TransformDirection (0, 0, dashSpeed * speedMuliplier);
         movev3.x = helper.x;
         movev3.z = helper.z;
         movev3.y = 0;
 
-        if (lastPos != Vector3.zero && Vector3.Distance (transform.position, lastPos) < 0.5f) {
+        if (lastPos != Vector3.zero && Vector3.Distance (transform.position, lastPos) < 10f * Time.deltaTime) {
             curState = State.Knockback;
             SetDashInvisible (false);
             movev3.x = -transform.forward.x * 10;
@@ -297,22 +312,34 @@ public class PlayerController : MonoBehaviour {
     float curAccDec = 0;
     void MoveForward () {
 
-        if (AnalMagnitude () > 0) {
-            curAccDec = Mathf.MoveTowards (curAccDec, AnalMagnitude (), Time.deltaTime * moveStats[curMoveStats].acceleration);
-        } else {
-            curAccDec = Mathf.MoveTowards (curAccDec, AnalMagnitude (), Time.deltaTime * moveStats[curMoveStats].deceleration);
+        if (isGrounded == true) {
+
+            if (AnalMagnitude () > 0) {
+                curAccDec = Mathf.MoveTowards (curAccDec, AnalMagnitude (), Time.deltaTime * moveStats[curMoveStats].acceleration);
+            } else {
+                curAccDec = Mathf.MoveTowards (curAccDec, AnalMagnitude (), Time.deltaTime * moveStats[curMoveStats].deceleration);
+            }
+
+            Vector3 forwardhelper = transform.TransformDirection (0, 0, curAccDec * moveStats[curMoveStats].speed * speedMuliplier);
+            movev3.x = forwardhelper.x;
+            movev3.z = forwardhelper.z;
+
+            anim.SetFloat ("curSpeed", AnalMagnitude ());
+            anim.SetFloat ("speedMuliplier", speedMuliplier);
+        } else if (curState != State.WallJump) {
+            Vector3 helper = new Vector3 (GetHorInput (), 0, GetVertInput ()) * moveStats[curMoveStats].speed * speedMuliplier;
+            float oldCamZ = cameraTransform.eulerAngles.z;
+            cameraTransform.eulerAngles = new Vector3 (cameraTransform.eulerAngles.x, cameraTransform.eulerAngles.y, 0);
+            helper = cameraTransform.TransformDirection (helper);
+            cameraTransform.eulerAngles = new Vector3 (cameraTransform.eulerAngles.x, cameraTransform.eulerAngles.y, oldCamZ);
+            movev3.x = Mathf.Lerp (movev3.x, helper.x, Time.deltaTime * moveStats[curMoveStats].acceleration * 6);
+            movev3.z = Mathf.Lerp (movev3.z, helper.z, Time.deltaTime * moveStats[curMoveStats].acceleration * 6);
         }
-
-        Vector3 forwardhelper = transform.TransformDirection (0, 0, curAccDec * moveStats[curMoveStats].speed);
-        movev3.x = forwardhelper.x;
-        movev3.z = forwardhelper.z;
-
-        anim.SetFloat ("curSpeed", AnalMagnitude ());
     }
 
     float jumpsLeft = 2;
     void Jump (float strength) {
-        if (Input.GetButtonDown (jumpInput) == true) {
+        if (Input.GetButtonDown (jumpInput) == true && curState != State.WallJump) {
             Invoke ("JumpBuffer", 0.2f);
         }
         if (jumpsLeft > 0 && IsInvoking ("JumpBuffer") == true) {
@@ -413,6 +440,67 @@ public class PlayerController : MonoBehaviour {
 
         return IsInvoking ("CayoteTime");
     }
+    void WallJump () {
+        if (isGrounded == false && AnalMagnitude () > 0) {
+            RaycastHit hit;
+            float oldY = transform.eulerAngles.y;
+            transform.rotation = Quaternion.Euler (transform.eulerAngles.x, angleGoal, transform.eulerAngles.z);
+            if (Physics.SphereCast (transform.position + cc.center, cc.radius, transform.forward, out hit, cc.radius * 2.5f, LayerMask.GetMask ("Default"), QueryTriggerInteraction.Ignore) == true && isGrounded == false) {
+                if (Physics.Raycast (transform.position + cc.center * 2, transform.forward, cc.radius * 2.5f, LayerMask.GetMask ("Default"), QueryTriggerInteraction.Ignore) == true) {
+                    if (groundHit == null || Vector3.Angle (groundHit.normal, transform.up) > cc.slopeLimit) {
+                        transform.rotation = Quaternion.Euler (transform.eulerAngles.x, oldY, transform.eulerAngles.z);
+                        if ((firstWallJump == true || (Mathf.DeltaAngle (angleGoal, lastWallAngle)) > 91) && movev3.y < -3) {
+                            curState = State.WallSlide;
+                            lastWallAngle = angleGoal;
+                            firstWallJump = false;
+                            canAirDash = true;
+                        }
+                    }
+                }
+            }
+            transform.rotation = Quaternion.Euler (transform.eulerAngles.x, oldY, transform.eulerAngles.z);
+        } else if (isGrounded == true) {
+            firstWallJump = true;
+        }
+    }
+
+    void StopWallJump () {
+        curState = State.Normal;
+        angleGoal = transform.eulerAngles.y;
+        isGrounded = false;
+        wasGrounded = false;
+    }
+
+    float lastWallAngle = 0;
+    bool firstWallJump = false;
+    void WallSlide () {
+        RaycastHit hit;
+        movev3 = Vector3.zero;
+        spear.SetActive (false);
+        curAccDec = 0;
+        if (anim.GetCurrentAnimatorStateInfo (0).IsName ("WallSlide") == false) {
+            anim.Play ("WallSlide");
+        }
+        if (Physics.SphereCast (transform.position + cc.center, cc.radius, transform.forward, out hit, cc.radius * 2.5f, LayerMask.GetMask ("Default"), QueryTriggerInteraction.Ignore) == true && isGrounded == false) {
+            if (Input.GetButtonDown (jumpInput) == true) {
+                curState = State.WallJump;
+                Vector3 oldRot = transform.eulerAngles;
+                transform.forward = hit.normal;
+                transform.eulerAngles = new Vector3 (oldRot.x, transform.eulerAngles.y, oldRot.z);
+                angleGoal = transform.eulerAngles.y;
+                movev3 = transform.forward * 10;
+                movev3.y = jumpStrength * 1.2f;
+                anim.Play ("DoubleJump");
+                Invoke ("StopWallJump", 0.1f);
+                isGrounded = false;
+                wasGrounded = false;
+            }
+        } else {
+            anim.Play ("Fall");
+            curState = State.Normal;
+        }
+        DashInput ();
+    }
 
     ControllerColliderHit groundHit;
     void OnControllerColliderHit (ControllerColliderHit ccHit) {
@@ -448,14 +536,14 @@ public class PlayerController : MonoBehaviour {
             }
             if (willDash == true) {
 
+                transform.eulerAngles = new Vector3 (transform.eulerAngles.x, angleGoal, transform.eulerAngles.z);
                 curState = State.Dash;
                 SpawnAudio.AudioSpawn (dashAudio[0], 0f, Random.Range (4.5f, 4.5f), 1);
                 SpawnAudio.AudioSpawn (dashAudio[1], 0.4f, Random.Range (0.75f, 1.25f), 1);
                 willpower -= dashWPCost;
-                Invoke ("StopDash", dashTime);
+                Invoke ("StopDash", dashTime / speedMuliplier);
                 curAccDec = 1;
                 anim.SetFloat ("curSpeed", 0);
-                transform.eulerAngles = new Vector3 (transform.eulerAngles.x, angleGoal, transform.eulerAngles.z);
                 playerCam._enabled = false;
                 anim.Play ("Fall");
 
@@ -473,7 +561,7 @@ public class PlayerController : MonoBehaviour {
         curModeText.text = "Shoot Mode";
         shootMagicCircle.SetActive ((curState == State.Gun));
         if (curState == State.Gun) {
-            transform.rotation = Quaternion.Lerp (transform.rotation, Quaternion.Euler (transform.eulerAngles.x, angleGoal, transform.eulerAngles.z), Time.deltaTime * moveStats[curMoveStats].rotSpeed * 2);
+            transform.rotation = Quaternion.Lerp (transform.rotation, Quaternion.Euler (transform.eulerAngles.x, angleGoal, transform.eulerAngles.z), Time.deltaTime * moveStats[curMoveStats].rotSpeed * 2 * speedMuliplier);
             if (Input.GetButtonDown (shootInput) == true) {
                 Invoke ("ShootInputBuffer", 0.3f);
             }
@@ -553,7 +641,7 @@ public class PlayerController : MonoBehaviour {
             transform.rotation = Quaternion.Euler (transform.eulerAngles.x, angleGoal, transform.eulerAngles.z);
             curState = State.SlamAttack;
             anim.Play ("JumpAttackStart");
-            movev3 = transform.forward * moveStats[0].speed * curAccDec;
+            movev3 = transform.forward * moveStats[0].speed * AnalMagnitude ();
             movev3.y = jumpStrength;
             SpawnAudio.SpawnVoice (voiceLines[3], 0, 1, 1, 0);
 

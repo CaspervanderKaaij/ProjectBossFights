@@ -9,6 +9,9 @@ EditorBuildSettings:
     path: Assets/Scenes/Init.unity
     guid: 08a032168009ec743baa03136b6bb5db
   - enabled: 1
+    path: Assets/Scenes/CutsceneTest.unity
+    guid: 014cc2436a23a664ab9b29659f1647a5
+  - enabled: 1
     path: Assets/Scenes/NieRTest.unity
     guid: 404877159ee4d5f40adb428d36d89e08
   m_configObjects: {}

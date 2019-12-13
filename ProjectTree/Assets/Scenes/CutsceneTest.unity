@@ -616,6 +616,7 @@ GameObject:
   - component: {fileID: 956716763}
   - component: {fileID: 956716762}
   - component: {fileID: 956716761}
+  - component: {fileID: 956716767}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -658,7 +659,20 @@ MonoBehaviour:
   firstInput: 0
   endEv:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 956716767}
+        m_MethodName: Activate
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  nextDiaAudio: {fileID: 0}
+  noInputTime: 1
 --- !u!114 &956716763
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -740,6 +754,18 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!114 &956716767
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 956716760}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 646bd66e9163995458428df47c64dfcf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1714993453
 GameObject:
   m_ObjectHideFlags: 0
@@ -947,8 +973,8 @@ MonoBehaviour:
     newRot: {x: 30.518, y: -44.051, z: 0}
     pos: {x: 0, y: 0, z: 0}
     rot: {x: 0, y: 0, z: 0}
-    speed: 1
-    rotSpeed: 1
+    speed: 10
+    rotSpeed: 10
     animName: Walk
     anim: {fileID: 0}
     clip: {fileID: 0}
