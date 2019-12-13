@@ -449,9 +449,10 @@ public class PlayerController : MonoBehaviour {
                 if (Physics.Raycast (transform.position + cc.center * 2, transform.forward, cc.radius * 2.5f, LayerMask.GetMask ("Default"), QueryTriggerInteraction.Ignore) == true) {
                     if (groundHit == null || Vector3.Angle (groundHit.normal, transform.up) > cc.slopeLimit) {
                         transform.rotation = Quaternion.Euler (transform.eulerAngles.x, oldY, transform.eulerAngles.z);
-                        if ((firstWallJump == true || (Mathf.DeltaAngle (angleGoal, lastWallAngle)) > 91) && movev3.y < -3) {
+                        //if ((firstWallJump == true || (Mathf.DeltaAngle (angleGoal, lastWallAngle)) > 91) && movev3.y < -3) {
+                        if (movev3.y < -3) {
                             curState = State.WallSlide;
-                            lastWallAngle = angleGoal;
+                            //lastWallAngle = angleGoal;
                             firstWallJump = false;
                             canAirDash = true;
                         }
@@ -461,6 +462,9 @@ public class PlayerController : MonoBehaviour {
             transform.rotation = Quaternion.Euler (transform.eulerAngles.x, oldY, transform.eulerAngles.z);
         } else if (isGrounded == true) {
             firstWallJump = true;
+        }
+        if (curState != State.WallSlide && anim.GetCurrentAnimatorStateInfo (0).IsName ("WallSlide") == true) {
+            anim.Play ("Idle");
         }
     }
 
