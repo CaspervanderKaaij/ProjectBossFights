@@ -416,6 +416,16 @@ public class PlayerController : MonoBehaviour {
                 movev3.x = 0;
                 movev3.z = 0;
                 wasGrounded = false;
+
+                if (AnalMagnitude () > 0) {
+                    if (Vector3.Dot ((groundHit.point - transform.position).normalized, transform.forward) > 0) {
+                        if (movev3.y < -3 && IsInvoking ("NoWallJump") == false && willpower > 0) {
+                            curState = State.WallSlide;
+                            firstWallJump = false;
+                            canAirDash = true;
+                        }
+                    }
+                }
             }
 
         } else {
@@ -445,9 +455,9 @@ public class PlayerController : MonoBehaviour {
             RaycastHit hit;
             float oldY = transform.eulerAngles.y;
             transform.rotation = Quaternion.Euler (transform.eulerAngles.x, angleGoal, transform.eulerAngles.z);
-            if (Physics.SphereCast (transform.position + cc.center, cc.radius, transform.forward, out hit, cc.radius * 2.5f, LayerMask.GetMask ("Default"), QueryTriggerInteraction.Ignore) == true && isGrounded == false) {
-                if (Physics.Raycast (transform.position + cc.center * 2, transform.forward, cc.radius * 2.5f, LayerMask.GetMask ("Default"), QueryTriggerInteraction.Ignore) == true) {
-                    if (groundHit == null || Vector3.Angle (groundHit.normal, transform.up) > cc.slopeLimit) {
+            if (Physics.SphereCast (transform.position + cc.center, cc.radius, transform.forward, out hit, cc.radius * 4.5f, LayerMask.GetMask ("Default"), QueryTriggerInteraction.Ignore) == true && isGrounded == false) {
+                if (Physics.Raycast (transform.position + cc.center * 2, transform.forward, cc.radius * 4.5f, LayerMask.GetMask ("Default"), QueryTriggerInteraction.Ignore) == true) {
+                    if (groundHit == null || Vector3.Angle (groundHit.normal, transform.up) > cc.slopeLimit && IsInvoking ("NoWallJump") == false && willpower > 0) {
                         transform.rotation = Quaternion.Euler (transform.eulerAngles.x, oldY, transform.eulerAngles.z);
                         //if ((firstWallJump == true || (Mathf.DeltaAngle (angleGoal, lastWallAngle)) > 91) && movev3.y < -3) {
                         if (movev3.y < -3) {
@@ -478,6 +488,11 @@ public class PlayerController : MonoBehaviour {
     float lastWallAngle = 0;
     bool firstWallJump = false;
     void WallSlide () {
+        SetWillpowerBar ();
+        if (willpower < Time.deltaTime * 20) {
+            anim.Play ("Fall");
+            curState = State.Normal;
+        }
         RaycastHit hit;
         movev3 = Vector3.zero;
         spear.SetActive (false);
@@ -485,15 +500,25 @@ public class PlayerController : MonoBehaviour {
         if (anim.GetCurrentAnimatorStateInfo (0).IsName ("WallSlide") == false) {
             anim.Play ("WallSlide");
         }
-        if (Physics.SphereCast (transform.position + cc.center, cc.radius, transform.forward, out hit, cc.radius * 2.5f, LayerMask.GetMask ("Default"), QueryTriggerInteraction.Ignore) == true && isGrounded == false) {
+        if (Physics.SphereCast (transform.position + cc.center, cc.radius, transform.forward, out hit, cc.radius * 4.5f, LayerMask.GetMask ("Default"), QueryTriggerInteraction.Ignore) == true && isGrounded == false) {
             if (Input.GetButtonDown (jumpInput) == true) {
+                if (willpower > 10) {
+                    transform.Rotate (0, 180, 0);
+                    angleGoal = transform.eulerAngles.y;
+                    movev3 = transform.forward * 10;
+                    movev3.y = jumpStrength * 1.2f;
+                } else {
+                    movev3.y = jumpStrength * 1.5f;
+                    willpower = 0;
+                }
                 curState = State.WallJump;
-                Vector3 oldRot = transform.eulerAngles;
-                transform.forward = hit.normal;
-                transform.eulerAngles = new Vector3 (oldRot.x, transform.eulerAngles.y, oldRot.z);
-                angleGoal = transform.eulerAngles.y;
-                movev3 = transform.forward * 10;
-                movev3.y = jumpStrength * 1.2f;
+                // Vector3 oldRot = transform.eulerAngles;
+                // transform.forward = hit.normal;
+                //  transform.eulerAngles = new Vector3 (oldRot.x, transform.eulerAngles.y, oldRot.z);
+                if (willpower > 0) {
+                    willpower -= 10;
+                }
+                Invoke ("NoWallJump", 0.5f);
                 anim.Play ("DoubleJump");
                 Invoke ("StopWallJump", 0.1f);
                 isGrounded = false;
@@ -504,6 +529,10 @@ public class PlayerController : MonoBehaviour {
             curState = State.Normal;
         }
         DashInput ();
+    }
+
+    void NoWallJump () {
+
     }
 
     ControllerColliderHit groundHit;
@@ -853,7 +882,9 @@ public class PlayerController : MonoBehaviour {
     }
 
     void SetWillpowerBar () {
-        willpower = Mathf.MoveTowards (willpower, 100, Time.deltaTime * willpowerRefillSpeed);
+        if (isGrounded == true) {
+            willpower = Mathf.MoveTowards (willpower, 100, Time.deltaTime * willpowerRefillSpeed);
+        }
         willPowerBar.curPercent = willpower;
     }
 
