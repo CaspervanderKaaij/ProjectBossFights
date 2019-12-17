@@ -419,7 +419,7 @@ public class PlayerController : MonoBehaviour {
 
                 if (AnalMagnitude () > 0) {
                     if (Vector3.Dot ((groundHit.point - transform.position).normalized, transform.forward) > 0) {
-                        if (movev3.y < -3 && IsInvoking ("NoWallJump") == false && willpower > 0) {
+                        if (movev3.y < -3 && IsInvoking ("NoWallJump") == false && willpower > 0 && curState == State.Normal) {
                             curState = State.WallSlide;
                             firstWallJump = false;
                             canAirDash = true;
@@ -629,7 +629,7 @@ public class PlayerController : MonoBehaviour {
                 movev3.y = jumpStrength / 1.5f;
                 Invoke ("WaitShoot", 0.6f);
                 timescaleManager.SlowMo (0.2f, 0.05f, 0.1f);
-                Instantiate (hitEffectParticle, gunWeapon.spawnPoint.position, Quaternion.identity, gunWeapon.spawnPoint);
+                Instantiate (hitEffectParticle, gunWeapon.spawnPoint.position, Quaternion.identity);
                 SpawnAudio.AudioSpawn (dashAudio, 0, Random.Range (2.5f, 3), 1);
                 playerCam.SmallShake (0.2f);
                 gunWeapon.GetInput (new Vector3 (0, 0, -90));
@@ -877,7 +877,12 @@ public class PlayerController : MonoBehaviour {
 
         diaUI.curHolder = holder;
         diaUI.firstInput = true;
-        diaUI.GetComponent<Animator> ().Play (0);
+        if(curWeapon != Weapon.Spear){
+        spear.SetActive(false);
+        }
+        angleGoal = transform.eulerAngles.y;
+        curAccDec = 0;
+        anim.SetFloat("curSpeed",0);
 
     }
 

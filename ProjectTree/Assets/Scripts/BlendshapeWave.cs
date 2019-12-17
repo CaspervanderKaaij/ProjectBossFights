@@ -10,6 +10,6 @@ public class BlendshapeWave : MonoBehaviour {
     }
 
     void Update () {
-        rend.SetBlendShapeWeight (0, Mathf.Lerp(rend.GetBlendShapeWeight(0), Mathf.PingPong (Time.time * speed, 100),Time.deltaTime * speed / 10));
+        rend.SetBlendShapeWeight (0,Mathf.Abs(Mathf.Sin(Time.time * (speed / 100) )) * 100);
     }
 }

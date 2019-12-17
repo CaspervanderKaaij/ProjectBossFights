@@ -12,7 +12,7 @@ public class Dialogue : MonoBehaviour {
     PlayerController player;
     [HideInInspector] public bool firstInput = false;
     [SerializeField] UnityEvent endEv;
-    [SerializeField] AudioClip nextDiaAudio;
+    [SerializeField] AudioClip[] voiceAudio;
     void Start () {
         player = FindObjectOfType<PlayerController> ();
     }
@@ -29,15 +29,14 @@ public class Dialogue : MonoBehaviour {
     void PlayerBased () {
         if (curHolder != null) {
             textBack.enabled = true;
-            text.text = curHolder.dialogue[curDia];
-            if (Input.GetButtonUp (player.shootInput) == true && IsInvoking("NoInput") == false) {
+            SetTextPerLetter ();
+            if (Input.GetButtonUp (player.shootInput) == true && IsInvoking ("NoInput") == false) {
                 if (firstInput == false) {
-                    Invoke("NoInput",noInputTime);
+                    text.text = "";
+                    Invoke ("NoInput", noInputTime);
                     curDia++;
                     if (curDia + 1 > curHolder.dialogue.Length) {
                         curHolder = null;
-                    } else {
-                        SpawnAudio.AudioSpawn (nextDiaAudio, 0, 1, 1);
                     }
                 } else {
                     firstInput = false;
@@ -51,13 +50,21 @@ public class Dialogue : MonoBehaviour {
         }
     }
 
+    void SetTextPerLetter () {
+        if (text.text.Length < curHolder.dialogue[curDia].dia.Length) {
+            text.text += curHolder.dialogue[curDia].dia[text.text.Length];
+            SpawnAudio.AudioSpawn (voiceAudio[curHolder.dialogue[curDia].talkerID], 0, Random.Range (2.2f, 2.9f), Random.Range (0.05f, 0.1f));
+        }
+    }
+
     void SelfBased () {
         if (curHolder != null) {
             textBack.enabled = true;
-            text.text = curHolder.dialogue[curDia];
-            if (Input.GetButtonUp ("Shoot") == true && IsInvoking("NoInput") == false) {
+            SetTextPerLetter ();
+            if (Input.GetButtonUp ("Shoot") == true && IsInvoking ("NoInput") == false) {
                 if (firstInput == false) {
-                    Invoke("NoInput",noInputTime);
+                    text.text = "";
+                    Invoke ("NoInput", noInputTime);
                     curDia++;
                     if (curDia + 1 > curHolder.dialogue.Length) {
                         curHolder = null;
@@ -73,7 +80,7 @@ public class Dialogue : MonoBehaviour {
         }
     }
 
-    void NoInput(){
+    void NoInput () {
 
     }
 }

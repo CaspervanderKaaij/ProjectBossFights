@@ -4764,7 +4764,6 @@ GameObject:
   - component: {fileID: 7327921430381373005}
   - component: {fileID: 7327921430381373004}
   - component: {fileID: 7327921430381373007}
-  - component: {fileID: 7327921430381373006}
   - component: {fileID: 7327921430381372994}
   m_Layer: 0
   m_Name: pryflap
@@ -4782,7 +4781,7 @@ Transform:
   m_GameObject: {fileID: 7327921430381373001}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0.03, y: 0, z: -0.03}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.36244, y: 0.36244, z: 0.36244}
   m_Children:
   - {fileID: 7327921429480833620}
   m_Father: {fileID: 0}
@@ -4834,19 +4833,6 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!135 &7327921430381373006
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7327921430381373001}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.5
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!96 &7327921430381372994
 TrailRenderer:
   serializedVersion: 2
@@ -4889,7 +4875,7 @@ TrailRenderer:
   m_Time: 0.3
   m_Parameters:
     serializedVersion: 3
-    widthMultiplier: 1
+    widthMultiplier: 0.36
     widthCurve:
       serializedVersion: 2
       m_Curve:

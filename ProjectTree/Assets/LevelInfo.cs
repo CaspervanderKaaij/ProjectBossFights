@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-[CreateAssetMenu (fileName = "Chapter1Intro", menuName = "LevelInfo", order = 0)]
+[CreateAssetMenu (fileName = "Chapter1Intro", menuName = "Level/LevelInfo", order = 0)]
 
 public class LevelInfo : ScriptableObject {
     public string[] scenes;

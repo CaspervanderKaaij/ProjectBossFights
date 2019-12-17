@@ -12,14 +12,16 @@ public class PlayerCam : MonoBehaviour {
     public bool _enabled = true;
     float shakeSTR = 0;
     [HideInInspector] public RippleEffect ripple;
+
+    public LimitCamArea limiter = null;
     void Start () {
         goalPos = player.position + offset;
         transform.position = goalPos;
-        ripple = GetComponent<RippleEffect>();
+        ripple = GetComponent<RippleEffect> ();
         angleGoal = transform.eulerAngles;
     }
 
-    void LateUpdate () {
+    void Update () {
         if (_enabled == true) {
             NormalCam ();
         }
@@ -39,8 +41,15 @@ public class PlayerCam : MonoBehaviour {
         }
         transform.position = Vector3.Lerp (transform.position, goalPos, Time.deltaTime * realSpeed);
 
+        transform.rotation = Quaternion.Lerp (transform.rotation, Quaternion.Euler (angleGoal), Time.deltaTime * 5);
 
-        transform.rotation = Quaternion.Lerp(transform.rotation,Quaternion.Euler(angleGoal),Time.deltaTime * 5);
+        if (limiter != null) {
+            Vector3 v3Helper = transform.position;
+           v3Helper = limiter.col.ClosestPoint(v3Helper);
+
+            transform.position = v3Helper;
+            goalPos = transform.position;
+        }
     }
 
     void Shake () {

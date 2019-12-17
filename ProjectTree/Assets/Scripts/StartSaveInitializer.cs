@@ -10,7 +10,7 @@ public class StartSaveInitializer : MonoBehaviour {
     PlayerController player;
     SaveStuff data;
     public void OnEnable () {
-        print("enable");
+        print ("enable");
         player = FindObjectOfType<PlayerController> ();
         data = SaveSystem.LoadStuff ();
 
@@ -37,13 +37,13 @@ public class StartSaveInitializer : MonoBehaviour {
     }
 
     float VolumeConverter (float f) {
-        print(f);
+        print (f);
         if (f > 0.5f) {
             f = Mathf.Log ((float) f / 10f) * 20;
         } else {
             f = -80;
         }
-        print(f);
+        print (f);
         return f;
     }
     void SetResolution () {
@@ -69,10 +69,12 @@ public class StartSaveInitializer : MonoBehaviour {
     }
 
     void SetAntiAlias () {
-        if (data.antiAlias == true) {
-            Camera.main.GetComponent<PostProcessLayer> ().antialiasingMode = PostProcessLayer.Antialiasing.FastApproximateAntialiasing;
-        } else {
-            Camera.main.GetComponent<PostProcessLayer> ().antialiasingMode = PostProcessLayer.Antialiasing.None;
+        if (Camera.main != null) {
+            if (data.antiAlias == true) {
+                Camera.main.GetComponent<PostProcessLayer> ().antialiasingMode = PostProcessLayer.Antialiasing.FastApproximateAntialiasing;
+            } else {
+                Camera.main.GetComponent<PostProcessLayer> ().antialiasingMode = PostProcessLayer.Antialiasing.None;
+            }
         }
     }
 

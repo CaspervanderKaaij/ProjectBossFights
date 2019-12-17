@@ -20,4 +20,8 @@ public class LevelLoader : MonoBehaviour
         print(curInfo);
         curInfo.Load();
     }
+
+    public void ActivateWithCurInfo(){
+        curInfo.Load();
+    }
 }

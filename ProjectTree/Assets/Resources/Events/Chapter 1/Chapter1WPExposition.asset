@@ -1,0 +1,74 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 18a009a860bea0949952254ed9db137a, type: 3}
+  m_Name: Chapter1WPExposition
+  m_EditorClassIdentifier: 
+  scenes:
+  - Dialogue
+  nextScene: Events/Chapter 1/Chapter1Intro
+  dialogue:
+  - dia: Hi, you should probably read this, It's kind of important.
+    method: 0
+    talkerID: 0
+  - dia: Or be a mumpsimus and just press start to skip.
+    method: 0
+    talkerID: 0
+  - dia: In this world people are born with "superpowers".
+    method: 0
+    talkerID: 0
+  - dia: Nobody knows what causes it.
+    method: 0
+    talkerID: 0
+  - dia: I might have called them superpowers, but they are not very powerful.
+    method: 0
+    talkerID: 0
+  - dia: However people have more then one power.
+    method: 0
+    talkerID: 0
+  - dia: 'For instance, a fisherman can breath underwater, attract fish and some other
+      things.
+
+'
+    method: 0
+    talkerID: 0
+  - dia: It's usually kind of context sensative.
+    method: 0
+    talkerID: 0
+  - dia: In fact, sometimes it doesn't even really work out.
+    method: 0
+    talkerID: 0
+  - dia: There are a ton of variables.
+    method: 0
+    talkerID: 0
+  - dia: But there's a much simpler way to explain it. A way to describe it in only
+      a few words.
+    method: 0
+    talkerID: 0
+  - dia: 'WILLPOWER
+
+      limited edition'
+    method: 0
+    talkerID: 0
+  - dia: limited edition is actually part of the name of this game.
+    method: 0
+    talkerID: 0
+  - dia: What you bought this game because you thought it was a limited edition?
+    method: 0
+    talkerID: 0
+  - dia: I think you can guess what the limit is, but why is there even a limit in
+      the first place?
+    method: 0
+    talkerID: 0
+  - dia: Well, I wouldn't wanna give you a wall of text at the start of the game,
+      so let's move on.
+    method: 0
+    talkerID: 0
