@@ -35,15 +35,15 @@ Material:
     - _Cutoff: 0.5
     - _Float0: 0
     - _Float1: 75.46
-    - _GradientLinesScaleDotCom: 1.95
-    - _LineStrength: -0.1
+    - _GradientLinesScaleDotCom: 0.27
+    - _LineStrength: 1
     - _LinesSpeedScale: 0.06
-    - _OpacityTest: 3.02
+    - _OpacityTest: 0.13
     - _Scale: 1
     - _Timescale: 0.8
     - __dirty: 0
     - _hgbiuasdfghjklororfo43756: 0
     m_Colors:
-    - _BarrierBaseColor: {r: 3.5234458, g: 0, b: 1.5512002, a: 0}
-    - _BarrierGlow: {r: 3.441591, g: 0.030299257, b: 0, a: 0}
+    - _BarrierBaseColor: {r: 0, g: 1.3980107, b: 5.278032, a: 0}
+    - _BarrierGlow: {r: 0, g: 248.97255, b: 1024, a: 0}
     - _LineDirection: {r: 0.21, g: -1, b: 0, a: 0}
