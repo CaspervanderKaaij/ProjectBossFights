@@ -24,7 +24,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
-    - _AddedWaterHeight: 0
+    - _AddedWaterHeight: 0.5
     - _EdgeLength: 3.6
     - _Float0: 0.38
     - _Float1: 0
@@ -33,10 +33,10 @@ Material:
     - _TessMax: 25
     - _TessMin: 10
     - _TessValue: 15
-    - _WaveHeight: -0.24
+    - _WaveHeight: -0.38
     - __dirty: 0
     m_Colors:
     - _Base: {r: 0.5977661, g: 0.8289059, b: 0.9528302, a: 0}
-    - _Foam: {r: 0, g: 0.47362328, b: 1, a: 0}
-    - _WaveDirection: {r: 0.12, g: 0, b: 0, a: 0}
+    - _Foam: {r: 0.2216981, g: 0.5910099, b: 1, a: 0}
+    - _WaveDirection: {r: 0, g: -0.3, b: 0, a: 0}
     - _WaveDirectionOffset: {r: 0, g: 1, b: 0, a: 0}

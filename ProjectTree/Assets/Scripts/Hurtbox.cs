@@ -13,17 +13,17 @@ public class Hurtbox : MonoBehaviour {
         if (other.GetComponent<Hitbox> () != null && this.enabled == true) {
             other.GetComponent<Hitbox> ().GetHit (team, damage, this);
             if (destroyOnHit == true && other.GetComponent<Hitbox> ().team != team) {
-            Destroy (gameObject);
-        }
-        } else if (destroyOnHit == true && this.enabled == true && other.GetComponent<Hurtbox>() == false) {
+                Destroy (gameObject);
+            }
+        } else if (destroyOnHit == true && this.enabled == true && other.GetComponent<Hurtbox> () == false) {
             Destroy (gameObject);
         }
     }
 
-    void OnCollisionEnter(Collision other) {
-       if(other.gameObject.layer == 0 && destroyOnHit == true){
-           Destroy(gameObject);
-       } 
+    void OnCollisionEnter (Collision other) {
+        if (other.gameObject.layer == 0 && destroyOnHit == true) {
+            Destroy (gameObject);
+        }
     }
 
     void OnEnable () {

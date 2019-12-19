@@ -89,6 +89,7 @@ public class PlayerController : MonoBehaviour {
 
     [Header ("UI")]
     [Header ("HUD")]
+    public Canvas hudCanvas;
     public Text curModeText;
     public UIBar willPowerBar;
     [Header ("Dialogue")]
@@ -527,6 +528,7 @@ public class PlayerController : MonoBehaviour {
         } else {
             anim.Play ("Fall");
             curState = State.Normal;
+            Invoke ("NoWallJump", 0.5f);Invoke ("NoWallJump", 0.5f);
         }
         DashInput ();
     }
@@ -822,6 +824,10 @@ public class PlayerController : MonoBehaviour {
         SetDashInvisible (false);
         spear.SetActive (false);
         hitbox.enabled = false;
+        if(GameObject.FindGameObjectWithTag("BackgroundCam") != null){
+            GameObject.FindGameObjectWithTag("BackgroundCam").SetActive(false);
+        }
+        Camera.main.clearFlags = CameraClearFlags.SolidColor;
     }
 
     void StopKnockback () {
@@ -844,10 +850,9 @@ public class PlayerController : MonoBehaviour {
     }
 
     void FinalMove () {
-        // cc.Move (new Vector3 (movev3.x, 0, 0) * Time.deltaTime);
-        //  cc.Move (new Vector3 (0, movev3.y, 0) * Time.deltaTime);
-        //  cc.Move (new Vector3 (0, 0, movev3.z) * Time.deltaTime);
+        if(curState != State.WallSlide){
         cc.Move (movev3 * Time.deltaTime);
+        }
     }
 
     //UI
@@ -877,12 +882,12 @@ public class PlayerController : MonoBehaviour {
 
         diaUI.curHolder = holder;
         diaUI.firstInput = true;
-        if(curWeapon != Weapon.Spear){
-        spear.SetActive(false);
+        if (curWeapon != Weapon.Spear) {
+            spear.SetActive (false);
         }
         angleGoal = transform.eulerAngles.y;
         curAccDec = 0;
-        anim.SetFloat("curSpeed",0);
+        anim.SetFloat ("curSpeed", 0);
 
     }
 
