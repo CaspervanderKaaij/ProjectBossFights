@@ -7,10 +7,10 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: UV light
-  m_Shader: {fileID: 4800000, guid: a4ebb9b1782992a4ab9db160996e76c7, type: 3}
+  m_Name: ASESampleShaders_UV Light Reveal
+  m_Shader: {fileID: 4800000, guid: b4ec98557cddc8c48b0fd24b64cd1e9d, type: 3}
   m_ShaderKeywords: 
-  m_LightmapFlags: 5
+  m_LightmapFlags: 0
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
   m_CustomRenderQueue: -1
@@ -32,7 +32,8 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
-    - _DifferenceThreshold: 0.0016
+    - _Cutoff: 0.05
+    - _DifferenceThreshold: 0.05
     - __dirty: 0
     m_Colors:
     - _ColortoBeFiltered: {r: 0.40392157, g: 0, b: 1, a: 1}

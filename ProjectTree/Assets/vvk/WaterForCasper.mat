@@ -7,10 +7,10 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: UV light
-  m_Shader: {fileID: 4800000, guid: a4ebb9b1782992a4ab9db160996e76c7, type: 3}
+  m_Name: WaterForCasper
+  m_Shader: {fileID: 4800000, guid: 05fcf3f398e7bc246906bc258410b62a, type: 3}
   m_ShaderKeywords: 
-  m_LightmapFlags: 5
+  m_LightmapFlags: 0
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
   m_CustomRenderQueue: -1
@@ -19,20 +19,20 @@ Material:
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
-    - _BaseTexture:
-        m_Texture: {fileID: 2800000, guid: 7130c16fd8005b546b111d341310a9a4, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _UVTexture:
-        m_Texture: {fileID: 2800000, guid: d611d6f49dd07344aa1277ada0f6bf6c, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
     - _texcoord:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
-    - _DifferenceThreshold: 0.0016
+    - _EdgeLength: 3.6
+    - _Float0: 0.38
+    - _Float1: 0
+    - _FoamScale: 4.49
+    - _FoamTimeScale: 1
+    - _WaveHeight: -0.24
     - __dirty: 0
     m_Colors:
-    - _ColortoBeFiltered: {r: 0.40392157, g: 0, b: 1, a: 1}
+    - _Base: {r: 0.5977661, g: 0.8289059, b: 0.9528302, a: 0}
+    - _Foam: {r: 0, g: 0.47362328, b: 1, a: 0}
+    - _WaveDirection: {r: 0.12, g: 0, b: 0, a: 0}
+    - _WaveDirectionOffset: {r: 0, g: 1, b: 0, a: 0}
