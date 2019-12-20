@@ -7,8 +7,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Rift
-  m_Shader: {fileID: 4800000, guid: fe18053ad29246747aab393a2bc817ff, type: 3}
+  m_Name: RiftAlt
+  m_Shader: {fileID: 4800000, guid: bf41409639a7dc6469375edc0a12ae2c, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 0
   m_EnableInstancingVariants: 0
@@ -19,10 +19,6 @@ Material:
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
-    - _LeMask:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
     - _TextureSample0:
         m_Texture: {fileID: 2800000, guid: f35cef3a157cf9844a9606139f3998fb, type: 3}
         m_Scale: {x: 1, y: 1}
@@ -40,7 +36,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
-    - _Casper: 0
+    - _Casper: 1
     - _DistortionMultiplier: 0.02
     - _First: 0.8
     - _NoiseScale: 11.74
@@ -51,4 +47,4 @@ Material:
     - _V2: 8.03
     - __dirty: 0
     m_Colors:
-    - _EdgeLight: {r: 48.502926, g: 48.502926, b: 48.502926, a: 0}
+    - _EdgeLight: {r: 48.50293, g: 48.50293, b: 48.50293, a: 0}

@@ -10,7 +10,7 @@ Material:
   m_Name: Remasu_Barrier
   m_Shader: {fileID: 4800000, guid: 4b66b914c8e2f114d980ec828fcb0fee, type: 3}
   m_ShaderKeywords: ETC1_EXTERNAL_ALPHA
-  m_LightmapFlags: 4
+  m_LightmapFlags: 0
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
   m_CustomRenderQueue: -1
@@ -32,6 +32,9 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
+    - _CrackAngle: 3.64
+    - _CrackProgress: 0
+    - _CrackScale: 10
     - _Cutoff: 0.5
     - _Float0: 0
     - _Float1: 75.46
@@ -46,4 +49,5 @@ Material:
     m_Colors:
     - _BarrierBaseColor: {r: 0, g: 1.3980107, b: 5.278032, a: 0}
     - _BarrierGlow: {r: 0, g: 248.97255, b: 1024, a: 0}
+    - _CrackColor: {r: 59.017693, g: 59.017693, b: 59.017693, a: 1}
     - _LineDirection: {r: 0.21, g: -1, b: 0, a: 0}

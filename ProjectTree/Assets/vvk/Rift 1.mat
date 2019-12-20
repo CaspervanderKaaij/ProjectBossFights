@@ -31,11 +31,22 @@ Material:
         m_Texture: {fileID: 2800000, guid: 3a712e4b235b5e5418a6e9162df96fa5, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _TextureSample2:
+        m_Texture: {fileID: 2800000, guid: 92a729647ea87944b89cf5a581551466, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _texcoord:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
+    - _Casper: 0.5553234
     - _DistortionMultiplier: 0
+    - _First: 0.96
+    - _NoiseScale: 6
+    - _NoiseSpeed: 1
+    - _NoiseStrength: 1
+    - _Second: 0.99
     - __dirty: 0
-    m_Colors: []
+    m_Colors:
+    - _EdgeLight: {r: 1, g: 1, b: 1, a: 0}
