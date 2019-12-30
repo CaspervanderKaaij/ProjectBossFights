@@ -10,7 +10,7 @@ Material:
   m_Name: Rift
   m_Shader: {fileID: 4800000, guid: fe18053ad29246747aab393a2bc817ff, type: 3}
   m_ShaderKeywords: 
-  m_LightmapFlags: 0
+  m_LightmapFlags: 1
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
   m_CustomRenderQueue: -1
@@ -32,7 +32,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _TextureSample2:
-        m_Texture: {fileID: 2800000, guid: 92a729647ea87944b89cf5a581551466, type: 3}
+        m_Texture: {fileID: 2800000, guid: 9a3fd9135b97a9348bfb714f5214f745, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _texcoord:
@@ -40,15 +40,19 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
-    - _Casper: 0
+    - _Casper: 1
     - _DistortionMultiplier: 0.02
     - _First: 0.8
     - _NoiseScale: 11.74
     - _NoiseSpeed: 9.08
     - _NoiseStrength: -21.05
+    - _OffsetoMundoScalo: 13.24
+    - _OffsetoMundoStrength: 0.1
     - _Second: 0.99
     - _V1: 115.3
     - _V2: 8.03
     - __dirty: 0
     m_Colors:
     - _EdgeLight: {r: 48.502926, g: 48.502926, b: 48.502926, a: 0}
+    - _Roeko1: {r: 0, g: 0, b: 0, a: 0}
+    - _Roeko2: {r: 0.1, g: 0, b: 0, a: 0}

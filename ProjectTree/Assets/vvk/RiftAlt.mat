@@ -10,7 +10,7 @@ Material:
   m_Name: RiftAlt
   m_Shader: {fileID: 4800000, guid: bf41409639a7dc6469375edc0a12ae2c, type: 3}
   m_ShaderKeywords: 
-  m_LightmapFlags: 0
+  m_LightmapFlags: 1
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
   m_CustomRenderQueue: -1
@@ -42,9 +42,13 @@ Material:
     - _NoiseScale: 11.74
     - _NoiseSpeed: 9.08
     - _NoiseStrength: -21.05
+    - _OffsetoMundoScalo1: 7.14
+    - _OffsetoMundoStrength1: 0.1
     - _Second: 0.99
     - _V1: 115.3
     - _V2: 8.03
     - __dirty: 0
     m_Colors:
-    - _EdgeLight: {r: 48.50293, g: 48.50293, b: 48.50293, a: 0}
+    - _EdgeLight: {r: 97.88404, g: 64.673386, b: 18.353258, a: 0}
+    - _Roeko2: {r: 0, g: 0, b: 0, a: 0}
+    - _Roeko3: {r: 0.1, g: 0, b: 0, a: 0}
