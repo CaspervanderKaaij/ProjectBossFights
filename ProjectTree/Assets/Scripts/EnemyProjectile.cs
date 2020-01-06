@@ -14,12 +14,16 @@ public class EnemyProjectile : MonoBehaviour {
     Hurtbox hBox;
     SphereCollider col;
     float baseRadius;
+    [SerializeField] bool unparentAtStart = false;
     void Start () {
         player = FindObjectOfType<PlayerController> ();
         hBox = GetComponent<Hurtbox> ();
         hBox.destroyOnHit = destroyOnHit;
         col = GetComponent<SphereCollider> ();
         baseRadius = col.radius;
+        if(unparentAtStart == true){
+            transform.parent = null;
+        }
     }
 
     void Update () {

@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class AutoScale : MonoBehaviour
 {
-    [SerializeField] Vector3 goal;
-    [SerializeField] float speed = 1;
+    public Vector3 goal;
+    public float speed = 1;
 
     void Update()
     {

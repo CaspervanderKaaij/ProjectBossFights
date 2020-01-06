@@ -14,4 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   scenes:
   - NieRTest
+  - C1_Night_PieceOfBarrier
   nextScene: Events/Chapter 1/Chapter1Intro

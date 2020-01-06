@@ -1,0 +1,49 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 6
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: FireCamo 1
+  m_Shader: {fileID: 4800000, guid: f04c79dcf4fdd4743a897a35b51d9700, type: 3}
+  m_ShaderKeywords: 
+  m_LightmapFlags: 0
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _Mask:
+        m_Texture: {fileID: 2800000, guid: 5798ded558355430c8a9b13ee12a847c, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _NoiseTexture:
+        m_Texture: {fileID: 2800000, guid: c60ce9d4c710434479c26cd5a98f7a9c, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _texcoord:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Floats:
+    - _BorderIntensity: 5
+    - _BorderSmoothness: 76
+    - _BorderTreshold: -4.39
+    - _Cutoff: 3.28
+    - _Intensity: 40.06
+    - _NoiseTimescale: -1
+    - _Rotation: -1.5
+    - __dirty: 0
+    m_Colors:
+    - _Color: {r: 6.0628657, g: 6.0628657, b: 6.0628657, a: 0}
+    - _NoiseSpeed1: {r: 0.68, g: 0, b: 0, a: 0}
+    - _NoiseSpeed2: {r: -0.09, g: 0.27, b: 0, a: 0}
+    - _NoiseTiling1: {r: 5, g: 5, b: 0, a: 0}
+    - _NoiseTiling2: {r: 5, g: 5, b: 0, a: 0}
+    - _UberTiling: {r: 5, g: 5, b: 0, a: 0}

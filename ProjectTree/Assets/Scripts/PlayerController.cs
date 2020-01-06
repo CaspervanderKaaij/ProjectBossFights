@@ -119,6 +119,10 @@ public class PlayerController : MonoBehaviour {
         for (int i = 0; i < hitboxParent.transform.childCount; i++) {
             hitboxes.Add (hitboxParent.transform.GetChild (i).gameObject);
         }
+
+        if (GameObject.Find ("PlayerSpawnPoint") != null) {
+            transform.position = GameObject.Find ("PlayerSpawnPoint").transform.position;
+        }
     }
 
     void Update () {
@@ -528,7 +532,8 @@ public class PlayerController : MonoBehaviour {
         } else {
             anim.Play ("Fall");
             curState = State.Normal;
-            Invoke ("NoWallJump", 0.5f);Invoke ("NoWallJump", 0.5f);
+            Invoke ("NoWallJump", 0.5f);
+            Invoke ("NoWallJump", 0.5f);
         }
         DashInput ();
     }
@@ -596,7 +601,15 @@ public class PlayerController : MonoBehaviour {
         curModeText.text = "Shoot Mode";
         shootMagicCircle.SetActive ((curState == State.Gun));
         if (curState == State.Gun) {
-            transform.rotation = Quaternion.Lerp (transform.rotation, Quaternion.Euler (transform.eulerAngles.x, angleGoal, transform.eulerAngles.z), Time.deltaTime * moveStats[curMoveStats].rotSpeed * 2 * speedMuliplier);
+            if (UseMouse () == false) {
+                if (AnalMagnitude () > 0) {
+                    angleGoal = AnalAngle () + cameraTransform.eulerAngles.y - 90;
+                }
+                transform.rotation = Quaternion.Lerp (transform.rotation, Quaternion.Euler (transform.eulerAngles.x, angleGoal, transform.eulerAngles.z), Time.deltaTime * moveStats[curMoveStats].rotSpeed * 2 * speedMuliplier);
+            } else {
+                print ("true");
+                transform.rotation = Quaternion.Lerp (transform.rotation, Quaternion.LookRotation (-(transform.position - GetMousePlanePos ()), Vector3.up), Time.deltaTime * moveStats[curMoveStats].rotSpeed * 2 * speedMuliplier);
+            }
             if (Input.GetButtonDown (shootInput) == true) {
                 Invoke ("ShootInputBuffer", 0.3f);
             }
@@ -623,6 +636,11 @@ public class PlayerController : MonoBehaviour {
         } else {
             if (Input.GetAxis (shootInput) != 0 && isGrounded == true) {
                 curState = State.Gun;
+                if (Input.GetKeyDown (KeyCode.Mouse0) == true) {
+                    mouseControlled = true;
+                } else {
+                    mouseControlled = false;
+                }
                 anim.Play ("StartShoot", 0, 0f);
                 Invoke ("WaitShoot", 0.3f);
                 curAccDec = 0;
@@ -639,6 +657,40 @@ public class PlayerController : MonoBehaviour {
                 Invoke ("IgnoreDashInput", 0.2f);
             }
         }
+
+        //here!!
+    }
+
+    bool mouseControlled = true;
+    bool UseMouse () {
+        if (mouseControlled == true) {
+            if (AnalMagnitude () > 0) {
+                mouseControlled = false;
+            }
+        } else if (Vector2.SqrMagnitude (new Vector2 (Input.GetAxis ("Mouse X"), Input.GetAxis ("Mouse Y"))) != 0 && AnalMagnitude () == 0) {
+            mouseControlled = true;
+        }
+        return mouseControlled;
+    }
+
+    Vector3 GetMousePlanePos () {
+        Vector3 toReturn = Vector3.zero;
+
+        //set rotation to mouse on plane position
+        Ray ray = Camera.main.ScreenPointToRay (Input.mousePosition);
+        Plane hPlane = new Plane (Vector3.up, new Vector3 (0, transform.position.y, 0));
+        float distance = 0;
+        if (hPlane.Raycast (ray, out distance)) {
+            toReturn = ray.GetPoint (distance);
+        }
+
+        //set rotation to enemy position
+        RaycastHit hit;
+        if (Physics.Raycast (ray, out hit, Mathf.Infinity, LayerMask.GetMask ("Enemy"), QueryTriggerInteraction.Collide) == true) {
+            toReturn = new Vector3 (hit.point.x, transform.position.y, hit.point.z);
+        }
+
+        return toReturn;
     }
 
     void ShootInputBuffer () {
@@ -824,8 +876,8 @@ public class PlayerController : MonoBehaviour {
         SetDashInvisible (false);
         spear.SetActive (false);
         hitbox.enabled = false;
-        if(GameObject.FindGameObjectWithTag("BackgroundCam") != null){
-            GameObject.FindGameObjectWithTag("BackgroundCam").SetActive(false);
+        if (GameObject.FindGameObjectWithTag ("BackgroundCam") != null) {
+            GameObject.FindGameObjectWithTag ("BackgroundCam").SetActive (false);
         }
         Camera.main.clearFlags = CameraClearFlags.SolidColor;
     }
@@ -850,8 +902,8 @@ public class PlayerController : MonoBehaviour {
     }
 
     void FinalMove () {
-        if(curState != State.WallSlide){
-        cc.Move (movev3 * Time.deltaTime);
+        if (curState != State.WallSlide) {
+            cc.Move (movev3 * Time.deltaTime);
         }
     }
 

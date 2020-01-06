@@ -12,16 +12,19 @@ public class LevelLoader : MonoBehaviour
 
     public void Activate(LevelInfo info){
         curInfo = info;
-        curInfo.Load();
+        //curInfo.Load();
+        StartCoroutine(curInfo.Activate());
     }
 
     public void Activate(string levelInfoName){
         curInfo = Resources.Load(levelInfoName) as LevelInfo;
         print(curInfo);
-        curInfo.Load();
+        //curInfo.Load();
+        StartCoroutine(curInfo.Activate());
     }
 
     public void ActivateWithCurInfo(){
-        curInfo.Load();
+        //curInfo.Load();
+        StartCoroutine(curInfo.Activate());
     }
 }

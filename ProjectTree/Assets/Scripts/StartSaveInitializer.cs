@@ -10,7 +10,6 @@ public class StartSaveInitializer : MonoBehaviour {
     PlayerController player;
     SaveStuff data;
     public void OnEnable () {
-        print ("enable");
         player = FindObjectOfType<PlayerController> ();
         data = SaveSystem.LoadStuff ();
 
@@ -37,13 +36,11 @@ public class StartSaveInitializer : MonoBehaviour {
     }
 
     float VolumeConverter (float f) {
-        print (f);
         if (f > 0.5f) {
             f = Mathf.Log ((float) f / 10f) * 20;
         } else {
             f = -80;
         }
-        print (f);
         return f;
     }
     void SetResolution () {

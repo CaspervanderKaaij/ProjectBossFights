@@ -17,4 +17,13 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/NieRTest.unity
     guid: 404877159ee4d5f40adb428d36d89e08
+  - enabled: 1
+    path: Assets/Scenes/Backgrounds/Chapter1/C1_Day_Barrier.unity
+    guid: c9977b62764adbb4d8e43ad203970c57
+  - enabled: 1
+    path: Assets/Scenes/Backgrounds/Chapter1/C1_Night_Barrier.unity
+    guid: 68abd30859cb09b4ea13ad7ae000253e
+  - enabled: 1
+    path: Assets/Scenes/Backgrounds/Chapter1/C1_Night_PieceOfBarrier.unity
+    guid: ae3bffec717649f47ae298f20cba31a5
   m_configObjects: {}

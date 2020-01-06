@@ -59,7 +59,9 @@ public class MusicManager : MonoBehaviour {
     }
 
     public void FadeToNewMusic (AudioClip newMus) {
+        if(newMus != normalMusic){
         NewMusic (0.2f, 0.6f, newMus);
+        }
     }
 
     public void StopMusic (float fadeoutSpeed) {
