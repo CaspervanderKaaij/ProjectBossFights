@@ -143,7 +143,7 @@ public class PlayerController : MonoBehaviour {
                 DashInput ();
                 SetCurWeapon ();
                 GetParryInput ();
-                if (interactables.Count == 0) {
+                if (interactables.Count == 0 && curState == State.Normal) {
                     switch (curWeapon) {
                         case Weapon.Gun:
                             ShootInput ();

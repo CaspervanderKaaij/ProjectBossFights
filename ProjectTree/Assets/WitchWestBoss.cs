@@ -82,7 +82,7 @@ public class WitchWestBoss : MonoBehaviour {
     }
 
     void BarrierShake () {
-        FindObjectOfType<TimescaleManager>().SlowMo(0.2f,0.2f);
+        FindObjectOfType<TimescaleManager> ().SlowMo (0.2f, 0.2f);
         FindObjectOfType<PlayerCam> ().HardShake (0.15f);
         Instantiate (barrierParticle, barrier.transform.position, Quaternion.identity);
         barrier.GetComponent<AutoScale> ().enabled = false;
@@ -194,7 +194,9 @@ public class WitchWestBoss : MonoBehaviour {
     }
 
     void NoAttack () {
-
+        SetBarrierActive(true);
+        isAttacking = true;
+        Invoke ("StopAttack", 1);
     }
 
     IEnumerator GroundLaserAttack () {
