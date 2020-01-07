@@ -29,6 +29,7 @@ public class WitchWestBoss : MonoBehaviour {
     [SerializeField] GameObject barrier;
     Hitbox hitbox;
     [SerializeField] GameObject barrierParticle;
+    [SerializeField] GameObject barrierBreakParticle;
     [SerializeField] AudioClip barrierClip;
     [SerializeField] AudioClip barrierClip2;
     [SerializeField] SpriteRenderer testFace;
@@ -75,9 +76,13 @@ public class WitchWestBoss : MonoBehaviour {
             Invoke ("BarrierShake", 0.1f);
             barrier.GetComponent<AutoScale> ().enabled = true;
         }
+        if (active == false && wasActive == true) {
+            Instantiate (barrierBreakParticle, barrier.transform.position, Quaternion.identity);
+        }
     }
 
     void BarrierShake () {
+        FindObjectOfType<TimescaleManager>().SlowMo(0.2f,0.2f);
         FindObjectOfType<PlayerCam> ().HardShake (0.15f);
         Instantiate (barrierParticle, barrier.transform.position, Quaternion.identity);
         barrier.GetComponent<AutoScale> ().enabled = false;
@@ -90,7 +95,7 @@ public class WitchWestBoss : MonoBehaviour {
     void StartPhase1Attack () {
         if (isAttacking == false) {
 
-            int rng = (int) Mathf.Repeat (lastAtk + Random.Range(1,3), 6);
+            int rng = (int) Mathf.Repeat (lastAtk + Random.Range (1, 3), 6);
             lastAtk = rng;
 
             switch (rng) {
@@ -116,7 +121,7 @@ public class WitchWestBoss : MonoBehaviour {
 
     void StartPhase2Attack () {
         if (isAttacking == false) {
-            int rng = (int) Mathf.Repeat (lastAtk + Random.Range(1,3), 6);
+            int rng = (int) Mathf.Repeat (lastAtk + Random.Range (1, 3), 6);
             lastAtk = rng;
 
             switch (rng) {
@@ -141,7 +146,7 @@ public class WitchWestBoss : MonoBehaviour {
 
     void StartPhase3Attack () {
         if (isAttacking == false) {
-            int rng = (int) Mathf.Repeat (lastAtk + Random.Range(1,3), 6);
+            int rng = (int) Mathf.Repeat (lastAtk + Random.Range (1, 3), 6);
             lastAtk = rng;
 
             switch (rng) {
@@ -249,8 +254,11 @@ public class WitchWestBoss : MonoBehaviour {
     }
 
     IEnumerator LaserCircleAttack () {
-        Instantiate (laserCirclePrefab, transform.position, Quaternion.identity);
-        yield return new WaitForSeconds (15);
+        GameObject g = Instantiate (laserCirclePrefab, transform.position, Quaternion.identity);
+        for (int i = 0; i < g.transform.childCount; i++) {
+            g.transform.GetChild (i).GetComponent<WitchWestLaser> ().activeTime /= 2;
+        }
+        yield return new WaitForSeconds (7.5f);
         StopAttack ();
     }
 

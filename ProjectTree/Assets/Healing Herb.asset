@@ -14,8 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemName: Healing Herb
   description: Heals 10 HP.
-  amount: 10
   useParticle: {fileID: 3497745268452784414, guid: bd00b67c5d0a99c4e989c126b8b7bd14,
     type: 3}
   clip: {fileID: 8300000, guid: ce954babfc616e5469f3ead097afe507, type: 3}
+  clipPitch: 1.5
+  player: {fileID: 0}
+  amount: 50
   clipPitch: 1.5

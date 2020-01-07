@@ -5,7 +5,7 @@ using UnityEngine;
 public class WitchWestLaser : MonoBehaviour {
     public GameObject laser;
     public float chargeTime = 1;
-    [SerializeField] float activeTime = 0.6f;
+    public float activeTime = 0.6f;
     [SerializeField] AudioClip clip;
     void Start () {
         StartCoroutine (Events ());

@@ -13,9 +13,10 @@ public class Hitbox : MonoBehaviour {
     public float destroyDelay = 0;
 
     public void GetHit (int otherTeam, float damage,Hurtbox hBox) {
-        if (otherTeam != team && hp > 0 && this.enabled == true) {
+        if (otherTeam != team && hp > 0 && this.enabled == true && IsInvoking("Invincible") == false) {
             hBox.hitEv.Invoke();
             hp -= damage;
+            Invoke("Invincible",0);
             if (hp > 0) {
                 hitEv.Invoke ();
             } else {
@@ -25,5 +26,9 @@ public class Hitbox : MonoBehaviour {
                 }
             }
         }
+    }
+
+    void Invincible(){
+
     }
 }

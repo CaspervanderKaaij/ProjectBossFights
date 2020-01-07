@@ -111,7 +111,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   team: 0
-  damage: 1
+  damage: 15
   activeTime: 0
   hitEv:
     m_PersistentCalls:
