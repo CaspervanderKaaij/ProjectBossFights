@@ -32,9 +32,11 @@ Material:
     - _TessMaxDisp: -0.34
     - _TessPhongStrength: 0.557
     - _TessValue: 1
+    - _VertexStrength: 1
     - _VertexStrength1: 0.83
     - __dirty: 0
     m_Colors:
     - _Color0: {r: 0.011614287, g: 0, b: 0.3584906, a: 0}
     - _Color1: {r: 0, g: 2.6843355, b: 4.703744, a: 0.6784314}
     - _Vector0: {r: 0, g: 3.9, b: 0, a: 0}
+    - _Vector1: {r: 1, g: 1, b: 0, a: 0}
