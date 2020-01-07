@@ -13,7 +13,7 @@ public class Hitbox : MonoBehaviour {
     public float destroyDelay = 0;
 
     public void GetHit (int otherTeam, float damage,Hurtbox hBox) {
-        if (otherTeam != team && hp > 0) {
+        if (otherTeam != team && hp > 0 && this.enabled == true) {
             hBox.hitEv.Invoke();
             hp -= damage;
             if (hp > 0) {

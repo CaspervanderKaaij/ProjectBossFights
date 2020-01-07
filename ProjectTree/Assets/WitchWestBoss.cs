@@ -25,9 +25,18 @@ public class WitchWestBoss : MonoBehaviour {
     [Header ("ShootAttack")]
     public GameObject shooterPrefab;
     public GameObject shooterPrefab2;
+    [Header ("Barrier")]
+    [SerializeField] GameObject barrier;
+    Hitbox hitbox;
+    [SerializeField] GameObject barrierParticle;
+    [SerializeField] AudioClip barrierClip;
+    [SerializeField] AudioClip barrierClip2;
+    [SerializeField] SpriteRenderer testFace;
+    [SerializeField] Sprite[] testFaces;
 
     void Start () {
         player = FindObjectOfType<PlayerController> ();
+        hitbox = GetComponent<Hitbox> ();
     }
 
     void Update () {
@@ -35,86 +44,127 @@ public class WitchWestBoss : MonoBehaviour {
     }
 
     void DebugInput () {
+        if (isAttacking == true) {
+            hitbox.enabled = false;
+        } else if (barrier.activeSelf == false) {
+            hitbox.enabled = true;
+        }
+
         // if (Input.GetKeyDown (KeyCode.Tab) == true) {
-        StartPhase3Attack ();
+        if (hitbox.hp > 800) {
+            StartPhase1Attack ();
+        } else if (hitbox.hp > 350) {
+            StartPhase2Attack ();
+        } else {
+            StartPhase3Attack ();
+        }
         // }
+        //if (Input.GetKeyDown (KeyCode.Tab) == true) {
+        //  SetBarrierActive (!barrier.activeSelf);
+        // }
+
     }
 
+    void SetBarrierActive (bool active) {
+        bool wasActive = barrier.activeSelf;
+        barrier.SetActive (active);
+        hitbox.enabled = !active;
+        if (active == true && wasActive == false) {
+            barrier.transform.localScale = Vector3.zero;
+            FindObjectOfType<PlayerCam> ().SmallShake (0.3f);
+            Invoke ("BarrierShake", 0.1f);
+            barrier.GetComponent<AutoScale> ().enabled = true;
+        }
+    }
+
+    void BarrierShake () {
+        FindObjectOfType<PlayerCam> ().HardShake (0.15f);
+        Instantiate (barrierParticle, barrier.transform.position, Quaternion.identity);
+        barrier.GetComponent<AutoScale> ().enabled = false;
+        barrier.transform.localScale *= 2;
+        SpawnAudio.AudioSpawn (barrierClip, 0, 1, 0.4f);
+        SpawnAudio.AudioSpawn (barrierClip2, 0, 2, 1);
+    }
+
+    int lastAtk;
     void StartPhase1Attack () {
-        int rng = Random.Range (0, 6);
-        switch (rng) {
-            case 0:
-                StartAttack (State.Attacking, "GroundLaserAttack");
-                break;
-            case 1:
-                StartAttack (State.Attacking, "LaserCircleAttack");
-                break;
-            case 2:
-                StartAttack (State.Attacking, "AimShootP1");
-                break;
-            case 3:
-                StartAttack (State.Attacking, "SurroundPlayer");
-                break;
-            case 4:
-                if (IsInvoking ("NoLaser") == false) {
+        if (isAttacking == false) {
+
+            int rng = (int) Mathf.Repeat (lastAtk + Random.Range(1,3), 6);
+            lastAtk = rng;
+
+            switch (rng) {
+                case 0:
+                    StartAttack (State.Attacking, "GroundLaserAttack");
+                    break;
+                case 1:
+                    StartAttack (State.Attacking, "LaserCircleAttack");
+                    break;
+                case 2:
+                    StartAttack (State.Attacking, "AimShootP1");
+                    break;
+                case 3:
+                    StartAttack (State.Attacking, "SurroundPlayer");
+                    break;
+                case 4:
                     StartAttack (State.Attacking, "AroundWitch");
                     Invoke ("NoLaser", 20);
-                } else {
-                    StartAttack (State.Attacking, "AimShootP1");
-                }
-                break;
+                    break;
+            }
         }
     }
 
     void StartPhase2Attack () {
-        int rng = Random.Range (0, 6);
-        switch (rng) {
-            case 0:
-                StartAttack (State.Attacking, "GroundLaserPhase2Attack");
-                break;
-            case 1:
-                StartAttack (State.Attacking, "LaserCircleP2Attack");
-                break;
-            case 2:
-                StartAttack (State.Attacking, "AimShootP2");
-                break;
-            case 3:
-                StartAttack (State.Attacking, "SurroundPlayer2");
-                break;
-            case 4:
-                if (IsInvoking ("NoLaser") == false) {
-                    StartAttack (State.Attacking, "AroundWitch2");
-                    Invoke ("NoLaser", 30);
-                } else {
+        if (isAttacking == false) {
+            int rng = (int) Mathf.Repeat (lastAtk + Random.Range(1,3), 6);
+            lastAtk = rng;
+
+            switch (rng) {
+                case 0:
+                    StartAttack (State.Attacking, "GroundLaserPhase2Attack");
+                    break;
+                case 1:
+                    StartAttack (State.Attacking, "LaserCircleP2Attack");
+                    break;
+                case 2:
                     StartAttack (State.Attacking, "AimShootP2");
-                }
-                break;
+                    break;
+                case 3:
+                    StartAttack (State.Attacking, "SurroundPlayer2");
+                    break;
+                case 4:
+                    StartAttack (State.Attacking, "AroundWitch2");
+                    break;
+            }
         }
     }
 
     void StartPhase3Attack () {
-        int rng = Random.Range (0, 6);
-        switch (rng) {
-            case 0:
-                StartAttack (State.Attacking, "GroundLaserPhase3Attack");
-                break;
-            case 1:
-                StartAttack (State.Attacking, "LaserCircleP3Attack");
-                break;
-            case 2:
-                StartAttack (State.Attacking, "AimShootP3");
-                break;
-            case 3:
-                StartAttack (State.Attacking, "SurroundPlayer3");
-                break;
-            case 4:
-                if (IsInvoking ("NoLaser") == false) {
-                    StartAttack (State.Attacking, "AroundWitch3");
-                    Invoke ("NoLaser", 40);
-                } else {
+        if (isAttacking == false) {
+            int rng = (int) Mathf.Repeat (lastAtk + Random.Range(1,3), 6);
+            lastAtk = rng;
+
+            switch (rng) {
+                case 0:
+                    StartAttack (State.Attacking, "GroundLaserPhase3Attack");
+                    break;
+                case 1:
+                    if (IsInvoking ("NoLaser") == false) {
+                        StartAttack (State.Attacking, "LaserCircleP3Attack");
+                    } else {
+                        StartAttack (State.Attacking, "GroundLaserPhase3Attack");
+                    }
+                    break;
+                case 2:
                     StartAttack (State.Attacking, "AimShootP3");
-                }
-                break;
+                    break;
+                case 3:
+                    StartAttack (State.Attacking, "SurroundPlayer3");
+                    break;
+                case 4:
+                    StartAttack (State.Attacking, "AroundWitch3");
+                    break;
+            }
         }
     }
 
@@ -122,12 +172,24 @@ public class WitchWestBoss : MonoBehaviour {
 
     }
 
+    int curAtk = 0;
     void StartAttack (State atk, string coroutineName) {
-        if (isAttacking == false) {
-            curState = atk;
-            StartCoroutine (coroutineName);
-            isAttacking = true;
+        SetBarrierActive (!IsInvoking ("NoAttack"));
+        if (isAttacking == false && IsInvoking ("NoAttack") == false) {
+            if (curAtk < 5) {
+                curAtk++;
+                curState = atk;
+                StartCoroutine (coroutineName);
+                isAttacking = true;
+            } else {
+                curAtk = 0;
+                Invoke ("NoAttack", 5);
+            }
         }
+    }
+
+    void NoAttack () {
+
     }
 
     IEnumerator GroundLaserAttack () {
@@ -167,19 +229,19 @@ public class WitchWestBoss : MonoBehaviour {
             Instantiate (groundLaser3Prefab, centerPos + new Vector3 (Random.Range (-rngRange, rngRange), 0, Random.Range (-rngRange, rngRange)), Quaternion.identity);
         }
         yield return new WaitForSeconds (1);
-        for (int i = 0; i < 15; i++) {
-            Instantiate (groundLaser3Prefab, centerPos + new Vector3 (Random.Range (-rngRange, rngRange), 0, Random.Range (-rngRange, rngRange)), Quaternion.identity);
-        }
-        yield return new WaitForSeconds (1);
         for (int i = 0; i < 20; i++) {
             Instantiate (groundLaser3Prefab, centerPos + new Vector3 (Random.Range (-rngRange, rngRange), 0, Random.Range (-rngRange, rngRange)), Quaternion.identity);
         }
         yield return new WaitForSeconds (1);
-        for (int i = 0; i < 25; i++) {
+        for (int i = 0; i < 30; i++) {
             Instantiate (groundLaser3Prefab, centerPos + new Vector3 (Random.Range (-rngRange, rngRange), 0, Random.Range (-rngRange, rngRange)), Quaternion.identity);
         }
         yield return new WaitForSeconds (1);
-        for (int i = 0; i < 30; i++) {
+        for (int i = 0; i < 35; i++) {
+            Instantiate (groundLaser3Prefab, centerPos + new Vector3 (Random.Range (-rngRange, rngRange), 0, Random.Range (-rngRange, rngRange)), Quaternion.identity);
+        }
+        yield return new WaitForSeconds (1);
+        for (int i = 0; i < 40; i++) {
             Instantiate (groundLaser3Prefab, centerPos + new Vector3 (Random.Range (-rngRange, rngRange), 0, Random.Range (-rngRange, rngRange)), Quaternion.identity);
         }
         yield return new WaitForSeconds (1);
@@ -199,6 +261,7 @@ public class WitchWestBoss : MonoBehaviour {
     }
 
     IEnumerator LaserCircleP3Attack () {
+        Invoke ("NoLaser", 10.5f * 4);
         Instantiate (laserCirclePrefab, transform.position, Quaternion.identity).GetComponent<AutoRotate> ().v3 /= 10;
         Instantiate (laserCirclePrefab, transform.position, Quaternion.identity).GetComponent<AutoRotate> ().v3 /= -4;
 

@@ -862,6 +862,35 @@ public class PlayerController : MonoBehaviour {
         SpawnAudio.SpawnVoice (voiceLines[Random.Range (6, 9)], 0, 1, 1, 0f);
         spear.SetActive (false);
 
+        GetComponent<Hitbox> ().enabled = false;
+        HitFlash ();
+        CancelInvoke ("StopInvincible");
+        Invoke ("StopInvincible", 1);
+
+    }
+
+    void StopInvincible () {
+        GetComponent<Hitbox> ().enabled = true;
+        if (curState != State.Dash) {
+            for (int i = 0; i < dashInvisible.Length; i++) {
+                dashInvisible[i].SetActive (true);
+            }
+        }
+    }
+
+    void HitFlash () {
+        if (GetComponent<Hitbox> ().enabled == false) {
+            if (dashInvisible[0].activeSelf == true) {
+                for (int i = 0; i < dashInvisible.Length; i++) {
+                    dashInvisible[i].SetActive (false);
+                }
+            } else if (curState != State.Dash) {
+                for (int i = 0; i < dashInvisible.Length; i++) {
+                    dashInvisible[i].SetActive (true);
+                }
+            }
+            Invoke ("HitFlash", 0);
+        }
     }
 
     public void Die () {
@@ -876,6 +905,7 @@ public class PlayerController : MonoBehaviour {
         SetDashInvisible (false);
         spear.SetActive (false);
         hitbox.enabled = false;
+        GetComponent<Hitbox> ().enabled = false;
         if (GameObject.FindGameObjectWithTag ("BackgroundCam") != null) {
             GameObject.FindGameObjectWithTag ("BackgroundCam").SetActive (false);
         }
