@@ -36,6 +36,7 @@ public class WitchWestBoss : MonoBehaviour {
     [SerializeField] Sprite[] testFaces;
     PlayerCam cam;
     [SerializeField] Renderer[] shieldMats;
+    [SerializeField] float camXRotation = 30;
 
     void Start () {
         player = FindObjectOfType<PlayerController> ();
@@ -70,7 +71,7 @@ public class WitchWestBoss : MonoBehaviour {
     }
 
     void SetCam () {
-        cam.angleGoal.x = 25;
+        cam.angleGoal.x = camXRotation;
         cam.angleGoal.y = Quaternion.LookRotation (transform.position - cam.transform.position, Vector3.up).eulerAngles.y;
         cam.offset = cam.transform.forward * -20;
     }
