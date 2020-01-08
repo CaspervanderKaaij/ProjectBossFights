@@ -105,18 +105,13 @@ public class PlayerController : MonoBehaviour {
     public float maxHP = 100;
     [Header ("Buffs")]
     public float speedMuliplier = 1;
-    [Header("AbilitiesUnlocked")]
+    [Header ("AbilitiesUnlocked")]
     [SerializeField] bool hasGun = true;
     [SerializeField] bool hasWallJump = true;
     [SerializeField] bool hasDoubleJump = true;
     [SerializeField] bool hasDash = true;
     [SerializeField] bool hasSpear = true;
     [SerializeField] bool hasParry = true;
-    
-    
-    
-    
-    
 
     void Start () {
         if (FindObjectOfType<StartSaveInitializer> () != null) {
@@ -131,17 +126,22 @@ public class PlayerController : MonoBehaviour {
         for (int i = 0; i < hitboxParent.transform.childCount; i++) {
             hitboxes.Add (hitboxParent.transform.GetChild (i).gameObject);
         }
+        cc.enabled = false;
+        Invoke ("SetStartPos", 0);
+    }
 
+    void SetStartPos () {
         if (GameObject.Find ("PlayerSpawnPoint") != null) {
             transform.position = GameObject.Find ("PlayerSpawnPoint").transform.position;
         }
+        cc.enabled = true;
     }
 
-    void Update () {
-        playerCam.UpdateMe();
+    void FixedUpdate () {
+        playerCam.UpdateMe ();
         anim.transform.localEulerAngles = new Vector3 (anim.transform.localEulerAngles.x, anim.transform.localEulerAngles.y, 0);
         shootMagicCircle.SetActive (false);
-        speedMuliplier = Mathf.MoveTowards(speedMuliplier,1,Time.deltaTime / 300);
+        speedMuliplier = Mathf.MoveTowards (speedMuliplier, 1, Time.deltaTime / 300);
         switch (curState) {
             case State.Normal:
                 WallJump ();
@@ -232,7 +232,7 @@ public class PlayerController : MonoBehaviour {
                 break;
         }
         lowHPPostProccesing.SetActive ((hitbox.hp / maxHP < 0.3f));
-        playerCam.UpdateMe();
+        playerCam.UpdateMe ();
     }
 
     // Inputs
@@ -403,7 +403,7 @@ public class PlayerController : MonoBehaviour {
     float groundedTime = 0;
     bool IsGrounded () {
 
-        if(hasDoubleJump == true){
+        if (hasDoubleJump == true) {
             maxJumps = 2;
         } else {
             maxJumps = 1;
@@ -738,10 +738,10 @@ public class PlayerController : MonoBehaviour {
             }
             Invoke ("NoSwitchWeapon", 0.3f);
         }
-        if(curWeapon == Weapon.Gun && hasGun == false){
+        if (curWeapon == Weapon.Gun && hasGun == false) {
             curWeapon = Weapon.Spear;
         }
-        if(curWeapon == Weapon.Spear && hasSpear == false){
+        if (curWeapon == Weapon.Spear && hasSpear == false) {
             curWeapon = Weapon.Gun;
         }
     }
