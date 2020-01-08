@@ -137,13 +137,16 @@ public class PlayerController : MonoBehaviour {
         cc.enabled = true;
     }
 
-    void FixedUpdate () {
+    void Update () {
         playerCam.UpdateMe ();
         anim.transform.localEulerAngles = new Vector3 (anim.transform.localEulerAngles.x, anim.transform.localEulerAngles.y, 0);
         shootMagicCircle.SetActive (false);
         speedMuliplier = Mathf.MoveTowards (speedMuliplier, 1, Time.deltaTime / 300);
         switch (curState) {
             case State.Normal:
+                if(dashInvisible[0].activeSelf == false){
+                    SetDashInvisible(false);
+                }
                 WallJump ();
                 Jump (jumpStrength);
                 isGrounded = IsGrounded ();
@@ -960,7 +963,8 @@ public class PlayerController : MonoBehaviour {
 
     void FinalMove () {
         if (curState != State.WallSlide) {
-            cc.Move (movev3 * Time.deltaTime);
+            cc.Move (new Vector3(movev3.x,0,movev3.z) * Time.deltaTime);
+            cc.Move (new Vector3(0,movev3.y,0) * Time.deltaTime);
         }
     }
 
