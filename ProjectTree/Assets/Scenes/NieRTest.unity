@@ -17770,8 +17770,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -226, y: -457}
-  m_SizeDelta: {x: 757.3, y: 142}
+  m_AnchoredPosition: {x: -8.3, y: -459.3}
+  m_SizeDelta: {x: 1192.7, y: 76.1}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1294742214
 MonoBehaviour:
@@ -17810,7 +17810,7 @@ MonoBehaviour:
     m_Font: {fileID: 12800000, guid: 61ac39eaa410b744da46303097321cc0, type: 3}
     m_FontSize: 60
     m_FontStyle: 0
-    m_BestFit: 0
+    m_BestFit: 1
     m_MinSize: 10
     m_MaxSize: 60
     m_Alignment: 3
@@ -17819,7 +17819,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: ~DADDY~
+  m_Text: Kirby, exept he's a cube, and his face is rotating for some reason
 --- !u!222 &1294742216
 CanvasRenderer:
   m_ObjectHideFlags: 0
