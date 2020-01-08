@@ -144,8 +144,8 @@ public class PlayerController : MonoBehaviour {
         speedMuliplier = Mathf.MoveTowards (speedMuliplier, 1, Time.deltaTime / 300);
         switch (curState) {
             case State.Normal:
-                if(dashInvisible[0].activeSelf == false){
-                    SetDashInvisible(false);
+                if (dashInvisible[0].activeSelf == false) {
+                    SetDashInvisible (false);
                 }
                 WallJump ();
                 Jump (jumpStrength);
@@ -431,7 +431,9 @@ public class PlayerController : MonoBehaviour {
                     }
 
                     //print (Vector3.Angle (hit.normal, transform.up));
-                    cc.Move (new Vector3 (0, -100, 0) * Time.deltaTime);
+                    if (movev3.y < 0) {
+                        cc.Move (new Vector3 (0, -100, 0) * Time.deltaTime);
+                    }
                 } else {
                     groundedTime += Time.deltaTime;
                 }
@@ -963,8 +965,8 @@ public class PlayerController : MonoBehaviour {
 
     void FinalMove () {
         if (curState != State.WallSlide) {
-            cc.Move (new Vector3(movev3.x,0,movev3.z) * Time.deltaTime);
-            cc.Move (new Vector3(0,movev3.y,0) * Time.deltaTime);
+            cc.Move (new Vector3 (movev3.x, 0, movev3.z) * Time.deltaTime);
+            cc.Move (new Vector3 (0, movev3.y, 0) * Time.deltaTime);
         }
     }
 
