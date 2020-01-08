@@ -21,7 +21,7 @@ public class PlayerCam : MonoBehaviour {
         angleGoal = transform.eulerAngles;
     }
 
-    void Update () {
+    public void UpdateMe () {
         if (_enabled == true) {
             NormalCam ();
         }

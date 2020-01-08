@@ -105,6 +105,18 @@ public class PlayerController : MonoBehaviour {
     public float maxHP = 100;
     [Header ("Buffs")]
     public float speedMuliplier = 1;
+    [Header("AbilitiesUnlocked")]
+    [SerializeField] bool hasGun = true;
+    [SerializeField] bool hasWallJump = true;
+    [SerializeField] bool hasDoubleJump = true;
+    [SerializeField] bool hasDash = true;
+    [SerializeField] bool hasSpear = true;
+    [SerializeField] bool hasParry = true;
+    
+    
+    
+    
+    
 
     void Start () {
         if (FindObjectOfType<StartSaveInitializer> () != null) {
@@ -126,8 +138,10 @@ public class PlayerController : MonoBehaviour {
     }
 
     void Update () {
+        playerCam.UpdateMe();
         anim.transform.localEulerAngles = new Vector3 (anim.transform.localEulerAngles.x, anim.transform.localEulerAngles.y, 0);
         shootMagicCircle.SetActive (false);
+        speedMuliplier = Mathf.MoveTowards(speedMuliplier,1,Time.deltaTime / 300);
         switch (curState) {
             case State.Normal:
                 WallJump ();
@@ -218,6 +232,7 @@ public class PlayerController : MonoBehaviour {
                 break;
         }
         lowHPPostProccesing.SetActive ((hitbox.hp / maxHP < 0.3f));
+        playerCam.UpdateMe();
     }
 
     // Inputs
@@ -233,7 +248,7 @@ public class PlayerController : MonoBehaviour {
     // Movement
 
     void GetParryInput () {
-        if (Input.GetButtonDown (parryInput) == true && isGrounded == true) {
+        if (Input.GetButtonDown (parryInput) == true && isGrounded == true && hasParry == true) {
             curState = State.Parry;
             curWeapon = Weapon.Spear;
             movev3 = Vector3.zero;
@@ -294,7 +309,7 @@ public class PlayerController : MonoBehaviour {
         movev3.z = helper.z;
         movev3.y = 0;
 
-        if (lastPos != Vector3.zero && Vector3.Distance (transform.position, lastPos) < 10f * Time.deltaTime) {
+        if (lastPos != Vector3.zero && Vector3.Distance (transform.position, lastPos) < 5 * Time.deltaTime) {
             curState = State.Knockback;
             SetDashInvisible (false);
             movev3.x = -transform.forward.x * 10;
@@ -387,6 +402,12 @@ public class PlayerController : MonoBehaviour {
 
     float groundedTime = 0;
     bool IsGrounded () {
+
+        if(hasDoubleJump == true){
+            maxJumps = 2;
+        } else {
+            maxJumps = 1;
+        }
 
         RaycastHit hit;
         // Debug.DrawRay (transform.position + new Vector3 (0, 0.1f, 0), Vector3.down * 0.5f, Color.red, 0);
@@ -564,7 +585,7 @@ public class PlayerController : MonoBehaviour {
         if (isGrounded == true) {
             canAirDash = true;
         }
-        if (Input.GetButtonDown (dashInput) == true && IsInvoking ("IgnoreDashInput") == false && willpower > dashWPCost) {
+        if (Input.GetButtonDown (dashInput) == true && IsInvoking ("IgnoreDashInput") == false && willpower > dashWPCost && hasDash == true) {
             bool willDash = false;
             if (isGrounded == false) {
                 if (canAirDash == true) {
@@ -716,6 +737,12 @@ public class PlayerController : MonoBehaviour {
                 curWeapon = Weapon.Gun;
             }
             Invoke ("NoSwitchWeapon", 0.3f);
+        }
+        if(curWeapon == Weapon.Gun && hasGun == false){
+            curWeapon = Weapon.Spear;
+        }
+        if(curWeapon == Weapon.Spear && hasSpear == false){
+            curWeapon = Weapon.Gun;
         }
     }
 

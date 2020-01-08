@@ -34,14 +34,22 @@ public class WitchWestBoss : MonoBehaviour {
     [SerializeField] AudioClip barrierClip2;
     [SerializeField] SpriteRenderer testFace;
     [SerializeField] Sprite[] testFaces;
+    PlayerCam cam;
+    [SerializeField] Renderer[] shieldMats;
 
     void Start () {
         player = FindObjectOfType<PlayerController> ();
         hitbox = GetComponent<Hitbox> ();
+        cam = player.cameraTransform.GetComponent<PlayerCam> ();
+        barrierHBox = barrier.GetComponent<Hurtbox> ();
+        barrierHBox.enabled = false;
+        SetBarrierActive (true);
     }
 
     void Update () {
         DebugInput ();
+        SetCam ();
+        SetBarrierVisibility ();
     }
 
     void DebugInput () {
@@ -51,7 +59,6 @@ public class WitchWestBoss : MonoBehaviour {
             hitbox.enabled = true;
         }
 
-        // if (Input.GetKeyDown (KeyCode.Tab) == true) {
         if (hitbox.hp > 800) {
             StartPhase1Attack ();
         } else if (hitbox.hp > 350) {
@@ -59,16 +66,20 @@ public class WitchWestBoss : MonoBehaviour {
         } else {
             StartPhase3Attack ();
         }
-        // }
-        //if (Input.GetKeyDown (KeyCode.Tab) == true) {
-        //  SetBarrierActive (!barrier.activeSelf);
-        // }
 
     }
 
+    void SetCam () {
+        cam.angleGoal.x = 40;
+        cam.angleGoal.y = Quaternion.LookRotation (transform.position - cam.transform.position, Vector3.up).eulerAngles.y;
+        cam.offset = cam.transform.forward * -20;
+    }
+
+    Hurtbox barrierHBox;
     void SetBarrierActive (bool active) {
-        bool wasActive = barrier.activeSelf;
-        barrier.SetActive (active);
+        bool wasActive = barrierHBox.enabled;
+        //barrier.SetActive (active);
+        barrierHBox.enabled = active;
         hitbox.enabled = !active;
         if (active == true && wasActive == false) {
             barrier.transform.localScale = Vector3.zero;
@@ -78,6 +89,21 @@ public class WitchWestBoss : MonoBehaviour {
         }
         if (active == false && wasActive == true) {
             Instantiate (barrierBreakParticle, barrier.transform.position, Quaternion.identity);
+        }
+    }
+
+    float curDissolve = 0;
+    void SetBarrierVisibility () {
+        if (barrierHBox.enabled == true) {
+            curDissolve = Mathf.MoveTowards(curDissolve,1,Time.deltaTime * 1.5f);
+            for (int i = 0; i < shieldMats.Length; i++) {
+                shieldMats[i].material.SetFloat ("_DissolveMultiplier", curDissolve);
+            }
+        } else {
+            curDissolve = Mathf.MoveTowards(curDissolve,0,Time.deltaTime * 1.5f);
+            for (int i = 0; i < shieldMats.Length; i++) {
+                shieldMats[i].material.SetFloat ("_DissolveMultiplier", curDissolve);
+            }
         }
     }
 
@@ -194,7 +220,7 @@ public class WitchWestBoss : MonoBehaviour {
     }
 
     void NoAttack () {
-        SetBarrierActive(true);
+        SetBarrierActive (true);
         isAttacking = true;
         Invoke ("StopAttack", 1);
     }
