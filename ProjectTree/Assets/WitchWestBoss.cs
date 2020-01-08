@@ -70,7 +70,7 @@ public class WitchWestBoss : MonoBehaviour {
     }
 
     void SetCam () {
-        cam.angleGoal.x = 40;
+        cam.angleGoal.x = 25;
         cam.angleGoal.y = Quaternion.LookRotation (transform.position - cam.transform.position, Vector3.up).eulerAngles.y;
         cam.offset = cam.transform.forward * -20;
     }

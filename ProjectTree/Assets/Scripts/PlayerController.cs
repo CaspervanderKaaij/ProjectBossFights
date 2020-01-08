@@ -445,7 +445,7 @@ public class PlayerController : MonoBehaviour {
 
                 if (AnalMagnitude () > 0) {
                     if (Vector3.Dot ((groundHit.point - transform.position).normalized, transform.forward) > 0) {
-                        if (movev3.y < -3 && IsInvoking ("NoWallJump") == false && willpower > 0 && curState == State.Normal) {
+                        if (movev3.y < -3 && IsInvoking ("NoWallJump") == false && willpower > 0 && curState == State.Normal && hasWallJump == true) {
                             curState = State.WallSlide;
                             firstWallJump = false;
                             canAirDash = true;
@@ -483,7 +483,7 @@ public class PlayerController : MonoBehaviour {
             transform.rotation = Quaternion.Euler (transform.eulerAngles.x, angleGoal, transform.eulerAngles.z);
             if (Physics.SphereCast (transform.position + cc.center, cc.radius, transform.forward, out hit, cc.radius * 4.5f, LayerMask.GetMask ("Default"), QueryTriggerInteraction.Ignore) == true && isGrounded == false) {
                 if (Physics.Raycast (transform.position + cc.center * 2, transform.forward, cc.radius * 4.5f, LayerMask.GetMask ("Default"), QueryTriggerInteraction.Ignore) == true) {
-                    if (groundHit == null || Vector3.Angle (groundHit.normal, transform.up) > cc.slopeLimit && IsInvoking ("NoWallJump") == false && willpower > 0) {
+                    if (groundHit == null || Vector3.Angle (groundHit.normal, transform.up) > cc.slopeLimit && IsInvoking ("NoWallJump") == false && willpower > 0 && hasWallJump == true) {
                         transform.rotation = Quaternion.Euler (transform.eulerAngles.x, oldY, transform.eulerAngles.z);
                         //if ((firstWallJump == true || (Mathf.DeltaAngle (angleGoal, lastWallAngle)) > 91) && movev3.y < -3) {
                         if (movev3.y < -3) {
