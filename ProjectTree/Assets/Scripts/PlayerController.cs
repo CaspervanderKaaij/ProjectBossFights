@@ -146,6 +146,7 @@ public class PlayerController : MonoBehaviour {
             case State.Normal:
                 if (dashInvisible[0].activeSelf == false) {
                     SetDashInvisible (false);
+                    playerCam._enabled = true;
                 }
                 WallJump ();
                 Jump (jumpStrength);
@@ -417,7 +418,7 @@ public class PlayerController : MonoBehaviour {
         if (Physics.Raycast (transform.position + new Vector3 (0, 0.1f, 0), Vector3.down, out hit, 0.4f, LayerMask.GetMask ("Default"), QueryTriggerInteraction.Ignore) || cc.isGrounded == true) {
             //if (Vector3.Angle (hit.normal, transform.up) <= cc.slopeLimit) {
             if (groundHit == null || (Vector3.Angle (groundHit.normal, transform.up) <= cc.slopeLimit && groundHit.transform.tag != "NoFloor")) {
-                if (groundedTime > Time.deltaTime / 2) {
+                if (groundedTime > Time.deltaTime / 2 && movev3.y < 0) {
                     groundHit = null;
                     if (movev3.y < 0) {
                         CancelInvoke ("CayoteTime");
@@ -431,9 +432,7 @@ public class PlayerController : MonoBehaviour {
                     }
 
                     //print (Vector3.Angle (hit.normal, transform.up));
-                    if (movev3.y < 0) {
                         cc.Move (new Vector3 (0, -100, 0) * Time.deltaTime);
-                    }
                 } else {
                     groundedTime += Time.deltaTime;
                 }

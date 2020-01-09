@@ -8,7 +8,8 @@ public class WitchWestBoss : MonoBehaviour {
     [SerializeField] Hitbox hp;
     public enum State {
         Idle,
-        Attacking
+        Attacking,
+        FinalAttack
     }
     public State curState = State.Idle;
     PlayerController player;
@@ -30,6 +31,7 @@ public class WitchWestBoss : MonoBehaviour {
     Hitbox hitbox;
     [SerializeField] GameObject barrierParticle;
     [SerializeField] GameObject barrierBreakParticle;
+    [SerializeField] GameObject barrierBackTelegraphParticle;
     [SerializeField] AudioClip barrierClip;
     [SerializeField] AudioClip barrierClip2;
     [SerializeField] SpriteRenderer testFace;
@@ -37,6 +39,7 @@ public class WitchWestBoss : MonoBehaviour {
     PlayerCam cam;
     [SerializeField] Renderer[] shieldMats;
     [SerializeField] float camXRotation = 30;
+    [SerializeField] AudioClip finalAttackChargeClip;
 
     void Start () {
         player = FindObjectOfType<PlayerController> ();
@@ -59,14 +62,67 @@ public class WitchWestBoss : MonoBehaviour {
         } else if (barrier.activeSelf == false) {
             hitbox.enabled = true;
         }
+        if (curState != State.FinalAttack) {
 
-        if (hitbox.hp > 800) {
-            StartPhase1Attack ();
-        } else if (hitbox.hp > 350) {
-            StartPhase2Attack ();
-        } else {
-            StartPhase3Attack ();
+            if (hitbox.hp > 800) {
+                StartPhase1Attack ();
+            } else if (hitbox.hp > 350) {
+                StartPhase2Attack ();
+            } else {
+                StartPhase3Attack ();
+            }
+
         }
+    }
+
+    public void ActivateFinalAttack () {
+        if (curState != State.FinalAttack) {
+            StopAllCoroutines ();
+            curState = State.FinalAttack;
+            StartCoroutine ("FinalAttack");
+        }
+    }
+    IEnumerator FinalAttack () {
+        print ("Final Attack" + Time.time);
+        barrier.GetComponent<Hurtbox> ().damage = 0;
+        SetBarrierActive (true);
+        cam.HardShake (5);
+        SpawnAudio.AudioSpawn (finalAttackChargeClip, 0, 1, 1);
+
+        Instantiate (barrierBackTelegraphParticle, barrier.transform.position, Quaternion.identity);
+        yield return new WaitForSeconds (1);
+        Instantiate (barrierBackTelegraphParticle, barrier.transform.position, Quaternion.identity);
+        yield return new WaitForSeconds (1);
+        Instantiate (barrierBackTelegraphParticle, barrier.transform.position, Quaternion.identity);
+        yield return new WaitForSeconds (1);
+        Instantiate (barrierBackTelegraphParticle, barrier.transform.position, Quaternion.identity);
+        yield return new WaitForSeconds (1.7f);
+
+        StartCoroutine ("AimShootP3");
+        yield return new WaitForSeconds (1);
+        StartCoroutine ("SurroundPlayer3");
+        yield return new WaitForSeconds (3);
+        StartCoroutine ("LaserCircleP3Attack");
+        StartCoroutine ("AimShootP3");
+        yield return new WaitForSeconds (1);
+        StartCoroutine ("AimShootP3");
+        yield return new WaitForSeconds (5);
+        StartCoroutine ("GroundLaserPhase3Attack");
+        yield return new WaitForSeconds (6);
+        StartCoroutine ("AroundWitch3");
+        yield return new WaitForSeconds (1);
+        StartCoroutine ("AimShootP2");
+        yield return new WaitForSeconds (1);
+        StartCoroutine ("AimShootP2");
+        yield return new WaitForSeconds (1);
+        StartAttack (State.Attacking, "AimShootP2");
+
+        yield return new WaitForSeconds (3);
+        StartCoroutine ("GroundLaserPhase2Attack"); //this
+        yield return new WaitForSeconds (10);
+        StartCoroutine ("SurroundPlayer");
+        yield return new WaitForSeconds (3);
+        Destroy (transform.root.gameObject);
 
     }
 
@@ -96,12 +152,12 @@ public class WitchWestBoss : MonoBehaviour {
     float curDissolve = 0;
     void SetBarrierVisibility () {
         if (barrierHBox.enabled == true) {
-            curDissolve = Mathf.MoveTowards(curDissolve,1,Time.deltaTime * 1.5f);
+            curDissolve = Mathf.MoveTowards (curDissolve, 1, Time.deltaTime * 1.5f);
             for (int i = 0; i < shieldMats.Length; i++) {
                 shieldMats[i].material.SetFloat ("_DissolveMultiplier", curDissolve);
             }
         } else {
-            curDissolve = Mathf.MoveTowards(curDissolve,0,Time.deltaTime * 1.5f);
+            curDissolve = Mathf.MoveTowards (curDissolve, 0, Time.deltaTime * 1.5f);
             for (int i = 0; i < shieldMats.Length; i++) {
                 shieldMats[i].material.SetFloat ("_DissolveMultiplier", curDissolve);
             }
@@ -209,12 +265,17 @@ public class WitchWestBoss : MonoBehaviour {
         SetBarrierActive (!IsInvoking ("NoAttack"));
         if (isAttacking == false && IsInvoking ("NoAttack") == false) {
             if (curAtk < 5) {
-                curAtk++;
+                if (curState != State.FinalAttack) {
+                    curAtk++;
+                }
+                if(curState != State.FinalAttack){
                 curState = atk;
+                }
                 StartCoroutine (coroutineName);
                 isAttacking = true;
             } else {
                 curAtk = 0;
+                Invoke ("TelegraphBarrierBack", 4);
                 Invoke ("NoAttack", 5);
             }
         }
@@ -224,6 +285,10 @@ public class WitchWestBoss : MonoBehaviour {
         SetBarrierActive (true);
         isAttacking = true;
         Invoke ("StopAttack", 1);
+    }
+
+    void TelegraphBarrierBack () {
+        Instantiate (barrierBackTelegraphParticle, barrier.transform.position, Quaternion.identity);
     }
 
     IEnumerator GroundLaserAttack () {
@@ -259,22 +324,27 @@ public class WitchWestBoss : MonoBehaviour {
             Instantiate (groundLaser3Prefab, centerPos + new Vector3 (Random.Range (-rngRange, rngRange), 0, Random.Range (-rngRange, rngRange)), Quaternion.identity);
         }
         yield return new WaitForSeconds (1);
+        centerPos = new Vector3 (player.transform.position.x, floorYCoods + 0.1f, player.transform.position.z);
         for (int i = 0; i < 10; i++) {
             Instantiate (groundLaser3Prefab, centerPos + new Vector3 (Random.Range (-rngRange, rngRange), 0, Random.Range (-rngRange, rngRange)), Quaternion.identity);
         }
         yield return new WaitForSeconds (1);
+        centerPos = new Vector3 (player.transform.position.x, floorYCoods + 0.1f, player.transform.position.z);
         for (int i = 0; i < 20; i++) {
             Instantiate (groundLaser3Prefab, centerPos + new Vector3 (Random.Range (-rngRange, rngRange), 0, Random.Range (-rngRange, rngRange)), Quaternion.identity);
         }
         yield return new WaitForSeconds (1);
+        centerPos = new Vector3 (player.transform.position.x, floorYCoods + 0.1f, player.transform.position.z);
         for (int i = 0; i < 30; i++) {
             Instantiate (groundLaser3Prefab, centerPos + new Vector3 (Random.Range (-rngRange, rngRange), 0, Random.Range (-rngRange, rngRange)), Quaternion.identity);
         }
         yield return new WaitForSeconds (1);
+        centerPos = new Vector3 (player.transform.position.x, floorYCoods + 0.1f, player.transform.position.z);
         for (int i = 0; i < 35; i++) {
             Instantiate (groundLaser3Prefab, centerPos + new Vector3 (Random.Range (-rngRange, rngRange), 0, Random.Range (-rngRange, rngRange)), Quaternion.identity);
         }
         yield return new WaitForSeconds (1);
+        centerPos = new Vector3 (player.transform.position.x, floorYCoods + 0.1f, player.transform.position.z);
         for (int i = 0; i < 40; i++) {
             Instantiate (groundLaser3Prefab, centerPos + new Vector3 (Random.Range (-rngRange, rngRange), 0, Random.Range (-rngRange, rngRange)), Quaternion.identity);
         }
@@ -313,7 +383,7 @@ public class WitchWestBoss : MonoBehaviour {
     IEnumerator AimShootP1 () {
         SmoothLookAtPlayer ();
         yield return new WaitForSeconds (0.5f);
-        SpawnShooterPrefab (player.transform.position + Vector3.up, new Vector3 (0, 4, -3));
+        SpawnShooterPrefab (player.transform.position + Vector3.up + player.transform.forward * 5, new Vector3 (0, 4, -3));
         yield return new WaitForSeconds (0.3f);
         StopAttack ();
         CancelInvoke ("SmoothLookAtPlayer");
@@ -342,7 +412,7 @@ public class WitchWestBoss : MonoBehaviour {
             SpawnShooterPrefab (player.transform.position + Vector3.up + new Vector3 (Random.Range (-rngRange, rngRange), 0, Random.Range (-rngRange, rngRange)), new Vector3 (0, 4, -3));
         }
         yield return new WaitForSeconds (1f);
-        SpawnShooterPrefab (player.transform.position + Vector3.up, new Vector3 (0, 4, -3));
+        SpawnShooterPrefab (player.transform.position + Vector3.up + player.transform.forward * 5, new Vector3 (0, 4, -3));
         yield return new WaitForSeconds (0.1f);
         StopAttack ();
         CancelInvoke ("SmoothLookAtPlayer");
@@ -451,12 +521,12 @@ public class WitchWestBoss : MonoBehaviour {
     IEnumerator AroundWitch3 () {
         yield return new WaitForSeconds (1);
         float curAngle = 0;
-        float curForwardAmount = 5;
+        float curForwardAmount = 2;
         for (int i = 0; i < 100; i++) {
             GameObject g = Instantiate (shooterPrefab2, transform.position, Quaternion.Euler (90, curAngle, 0));
             g.transform.position -= g.transform.right * curForwardAmount;
             g.transform.Rotate (0, 0, -90);
-            curAngle += 360 / 20;
+            curAngle += 360 / 24;
             curForwardAmount += 0.25f;
             yield return new WaitForSeconds (0.05f);
         }
@@ -478,6 +548,8 @@ public class WitchWestBoss : MonoBehaviour {
 
     void StopAttack () {
         isAttacking = false;
+        if(curState != State.FinalAttack){
         curState = State.Idle;
+        }
     }
 }
