@@ -305,6 +305,7 @@ public class WitchWestBoss : MonoBehaviour {
     }
 
     IEnumerator GroundLaserPhase2Attack () {
+        yield return new WaitForSeconds (0.8f);
         float repeatSpeed = Random.Range (0.2f, 0.3f);
         SmoothLookAtPlayer ();
         for (int i = 0; i < 15; i++) {

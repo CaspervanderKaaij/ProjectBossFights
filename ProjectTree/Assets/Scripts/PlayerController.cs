@@ -9,6 +9,7 @@ public class PlayerController : MonoBehaviour {
 
     CharacterController cc;
     public Vector3 movev3;
+    public bool ThreeDMode = true;
     public Transform cameraTransform;
     TimescaleManager timescaleManager;
     PlayerCam playerCam;
@@ -246,7 +247,11 @@ public class PlayerController : MonoBehaviour {
     }
 
     float GetVertInput () {
-        return Input.GetAxis (vertInput);
+        if (ThreeDMode == true) {
+            return Input.GetAxis (vertInput);
+        } else {
+            return 0;
+        }
     }
 
     // Movement
@@ -432,7 +437,7 @@ public class PlayerController : MonoBehaviour {
                     }
 
                     //print (Vector3.Angle (hit.normal, transform.up));
-                        cc.Move (new Vector3 (0, -100, 0) * Time.deltaTime);
+                    cc.Move (new Vector3 (0, -100, 0) * Time.deltaTime);
                 } else {
                     groundedTime += Time.deltaTime;
                 }
@@ -440,7 +445,9 @@ public class PlayerController : MonoBehaviour {
                 //move backwards
                 Vector3 oldEuler = transform.eulerAngles;
                 transform.LookAt (transform.position + new Vector3 (groundHit.normal.x, 0, groundHit.normal.z));
-                cc.Move (transform.forward * Time.deltaTime * Mathf.Abs (movev3.y / 2));
+                if (ThreeDMode == true) {
+                    cc.Move (transform.forward * Time.deltaTime * Mathf.Abs (movev3.y / 2));
+                }
                 transform.eulerAngles = oldEuler;
                 curAccDec = 0;
                 movev3.x = 0;
@@ -632,7 +639,6 @@ public class PlayerController : MonoBehaviour {
                 }
                 transform.rotation = Quaternion.Lerp (transform.rotation, Quaternion.Euler (transform.eulerAngles.x, angleGoal, transform.eulerAngles.z), Time.deltaTime * moveStats[curMoveStats].rotSpeed * 2 * speedMuliplier);
             } else {
-                print ("true");
                 transform.rotation = Quaternion.Lerp (transform.rotation, Quaternion.LookRotation (-(transform.position - GetMousePlanePos ()), Vector3.up), Time.deltaTime * moveStats[curMoveStats].rotSpeed * 2 * speedMuliplier);
             }
             if (Input.GetButtonDown (shootInput) == true) {
@@ -894,7 +900,8 @@ public class PlayerController : MonoBehaviour {
         spear.SetActive (false);
 
         GetComponent<Hitbox> ().enabled = false;
-        HitFlash ();
+        StopCoroutine("HitFlash");
+        StartCoroutine("HitFlash");
         CancelInvoke ("StopInvincible");
         Invoke ("StopInvincible", 1);
 
@@ -909,7 +916,7 @@ public class PlayerController : MonoBehaviour {
         }
     }
 
-    void HitFlash () {
+    public IEnumerator HitFlash () {
         if (GetComponent<Hitbox> ().enabled == false) {
             if (dashInvisible[0].activeSelf == true) {
                 for (int i = 0; i < dashInvisible.Length; i++) {
@@ -920,7 +927,8 @@ public class PlayerController : MonoBehaviour {
                     dashInvisible[i].SetActive (true);
                 }
             }
-            Invoke ("HitFlash", 0);
+            yield return new WaitForSecondsRealtime(0.02f);
+            StartCoroutine ("HitFlash");
         }
     }
 
@@ -964,6 +972,16 @@ public class PlayerController : MonoBehaviour {
 
     void FinalMove () {
         if (curState != State.WallSlide) {
+            Vector3 oldPos = transform.position;
+            if (ThreeDMode == false) {
+                Vector3 oldAngle = cameraTransform.eulerAngles;
+                cameraTransform.eulerAngles = new Vector3(0,playerCam.angleGoal.y,0);
+
+               // cc.Move(cameraTransform.TransformDirection(0,0,Vector3.Distance(oldPos,transform.position)));
+               movev3 = cameraTransform.TransformDirection(new Vector2(movev3.x,movev3.z).magnitude *  Mathf.Clamp(movev3.x + movev3.z,-1,1),movev3.y,0);
+
+                cameraTransform.eulerAngles = oldAngle;
+            }
             cc.Move (new Vector3 (movev3.x, 0, movev3.z) * Time.deltaTime);
             cc.Move (new Vector3 (0, movev3.y, 0) * Time.deltaTime);
         }

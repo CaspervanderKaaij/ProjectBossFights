@@ -13,8 +13,8 @@ public class PlayerItemManager : MonoBehaviour {
     public string item3Button = "Item3";
     public string item4Button = "Item4";
 
-    void Start(){
-        UpdateUIOwnedText();
+    void Start () {
+        UpdateUIOwnedText ();
     }
     void Update () {
         GetInput ();
@@ -23,24 +23,24 @@ public class PlayerItemManager : MonoBehaviour {
     void GetInput () {
         for (int i = 0; i < 4; i++) {
             if (Input.GetButtonDown (GetValueByString.GetStringValue ("item" + (i + 1) + "Button", this)) == true) {
-                print(i);
                 UseItem (i);
-                UpdateUIOwnedText();
+                UpdateUIOwnedText ();
             }
         }
     }
 
-    void UpdateUIOwnedText(){
-        for (int i = 0; i < 4; i++)
-        {
+    void UpdateUIOwnedText () {
+        for (int i = 0; i < 4; i++) {
             uiOwned[i].text = "" + myItems[i].owned;
         }
     }
 
     public void UseItem (int inventorySlot) {
         if (myItems[inventorySlot].owned > 0) {
-            itemTypes[myItems[inventorySlot].itemID].UseItem ();
-            myItems[inventorySlot].owned--;
+            if (itemTypes[myItems[inventorySlot].itemID].CanUse () == true) {
+                itemTypes[myItems[inventorySlot].itemID].UseItem ();
+                myItems[inventorySlot].owned--;
+            }
         }
     }
 

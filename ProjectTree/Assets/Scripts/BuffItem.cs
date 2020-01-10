@@ -3,11 +3,14 @@
 public class BuffItem : Item
 {
     public float addedSpeed = 0.3f;
-    public GameObject useParticle;
     public override void UseItem(){
-        PlayerController player = FindObjectOfType<PlayerController>();
+        base.UseItem();
         player.speedMuliplier += addedSpeed;
         player.speedMuliplier = Mathf.Min(player.speedMuliplier,1.75f);
-        Instantiate(useParticle,player.transform.position,Quaternion.identity);
+    }
+
+    public override bool CanUse(){
+        player = FindObjectOfType<PlayerController>();
+        return (player.speedMuliplier - addedSpeed < 1.75f);
     }
 }

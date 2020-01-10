@@ -9,14 +9,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d0d6ef6d8a856be4a998d0110a949e57, type: 3}
-  m_Name: Whirlwind Potion
+  m_Script: {fileID: 11500000, guid: 080cd747e484d1b4183482ca34039703, type: 3}
+  m_Name: Spirit Orb
   m_EditorClassIdentifier: 
-  itemName: Whirlwind Potion
-  description: Speeds you up
+  itemName: Spirit Orb
+  description: Makes you invincible for 5 seconds.
   useParticle: {fileID: 3497745268452784414, guid: bd00b67c5d0a99c4e989c126b8b7bd14,
     type: 3}
-  clip: {fileID: 8300000, guid: 3a97ff7d157c1c549afccd1155d9930b, type: 3}
+  clip: {fileID: 8300000, guid: 0da2cfc301c325f4ba0b5f17aed4f3bd, type: 3}
   clipPitch: 1
   player: {fileID: 0}
-  addedSpeed: 0.6
+  time: 5

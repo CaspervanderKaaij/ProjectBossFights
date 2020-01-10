@@ -10,9 +10,10 @@ public class Hurtbox : MonoBehaviour {
     public UnityEvent hitEv;
     public bool destroyOnHit = false;
     void OnTriggerEnter (Collider other) {
-        if (other.GetComponent<Hitbox> () != null && this.enabled == true) {
-            other.GetComponent<Hitbox> ().GetHit (team, damage, this);
-            if (destroyOnHit == true && other.GetComponent<Hitbox> ().team != team) {
+        Hitbox hBox = other.GetComponent<Hitbox> ();
+        if (hBox != null && this.enabled == true) {
+            hBox.GetHit (team, damage, this);
+            if (destroyOnHit == true && hBox.team != team && hBox.IsFriend(team) == false) {
                 Destroy (gameObject);
             }
         } else if (destroyOnHit == true && this.enabled == true && other.GetComponent<Hurtbox> () == false && other.gameObject.layer == 0) {

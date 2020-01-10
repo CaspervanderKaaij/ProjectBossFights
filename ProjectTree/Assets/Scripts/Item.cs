@@ -19,4 +19,9 @@ public class Item : ScriptableObject {
         }
 
     }
+
+    public virtual bool CanUse(){
+        player = FindObjectOfType<PlayerController> ();
+        return true;
+    }
 }
