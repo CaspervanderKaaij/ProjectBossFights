@@ -7,8 +7,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Remasu_Ripple 1
-  m_Shader: {fileID: 4800000, guid: f77cdea02bf717146886a1e32994eb94, type: 3}
+  m_Name: BlackHole 4
+  m_Shader: {fileID: 4800000, guid: f8f038f636f81f446b7ff4c65e64c8f2, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 0
   m_EnableInstancingVariants: 0
@@ -19,15 +19,22 @@ Material:
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
-    - _TextureSample1:
-        m_Texture: {fileID: 2800000, guid: a2eabea7804f35d4b8faba8427310b61, type: 3}
+    - _Fade:
+        m_Texture: {fileID: 2800000, guid: c00953c130d0ce44e8fd53e79e48bdd9, type: 3}
         m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _TextureSample0:
+        m_Texture: {fileID: 2800000, guid: 6e6cba53deb4f4e41a81667b73a1ca42, type: 3}
+        m_Scale: {x: 3.4, y: 8.07}
         m_Offset: {x: 0, y: 0}
     - _texcoord:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
-    - _NormalScale: -0.2
+    - _Cutoff: 0.35
+    - _Opacity: 0.88
     - __dirty: 0
-    m_Colors: []
+    m_Colors:
+    - _Color0: {r: 20.201408, g: 8.9416065, b: 31.626795, a: 0}
+    - _Vector0: {r: -1.68, g: 2.05, b: 0, a: 0}
