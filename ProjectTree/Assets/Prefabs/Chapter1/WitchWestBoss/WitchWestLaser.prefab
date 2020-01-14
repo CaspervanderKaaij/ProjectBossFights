@@ -249,7 +249,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 30883f6f792f88d49a514f876255726f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  team: 1
+  team: 2
   damage: 10
   activeTime: 0
   hitEv:
