@@ -20,4 +20,3 @@ MonoBehaviour:
   clipPitch: 1.5
   player: {fileID: 0}
   amount: 50
-  clipPitch: 1.5
