@@ -42,8 +42,8 @@ Material:
     - _VertexStrength: 0.04
     - __dirty: 0
     m_Colors:
-    - _BaseColor: {r: 0.30045363, g: 0, b: 1.1977208, a: 0}
+    - _BaseColor: {r: 0, g: 0, b: 0, a: 0}
     - _Color0: {r: 1.1171656, g: 2.4145193, b: 6.5948806, a: 0}
-    - _FresnelColor: {r: 0, g: 0.3449435, b: 0.6509434, a: 0}
+    - _FresnelColor: {r: 4.1377416, g: 0, b: 25.962269, a: 0}
     - _Vector0: {r: 0, g: -0.2, b: 0, a: 0}
-    - _Vector05: {r: -0.51, g: -0.06, b: 0, a: 0}
+    - _Vector05: {r: 0.51, g: -0.06, b: 0, a: 0}

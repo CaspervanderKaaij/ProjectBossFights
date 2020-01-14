@@ -44,3 +44,6 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: Griddo
+    uniqueID: 1444494085
+    locked: 0
