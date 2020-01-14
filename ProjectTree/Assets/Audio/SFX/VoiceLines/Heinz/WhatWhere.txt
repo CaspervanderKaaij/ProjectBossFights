@@ -1,0 +1,9 @@
+Taunts: If no other voicelines are playing, have a random timer to play the taunt clips
+ShieldUp: Use whenever the shield goes back up again
+Phase3Attack: Use for any attack during phase 3
+Phase3Begin: Use when phase 3 begins
+Final: Use when the final attack starts
+PlayerLaserTaunt: Use when the player is hit by a laser
+LaserCircle: Use when the laser circle attack is used, once they're there you can throw this in a pool of general attack voicelines (so it doesn't play every single time)
+BulletAttack: Use when the bullet spray attack is used
+Phase2Begin: Use when phase 2 begins
