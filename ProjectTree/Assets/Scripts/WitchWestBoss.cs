@@ -40,6 +40,12 @@ public class WitchWestBoss : MonoBehaviour {
     [SerializeField] Renderer[] shieldMats;
     [SerializeField] float camXRotation = 30;
     [SerializeField] AudioClip finalAttackChargeClip;
+    [Header ("VoiceLines")]
+    [SerializeField] AudioClip[] barrierVoiceBackAudio;
+    [SerializeField] AudioClip[] phase3Start;
+    [SerializeField] AudioClip[] phase2Start;
+    [SerializeField] AudioClip[] phase1Start;
+    [SerializeField] AudioClip[] finalAttackVoice;
 
     void Start () {
         player = FindObjectOfType<PlayerController> ();
@@ -56,6 +62,7 @@ public class WitchWestBoss : MonoBehaviour {
         SetBarrierVisibility ();
     }
 
+    int lastPhase = 1;
     void DebugInput () {
         if (isAttacking == true) {
             hitbox.enabled = false;
@@ -65,14 +72,23 @@ public class WitchWestBoss : MonoBehaviour {
         if (curState != State.FinalAttack) {
 
             if (hitbox.hp > 800) {
+                lastPhase = 1;
                 StartPhase1Attack ();
             } else if (hitbox.hp > 350) {
+                lastPhase = 2;
                 StartPhase2Attack ();
             } else {
+                lastPhase = 3;
                 StartPhase3Attack ();
             }
 
         }
+        /*
+
+         if(Input.GetKeyDown(KeyCode.Tab)){
+             StartAttack (State.Attacking, "GroundLaserPhase2Attack");
+         }
+         */
     }
 
     public void ActivateFinalAttack () {
@@ -83,7 +99,7 @@ public class WitchWestBoss : MonoBehaviour {
         }
     }
     IEnumerator FinalAttack () {
-        print ("Final Attack" + Time.time);
+        Talk (finalAttackVoice);
         barrier.GetComponent<Hurtbox> ().damage = 0;
         SetBarrierActive (true);
         cam.HardShake (5);
@@ -133,6 +149,9 @@ public class WitchWestBoss : MonoBehaviour {
     }
 
     Hurtbox barrierHBox;
+    bool phase2Voiced = false;
+    bool phase3Voiced = false;
+    bool phase1Voiced = false;
     void SetBarrierActive (bool active) {
         bool wasActive = barrierHBox.enabled;
         //barrier.SetActive (active);
@@ -143,10 +162,30 @@ public class WitchWestBoss : MonoBehaviour {
             FindObjectOfType<PlayerCam> ().SmallShake (0.3f);
             Invoke ("BarrierShake", 0.1f);
             barrier.GetComponent<AutoScale> ().enabled = true;
+            if (curState != State.FinalAttack) {
+                camXRotation = 30;
+                if (phase2Voiced == false && hitbox.hp <= 800) {
+                    phase2Voiced = true;
+                    Talk (phase2Start);
+                } else if (phase3Voiced == false && hitbox.hp <= 350) {
+                    phase3Voiced = true;
+                    Talk (phase3Start);
+                } else if(phase1Voiced == false) {
+                    Talk(phase1Start);
+                    phase1Voiced = true;
+                } else {
+                    Talk (barrierVoiceBackAudio);
+                }
+            }
         }
         if (active == false && wasActive == true) {
             Instantiate (barrierBreakParticle, barrier.transform.position, Quaternion.identity);
+            camXRotation = 50;
         }
+    }
+
+    void Talk (AudioClip[] clips) {
+        SpawnAudio.SpawnVoice (clips[Random.Range (0, clips.Length)], 0, 1, 1, 0);
     }
 
     float curDissolve = 0;
@@ -268,8 +307,8 @@ public class WitchWestBoss : MonoBehaviour {
                 if (curState != State.FinalAttack) {
                     curAtk++;
                 }
-                if(curState != State.FinalAttack){
-                curState = atk;
+                if (curState != State.FinalAttack) {
+                    curState = atk;
                 }
                 StartCoroutine (coroutineName);
                 isAttacking = true;
@@ -549,8 +588,8 @@ public class WitchWestBoss : MonoBehaviour {
 
     void StopAttack () {
         isAttacking = false;
-        if(curState != State.FinalAttack){
-        curState = State.Idle;
+        if (curState != State.FinalAttack) {
+            curState = State.Idle;
         }
     }
 }

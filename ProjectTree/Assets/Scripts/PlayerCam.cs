@@ -41,7 +41,7 @@ public class PlayerCam : MonoBehaviour {
         }
         transform.position = Vector3.Lerp (transform.position, goalPos, Time.deltaTime * realSpeed);
 
-        transform.rotation = Quaternion.Lerp (transform.rotation, Quaternion.Euler (angleGoal), Time.deltaTime * 5);
+        transform.rotation = Quaternion.Lerp (transform.rotation, Quaternion.Euler (angleGoal), Time.deltaTime * 10);
 
         if (limiter != null) {
             Vector3 v3Helper = transform.position;
