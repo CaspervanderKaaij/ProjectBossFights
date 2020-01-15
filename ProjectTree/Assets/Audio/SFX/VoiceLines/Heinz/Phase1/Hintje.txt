@@ -1,0 +1,2 @@
+BulletFast en BulletNormal kunnen worden gebruikt voor kogels bij alle fases. ze staan hier alleen voor schonere opmaak.
+Bijvoorbeeld: Voor de laatste kogel van minigun in phase 3 kan BulletFast gebruiken.
