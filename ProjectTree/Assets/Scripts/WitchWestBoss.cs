@@ -42,10 +42,23 @@ public class WitchWestBoss : MonoBehaviour {
     [SerializeField] AudioClip finalAttackChargeClip;
     [Header ("VoiceLines")]
     [SerializeField] AudioClip[] barrierVoiceBackAudio;
+    [SerializeField] AudioClip[] barrierDownVoice;
     [SerializeField] AudioClip[] phase3Start;
     [SerializeField] AudioClip[] phase2Start;
     [SerializeField] AudioClip[] phase1Start;
     [SerializeField] AudioClip[] finalAttackVoice;
+    [SerializeField] AudioClip[] deathVoice;
+    [SerializeField] AudioClip[] laserCircleVoice;
+    [SerializeField] AudioClip[] quickAttackP1Voice;
+    [SerializeField] AudioClip[] surroundPlayerP1Voice;
+    [SerializeField] AudioClip[] rapidLaserP2;
+    [SerializeField] AudioClip[] aroundWitchP2;
+    [SerializeField] AudioClip[] groundLaserP3Voice;
+    [SerializeField] AudioClip[] rapidFireP3Voice;
+    [SerializeField] AudioClip[] RatataP3Voice;
+    [SerializeField] AudioClip[] Phase3Attacks;
+    [SerializeField] AudioClip[] taunts;
+    [SerializeField] AudioClip[] getHitVoices;
 
     void Start () {
         player = FindObjectOfType<PlayerController> ();
@@ -54,6 +67,16 @@ public class WitchWestBoss : MonoBehaviour {
         barrierHBox = barrier.GetComponent<Hurtbox> ();
         barrierHBox.enabled = false;
         SetBarrierActive (true);
+        InvokeRepeating("Taunt",20,20);
+    }
+
+    void Taunt(){
+        if(barrier.activeSelf == true && curState != State.FinalAttack){
+        TalkIfNotTalking(taunts);
+        }
+    }
+    public void GetHitSound(){
+        Talk(getHitVoices);
     }
 
     void Update () {
@@ -83,10 +106,10 @@ public class WitchWestBoss : MonoBehaviour {
             }
 
         }
-        /*
 
+        /*
          if(Input.GetKeyDown(KeyCode.Tab)){
-             StartAttack (State.Attacking, "GroundLaserPhase2Attack");
+             StartAttack (State.Attacking, "AimShootP3");
          }
          */
     }
@@ -104,6 +127,7 @@ public class WitchWestBoss : MonoBehaviour {
         SetBarrierActive (true);
         cam.HardShake (5);
         SpawnAudio.AudioSpawn (finalAttackChargeClip, 0, 1, 1);
+        camXRotation = 30;
 
         Instantiate (barrierBackTelegraphParticle, barrier.transform.position, Quaternion.identity);
         yield return new WaitForSeconds (1);
@@ -138,6 +162,7 @@ public class WitchWestBoss : MonoBehaviour {
         yield return new WaitForSeconds (10);
         StartCoroutine ("SurroundPlayer");
         yield return new WaitForSeconds (3);
+        Talk(deathVoice);
         Destroy (transform.root.gameObject);
 
     }
@@ -181,11 +206,24 @@ public class WitchWestBoss : MonoBehaviour {
         if (active == false && wasActive == true) {
             Instantiate (barrierBreakParticle, barrier.transform.position, Quaternion.identity);
             camXRotation = 50;
+            Talk(barrierDownVoice);
         }
     }
 
     void Talk (AudioClip[] clips) {
-        SpawnAudio.SpawnVoice (clips[Random.Range (0, clips.Length)], 0, 1, 1, 0);
+        AudioClip chosenClip = clips[Random.Range (0, clips.Length)];
+        SpawnAudio.SpawnVoice (chosenClip, 0, 1, 1, 0);
+        Invoke("Talking",chosenClip.length);
+    }
+
+    void TalkIfNotTalking(AudioClip[] clips){
+        if(IsInvoking("Talking") == false){
+            Talk(clips);
+        }
+    }
+
+    void Talking(){
+
     }
 
     float curDissolve = 0;
@@ -345,6 +383,7 @@ public class WitchWestBoss : MonoBehaviour {
 
     IEnumerator GroundLaserPhase2Attack () {
         yield return new WaitForSeconds (0.8f);
+        TalkIfNotTalking(rapidLaserP2);
         float repeatSpeed = Random.Range (0.2f, 0.3f);
         SmoothLookAtPlayer ();
         for (int i = 0; i < 15; i++) {
@@ -358,6 +397,7 @@ public class WitchWestBoss : MonoBehaviour {
 
     IEnumerator GroundLaserPhase3Attack () {
         yield return new WaitForSeconds (1);
+        TalkIfNotTalking(groundLaserP3Voice);
         Vector3 centerPos = new Vector3 (player.transform.position.x, floorYCoods + 0.1f, player.transform.position.z);
         float rngRange = 20;
         for (int i = 0; i < 5; i++) {
@@ -393,6 +433,7 @@ public class WitchWestBoss : MonoBehaviour {
     }
 
     IEnumerator LaserCircleAttack () {
+        TalkIfNotTalking(laserCircleVoice);
         GameObject g = Instantiate (laserCirclePrefab, transform.position, Quaternion.identity);
         for (int i = 0; i < g.transform.childCount; i++) {
             g.transform.GetChild (i).GetComponent<WitchWestLaser> ().activeTime /= 2;
@@ -402,12 +443,14 @@ public class WitchWestBoss : MonoBehaviour {
     }
 
     IEnumerator LaserCircleP2Attack () {
+        TalkIfNotTalking(laserCircleVoice);
         Instantiate (laserP2CirclePrefab, transform.position, Quaternion.identity);
         yield return new WaitForSeconds (15);
         StopAttack ();
     }
 
     IEnumerator LaserCircleP3Attack () {
+        TalkIfNotTalking(laserCircleVoice);
         Invoke ("NoLaser", 10.5f * 4);
         Instantiate (laserCirclePrefab, transform.position, Quaternion.identity).GetComponent<AutoRotate> ().v3 /= 10;
         Instantiate (laserCirclePrefab, transform.position, Quaternion.identity).GetComponent<AutoRotate> ().v3 /= -4;
@@ -422,6 +465,7 @@ public class WitchWestBoss : MonoBehaviour {
 
     IEnumerator AimShootP1 () {
         SmoothLookAtPlayer ();
+        TalkIfNotTalking(quickAttackP1Voice);
         yield return new WaitForSeconds (0.5f);
         SpawnShooterPrefab (player.transform.position + Vector3.up + player.transform.forward * 5, new Vector3 (0, 4, -3));
         yield return new WaitForSeconds (0.3f);
@@ -446,6 +490,7 @@ public class WitchWestBoss : MonoBehaviour {
         float rngRange = 2;
         SmoothLookAtPlayer ();
         yield return new WaitForSeconds (0.5f);
+        TalkIfNotTalking(RatataP3Voice);
         SpawnShooterPrefab (player.transform.position + Vector3.up + new Vector3 (Random.Range (-rngRange, rngRange), 0, Random.Range (-rngRange, rngRange)), new Vector3 (0, 4, -3));
         for (int i = 0; i < 20; i++) {
             yield return new WaitForSeconds (0.1f);
@@ -461,6 +506,7 @@ public class WitchWestBoss : MonoBehaviour {
     IEnumerator SurroundPlayer () {
         SmoothLookAtPlayer ();
         yield return new WaitForSeconds (1);
+        TalkIfNotTalking(surroundPlayerP1Voice);
         GameObject g = Instantiate (shooterPrefab2, player.transform.position + player.transform.forward * -10 + Vector3.up * 2, transform.rotation);
         g.transform.LookAt (new Vector3 (player.transform.position.x, transform.position.y, player.transform.position.z));
         g.transform.Rotate (90, 0, 0);
@@ -501,6 +547,7 @@ public class WitchWestBoss : MonoBehaviour {
     IEnumerator SurroundPlayer3 () {
         SmoothLookAtPlayer ();
         yield return new WaitForSeconds (1);
+        TalkIfNotTalking(Phase3Attacks);
         float curAngle = 0;
         for (int i = 0; i < 10; i++) {
             GameObject g = Instantiate (shooterPrefab2, player.transform.position + Vector3.up * 2, Quaternion.Euler (90, curAngle, 0));
@@ -547,6 +594,7 @@ public class WitchWestBoss : MonoBehaviour {
 
     IEnumerator AroundWitch2 () {
         yield return new WaitForSeconds (1);
+        TalkIfNotTalking(aroundWitchP2);
         float curAngle = 0;
         for (int i = 0; i < 100; i++) {
             GameObject g = Instantiate (shooterPrefab2, transform.position, Quaternion.Euler (90, curAngle, 0));
@@ -560,6 +608,7 @@ public class WitchWestBoss : MonoBehaviour {
     }
     IEnumerator AroundWitch3 () {
         yield return new WaitForSeconds (1);
+        TalkIfNotTalking(rapidFireP3Voice);
         float curAngle = 0;
         float curForwardAmount = 2;
         for (int i = 0; i < 100; i++) {
