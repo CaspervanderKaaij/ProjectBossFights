@@ -283,8 +283,8 @@ public class WitchWestBoss : MonoBehaviour {
         FindObjectOfType<TimescaleManager> ().SlowMo (0.2f, 0.2f);
         FindObjectOfType<PlayerCam> ().HardShake (0.15f);
         Instantiate (barrierParticle, barrier.transform.position, Quaternion.identity);
-        barrier.GetComponent<AutoScale> ().enabled = false;
-        barrier.transform.localScale *= 2;
+        //barrier.GetComponent<AutoScale> ().enabled = false;
+        //barrier.transform.localScale *= 2;
         SpawnAudio.AudioSpawn (barrierClip, 0, 1, 0.4f);
         SpawnAudio.AudioSpawn (barrierClip2, 0, 2, 1);
     }

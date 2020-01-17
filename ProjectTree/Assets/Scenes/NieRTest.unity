@@ -2148,7 +2148,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b1a1e429875089e4882f537b2efc0bea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  goal: {x: 1.9833266, y: 1.9833266, z: 1.9833266}
+  goal: {x: 2.644436, y: 2.644436, z: 2.644436}
   speed: 16.666666
 --- !u!114 &179249169
 MonoBehaviour:
