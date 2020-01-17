@@ -26,4 +26,10 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Backgrounds/Chapter1/C1_Night_PieceOfBarrier.unity
     guid: ae3bffec717649f47ae298f20cba31a5
+  - enabled: 1
+    path: Assets/Scenes/GreyBoxing/HeinzGreybox.unity
+    guid: 4b200af9353c349438aa5228b01b06f1
+  - enabled: 1
+    path: Assets/Scenes/Backgrounds/Chapter1/C1_Heinz.unity
+    guid: 75c9dc8b3b708cf4aa9bbdd6ea5260d7
   m_configObjects: {}
