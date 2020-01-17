@@ -6,7 +6,7 @@ public class WitchWestLaser : MonoBehaviour {
     public GameObject laser;
     public float chargeTime = 1;
     public float activeTime = 0.6f;
-    [SerializeField] AudioClip clip;
+    public AudioClip clip;
     void Start () {
         StartCoroutine (Events ());
     }
@@ -18,7 +18,9 @@ public class WitchWestLaser : MonoBehaviour {
         yield return new WaitForSeconds (0.1f);
         laser.gameObject.SetActive (true);
         FindObjectOfType<PlayerCam> ().HardShake (0.1f);
-        SpawnAudio.AudioSpawn (clip, 0, Random.Range (1.5f, 2.5f), 1);
+        if (clip != null) {
+            SpawnAudio.AudioSpawn (clip, 0, Random.Range (1.5f, 2.5f), 1);
+        }
         transform.localScale *= 1.2f;
         if (GetComponentInChildren<LineRenderer> () != null) {
             Destroy (GetComponentInChildren<LineRenderer> ().gameObject);

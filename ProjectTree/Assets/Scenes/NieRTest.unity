@@ -14361,8 +14361,8 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 1, y: 1.5203952, z: 1}
+  m_Center: {x: 0, y: -0.2601978, z: 0}
 --- !u!23 &944458555
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -14550,6 +14550,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 4ddac5c74ee03f949b9b4e1fe7cc3cc0, type: 3}
   - {fileID: 8300000, guid: cdf7bdb859cfefb4794e814f019ba796, type: 3}
   - {fileID: 8300000, guid: 132f0f2808abba14eb0ee37d41d9c46c, type: 3}
+  - {fileID: 8300000, guid: 29f52035b554a1e47aa4b32010e7c75a, type: 3}
   getHitVoices:
   - {fileID: 8300000, guid: 4e43af970cc5af24b8cb2c9e811a4076, type: 3}
   - {fileID: 8300000, guid: 0be8a019b88fe894186a80e676f47ddc, type: 3}
@@ -14559,6 +14560,9 @@ MonoBehaviour:
   - {fileID: 8300000, guid: dcc91c07cb324ac4aa846f4be5fd04d6, type: 3}
   - {fileID: 8300000, guid: d68170a94d166a04fbf54927690818a3, type: 3}
   - {fileID: 8300000, guid: 93ef14b129a1ce24ea93b74e7de9d0c2, type: 3}
+  ratataLoopSound: {fileID: 8300000, guid: a87bf999f3ca67c479ee043e9113321e, type: 3}
+  groundLaserBassBoost: {fileID: 8300000, guid: ab1e89125ab41194a966c44e7fb70f07,
+    type: 3}
   anim: {fileID: 2082238211}
   animRotator: {fileID: 2082238209}
   heinzModel: {fileID: 1194677059}

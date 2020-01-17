@@ -21,6 +21,23 @@ public class SpawnAudio : MonoBehaviour {
         }
     }
 
+    public static void AudioSpawn (AudioClip clip, float startTime, float pitch, float volume,float delay) {
+        GameObject g = new GameObject ();
+        AudioSource s = g.AddComponent<AudioSource> ();
+        s.clip = clip;
+        s.pitch = pitch;
+        s.time = startTime;
+        s.volume = volume;
+        AudioMixer mixer = Resources.Load ("MainVolume") as AudioMixer;
+        s.outputAudioMixerGroup = mixer.FindMatchingGroups ("SFX") [0];
+        s.PlayDelayed (delay);
+        Destroy (g, clip.length);
+
+        if (FindObjectOfType<TimescaleManager> () != null) {
+            s.pitch *= FindObjectOfType<TimescaleManager> ().normalScale;
+        }
+    }
+
     public static void AudioSpawn (AudioClip[] clip, float startTime, float pitch, float volume) {
         for (int i = 0; i < clip.Length; i++) {
             GameObject g = new GameObject ();

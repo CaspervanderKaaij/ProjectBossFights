@@ -59,6 +59,8 @@ public class WitchWestBoss : MonoBehaviour {
     [SerializeField] AudioClip[] Phase3Attacks;
     [SerializeField] AudioClip[] taunts;
     [SerializeField] AudioClip[] getHitVoices;
+    [SerializeField] AudioClip ratataLoopSound;
+    [SerializeField] AudioClip groundLaserBassBoost;
     [Header ("Animations")]
     [SerializeField] Animator anim;
     [SerializeField] AutoRotate animRotator;
@@ -118,11 +120,21 @@ public class WitchWestBoss : MonoBehaviour {
 
         }
 
+        IdleSmoother ();
+
         /*
         if (Input.GetKeyDown (KeyCode.Tab)) {
-            StartAttack (State.Attacking, "AroundWitch3");
+            StartAttack (State.Attacking, "GroundLaserPhase3Attack");
         }
          */
+    }
+
+    void IdleSmoother () {
+        if (anim.GetCurrentAnimatorStateInfo (0).IsTag ("Idle") == true) {
+            anim.SetLayerWeight (1, 1);
+        } else {
+            anim.SetLayerWeight (1, Mathf.MoveTowards (anim.GetLayerWeight (1), 0, Time.deltaTime * 3));
+        }
     }
 
     public void ActivateFinalAttack () {
@@ -436,38 +448,49 @@ public class WitchWestBoss : MonoBehaviour {
         TalkIfNotTalking (groundLaserP3Voice);
         Vector3 centerPos = new Vector3 (player.transform.position.x, floorYCoods + 0.1f, player.transform.position.z);
         float rngRange = 20;
+        SpawnAudio.AudioSpawn (groundLaserBassBoost, 0, 1, 1, 1);
         for (int i = 0; i < 5; i++) {
-            Instantiate (groundLaser3Prefab, centerPos + new Vector3 (Random.Range (-rngRange, rngRange), 0, Random.Range (-rngRange, rngRange)), Quaternion.identity);
+            Instantiate (groundLaser3Prefab, centerPos + new Vector3 (Random.Range (-rngRange, rngRange), 0, Random.Range (-rngRange, rngRange)), Quaternion.identity).GetComponent<WitchWestLaser> ().clip = null;
         }
         yield return new WaitForSeconds (1f);
+        SpawnAudio.AudioSpawn (groundLaserBassBoost, 0, 1.2f, 1, 1);
+
         anim.Play ("HeinzDoubleGroundLaser", 0, 0);
         centerPos = new Vector3 (player.transform.position.x, floorYCoods + 0.1f, player.transform.position.z);
         for (int i = 0; i < 10; i++) {
-            Instantiate (groundLaser3Prefab, centerPos + new Vector3 (Random.Range (-rngRange, rngRange), 0, Random.Range (-rngRange, rngRange)), Quaternion.identity);
+            Instantiate (groundLaser3Prefab, centerPos + new Vector3 (Random.Range (-rngRange, rngRange), 0, Random.Range (-rngRange, rngRange)), Quaternion.identity).GetComponent<WitchWestLaser> ().clip = null;
         }
         yield return new WaitForSeconds (1);
+        SpawnAudio.AudioSpawn (groundLaserBassBoost, 0, 1.4f, 1, 1);
+
         anim.Play ("HeinzDoubleGroundLaser", 0, 0);
         centerPos = new Vector3 (player.transform.position.x, floorYCoods + 0.1f, player.transform.position.z);
         for (int i = 0; i < 20; i++) {
-            Instantiate (groundLaser3Prefab, centerPos + new Vector3 (Random.Range (-rngRange, rngRange), 0, Random.Range (-rngRange, rngRange)), Quaternion.identity);
+            Instantiate (groundLaser3Prefab, centerPos + new Vector3 (Random.Range (-rngRange, rngRange), 0, Random.Range (-rngRange, rngRange)), Quaternion.identity).GetComponent<WitchWestLaser> ().clip = null;
         }
         yield return new WaitForSeconds (1);
+        SpawnAudio.AudioSpawn (groundLaserBassBoost, 0, 1.6f, 1, 1);
+
         anim.Play ("HeinzDoubleGroundLaser", 0, 0);
         centerPos = new Vector3 (player.transform.position.x, floorYCoods + 0.1f, player.transform.position.z);
         for (int i = 0; i < 30; i++) {
-            Instantiate (groundLaser3Prefab, centerPos + new Vector3 (Random.Range (-rngRange, rngRange), 0, Random.Range (-rngRange, rngRange)), Quaternion.identity);
+            Instantiate (groundLaser3Prefab, centerPos + new Vector3 (Random.Range (-rngRange, rngRange), 0, Random.Range (-rngRange, rngRange)), Quaternion.identity).GetComponent<WitchWestLaser> ().clip = null;
         }
         yield return new WaitForSeconds (1);
+        SpawnAudio.AudioSpawn (groundLaserBassBoost, 0, 1.8f, 1, 1);
+
         anim.Play ("HeinzDoubleGroundLaser", 0, 0);
         centerPos = new Vector3 (player.transform.position.x, floorYCoods + 0.1f, player.transform.position.z);
         for (int i = 0; i < 35; i++) {
-            Instantiate (groundLaser3Prefab, centerPos + new Vector3 (Random.Range (-rngRange, rngRange), 0, Random.Range (-rngRange, rngRange)), Quaternion.identity);
+            Instantiate (groundLaser3Prefab, centerPos + new Vector3 (Random.Range (-rngRange, rngRange), 0, Random.Range (-rngRange, rngRange)), Quaternion.identity).GetComponent<WitchWestLaser> ().clip = null;
         }
         yield return new WaitForSeconds (1);
+        SpawnAudio.AudioSpawn (groundLaserBassBoost, 0, 2f, 1, 1);
+
         anim.Play ("HeinzDoubleGroundLaser", 0, 0);
         centerPos = new Vector3 (player.transform.position.x, floorYCoods + 0.1f, player.transform.position.z);
         for (int i = 0; i < 40; i++) {
-            Instantiate (groundLaser3Prefab, centerPos + new Vector3 (Random.Range (-rngRange, rngRange), 0, Random.Range (-rngRange, rngRange)), Quaternion.identity);
+            Instantiate (groundLaser3Prefab, centerPos + new Vector3 (Random.Range (-rngRange, rngRange), 0, Random.Range (-rngRange, rngRange)), Quaternion.identity).GetComponent<WitchWestLaser> ().clip = null;
         }
         yield return new WaitForSeconds (1);
         anim.Play ("HeinzDoubleGroundLaser", 0, 0);
@@ -517,7 +540,7 @@ public class WitchWestBoss : MonoBehaviour {
         anim.Play ("HeinzPredictionShotStart");
         TalkIfNotTalking (quickAttackP1Voice);
         yield return new WaitForSeconds (0.5f);
-        SpawnShooterPrefab (player.transform.position + Vector3.up + player.transform.forward * 5, new Vector3 (0, 4, -3));
+        SpawnShooterPrefab (player.transform.position + Vector3.up + player.transform.forward * 5, new Vector3 (0, 4, -3), true);
         yield return new WaitForSeconds (0.2f);
         anim.Play ("HeinzPredictionShot");
         yield return new WaitForSeconds (0.5f);
@@ -529,13 +552,13 @@ public class WitchWestBoss : MonoBehaviour {
         anim.Play ("HeinzDoubleShotAStart");
         SmoothLookAtPlayer ();
         yield return new WaitForSeconds (0.5f);
-        SpawnShooterPrefab (player.transform.position + Vector3.up, new Vector3 (-3, 3, -3));
-        SpawnShooterPrefab (player.transform.position + Vector3.up, new Vector3 (3, 3, -3));
+        SpawnShooterPrefab (player.transform.position + Vector3.up, new Vector3 (-3, 3, -3), true);
+        SpawnShooterPrefab (player.transform.position + Vector3.up, new Vector3 (3, 3, -3), false);
         yield return new WaitForSeconds (0.1f);
         anim.Play ("HeinzDoubleShotA");
         yield return new WaitForSeconds (0.4f);
-        SpawnShooterPrefab (player.transform.position + Vector3.up + player.transform.forward * 5, new Vector3 (-4.3f, 3, -3));
-        SpawnShooterPrefab (player.transform.position + Vector3.up + player.transform.forward * -5, new Vector3 (4.3f, 3, -3));
+        SpawnShooterPrefab (player.transform.position + Vector3.up + player.transform.forward * 5, new Vector3 (-4.3f, 3, -3), true);
+        SpawnShooterPrefab (player.transform.position + Vector3.up + player.transform.forward * -5, new Vector3 (4.3f, 3, -3), false);
         yield return new WaitForSeconds (0.1f);
         anim.Play ("HeinzDoubleShotB");
         yield return new WaitForSeconds (0.3f);
@@ -550,14 +573,16 @@ public class WitchWestBoss : MonoBehaviour {
         yield return new WaitForSeconds (0.5f);
         anim.Play ("HeinzRapidFireLoop");
         TalkIfNotTalking (RatataP3Voice);
-        SpawnShooterPrefab (player.transform.position + Vector3.up + new Vector3 (Random.Range (-rngRange, rngRange), 0, Random.Range (-rngRange, rngRange)), new Vector3 (0, 4, -3));
+        SpawnShooterPrefab (player.transform.position + Vector3.up + new Vector3 (Random.Range (-rngRange, rngRange), 0, Random.Range (-rngRange, rngRange)), new Vector3 (0, 4, -3), true);
+        yield return new WaitForSeconds (0.1f);
+        SpawnAudio.AudioSpawn (ratataLoopSound, 6.3f, 1, 0.4f);
         for (int i = 0; i < 20; i++) {
+            SpawnShooterPrefab (player.transform.position + Vector3.up + new Vector3 (Random.Range (-rngRange, rngRange), 0, Random.Range (-rngRange, rngRange)), new Vector3 (0, 4, -3), false);
             yield return new WaitForSeconds (0.1f);
-            SpawnShooterPrefab (player.transform.position + Vector3.up + new Vector3 (Random.Range (-rngRange, rngRange), 0, Random.Range (-rngRange, rngRange)), new Vector3 (0, 4, -3));
         }
         anim.Play ("HeinzPredictionShotStart");
         yield return new WaitForSeconds (1f);
-        SpawnShooterPrefab (player.transform.position + Vector3.up + player.transform.forward * 5, new Vector3 (0, 4, -3));
+        SpawnShooterPrefab (player.transform.position + Vector3.up + player.transform.forward * 5, new Vector3 (0, 4, -3), true);
         yield return new WaitForSeconds (0.1f);
         anim.Play ("HeinzPredictionShot");
         yield return new WaitForSeconds (0.3f);
@@ -682,10 +707,15 @@ public class WitchWestBoss : MonoBehaviour {
         animRotator.v3 *= 3;
         TalkIfNotTalking (aroundWitchP2);
         float curAngle = 0;
+        SpawnAudio.AudioSpawn (ratataLoopSound, 6.5f, 1, 1, 0.65f);
         for (int i = 0; i < 100; i++) {
             GameObject g = Instantiate (shooterPrefab2, transform.position, Quaternion.Euler (90, curAngle, 0));
+            if (i > 1) {
+                g.GetComponent<WitchWestLaser> ().clip = null;
+            }
             g.transform.position -= g.transform.right * 5;
             g.transform.Rotate (0, 0, -90);
+
             curAngle += 360 / 20 + (i / 3f);
             yield return new WaitForEndOfFrame ();
         }
@@ -699,11 +729,15 @@ public class WitchWestBoss : MonoBehaviour {
         animRotator.enabled = true;
         animRotator.v3 *= 3;
         yield return new WaitForSeconds (0.4f);
+        SpawnAudio.AudioSpawn (ratataLoopSound, 2.5f, 1, 1, 0.65f);
         TalkIfNotTalking (rapidFireP3Voice);
         float curAngle = 0;
         float curForwardAmount = 2;
         for (int i = 0; i < 100; i++) {
             GameObject g = Instantiate (shooterPrefab2, transform.position, Quaternion.Euler (90, curAngle, 0));
+            if (i > 1) {
+                g.GetComponent<WitchWestLaser> ().clip = null;
+            }
             g.transform.position -= g.transform.right * curForwardAmount;
             g.transform.Rotate (0, 0, -90);
             curAngle += 360 / 24 + (i / 3f);
@@ -715,8 +749,11 @@ public class WitchWestBoss : MonoBehaviour {
         StopAttack ();
     }
 
-    void SpawnShooterPrefab (Vector3 lookAtPos, Vector3 offset) {
+    void SpawnShooterPrefab (Vector3 lookAtPos, Vector3 offset, bool hasSound) {
         GameObject g = Instantiate (shooterPrefab, transform.position + (-transform.forward * offset.z) + (transform.up * offset.y) + (transform.right * offset.x), transform.rotation);
+        if (hasSound == false) {
+            g.GetComponent<WitchWestLaser> ().clip = null;
+        }
         g.transform.LookAt (lookAtPos);
         g.transform.Rotate (90, 0, 0);
 
