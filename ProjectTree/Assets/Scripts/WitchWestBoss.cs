@@ -59,6 +59,10 @@ public class WitchWestBoss : MonoBehaviour {
     [SerializeField] AudioClip[] Phase3Attacks;
     [SerializeField] AudioClip[] taunts;
     [SerializeField] AudioClip[] getHitVoices;
+    [Header ("Animations")]
+    [SerializeField] Animator anim;
+    [SerializeField] AutoRotate animRotator;
+    [SerializeField] Transform heinzModel;
 
     void Start () {
         player = FindObjectOfType<PlayerController> ();
@@ -67,20 +71,27 @@ public class WitchWestBoss : MonoBehaviour {
         barrierHBox = barrier.GetComponent<Hurtbox> ();
         barrierHBox.enabled = false;
         SetBarrierActive (true);
-        InvokeRepeating("Taunt",20,20);
+        InvokeRepeating ("Taunt", 20, 20);
+        Invoke ("StartWait", 3);
     }
 
-    void Taunt(){
-        if(barrier.activeSelf == true && curState != State.FinalAttack){
-        TalkIfNotTalking(taunts);
+    void StartWait () {
+
+    }
+
+    void Taunt () {
+        if (barrier.activeSelf == true && curState != State.FinalAttack) {
+            TalkIfNotTalking (taunts);
         }
     }
-    public void GetHitSound(){
-        Talk(getHitVoices);
+    public void GetHitSound () {
+        Talk (getHitVoices);
     }
 
     void Update () {
-        DebugInput ();
+        if (IsInvoking ("StartWait") == false) {
+            DebugInput ();
+        }
         SetCam ();
         SetBarrierVisibility ();
     }
@@ -108,9 +119,9 @@ public class WitchWestBoss : MonoBehaviour {
         }
 
         /*
-         if(Input.GetKeyDown(KeyCode.Tab)){
-             StartAttack (State.Attacking, "AimShootP3");
-         }
+        if (Input.GetKeyDown (KeyCode.Tab)) {
+            StartAttack (State.Attacking, "AroundWitch3");
+        }
          */
     }
 
@@ -122,21 +133,26 @@ public class WitchWestBoss : MonoBehaviour {
         }
     }
     IEnumerator FinalAttack () {
+
         Talk (finalAttackVoice);
         barrier.GetComponent<Hurtbox> ().damage = 0;
         SetBarrierActive (true);
         cam.HardShake (5);
+        SmoothLookAtPlayer ();
         SpawnAudio.AudioSpawn (finalAttackChargeClip, 0, 1, 1);
         camXRotation = 30;
 
         Instantiate (barrierBackTelegraphParticle, barrier.transform.position, Quaternion.identity);
         yield return new WaitForSeconds (1);
+        anim.Play ("HeinzFinalAttackIntro");
         Instantiate (barrierBackTelegraphParticle, barrier.transform.position, Quaternion.identity);
         yield return new WaitForSeconds (1);
+
         Instantiate (barrierBackTelegraphParticle, barrier.transform.position, Quaternion.identity);
         yield return new WaitForSeconds (1);
         Instantiate (barrierBackTelegraphParticle, barrier.transform.position, Quaternion.identity);
         yield return new WaitForSeconds (1.7f);
+        CancelInvoke ("SmoothLookAtPlayer");
 
         StartCoroutine ("AimShootP3");
         yield return new WaitForSeconds (1);
@@ -159,11 +175,19 @@ public class WitchWestBoss : MonoBehaviour {
 
         yield return new WaitForSeconds (3);
         StartCoroutine ("GroundLaserPhase2Attack"); //this
-        yield return new WaitForSeconds (10);
+        animRotator.enabled = false;
+        heinzModel.localEulerAngles = Vector3.zero;
+        anim.Play ("HeinzShieldDown");
+
+        yield return new WaitForSeconds (6);
+        SetBarrierActive (false);
+        yield return new WaitForSeconds (4);
+
         StartCoroutine ("SurroundPlayer");
-        yield return new WaitForSeconds (3);
-        Talk(deathVoice);
-        Destroy (transform.root.gameObject);
+        yield return new WaitForSeconds (0.6f);
+        anim.Play ("HeinzDeath");
+        yield return new WaitForSeconds (1.5f);
+        Talk (deathVoice);
 
     }
 
@@ -195,8 +219,9 @@ public class WitchWestBoss : MonoBehaviour {
                 } else if (phase3Voiced == false && hitbox.hp <= 350) {
                     phase3Voiced = true;
                     Talk (phase3Start);
-                } else if(phase1Voiced == false) {
-                    Talk(phase1Start);
+                } else if (phase1Voiced == false) {
+                    Talk (phase1Start);
+                    anim.Play ("HeinzIntro");
                     phase1Voiced = true;
                 } else {
                     Talk (barrierVoiceBackAudio);
@@ -205,24 +230,27 @@ public class WitchWestBoss : MonoBehaviour {
         }
         if (active == false && wasActive == true) {
             Instantiate (barrierBreakParticle, barrier.transform.position, Quaternion.identity);
-            camXRotation = 50;
-            Talk(barrierDownVoice);
+            if (curState != State.FinalAttack) {
+                camXRotation = 50;
+                Talk (barrierDownVoice);
+            }
+            anim.Play ("HeinzShieldDown");
         }
     }
 
     void Talk (AudioClip[] clips) {
         AudioClip chosenClip = clips[Random.Range (0, clips.Length)];
         SpawnAudio.SpawnVoice (chosenClip, 0, 1, 1, 0);
-        Invoke("Talking",chosenClip.length);
+        Invoke ("Talking", chosenClip.length);
     }
 
-    void TalkIfNotTalking(AudioClip[] clips){
-        if(IsInvoking("Talking") == false){
-            Talk(clips);
+    void TalkIfNotTalking (AudioClip[] clips) {
+        if (IsInvoking ("Talking") == false) {
+            Talk (clips);
         }
     }
 
-    void Talking(){
+    void Talking () {
 
     }
 
@@ -366,14 +394,19 @@ public class WitchWestBoss : MonoBehaviour {
 
     void TelegraphBarrierBack () {
         Instantiate (barrierBackTelegraphParticle, barrier.transform.position, Quaternion.identity);
+        if (curState != State.FinalAttack) {
+            anim.Play ("HeinzShieldUp");
+        }
     }
 
-    IEnumerator GroundLaserAttack () {
+    IEnumerator GroundLaserAttack () { //here
         //start animation
         Vector3 spawnPos = new Vector3 (player.transform.position.x, floorYCoods + 0.1f, player.transform.position.z);
         float repeatSpeed = Random.Range (0.6f, 0.9f);
+        anim.Play ("HeinzGroundLaserStart");
         yield return new WaitForSeconds (1);
         for (int i = 0; i < 5; i++) {
+            anim.Play ("HeinzGroundLaser", 0, 0);
             spawnPos = new Vector3 (player.transform.position.x, floorYCoods + 0.1f, player.transform.position.z);
             Instantiate (groundLaserPrefab, spawnPos, Quaternion.identity).GetComponent<WitchWestLaser> ().chargeTime *= 1.5f;
             yield return new WaitForSeconds (repeatSpeed);
@@ -382,11 +415,13 @@ public class WitchWestBoss : MonoBehaviour {
     }
 
     IEnumerator GroundLaserPhase2Attack () {
-        yield return new WaitForSeconds (0.8f);
-        TalkIfNotTalking(rapidLaserP2);
-        float repeatSpeed = Random.Range (0.2f, 0.3f);
         SmoothLookAtPlayer ();
+        anim.Play ("HeinzLaserStart");
+        yield return new WaitForSeconds (0.8f);
+        TalkIfNotTalking (rapidLaserP2);
+        float repeatSpeed = Random.Range (0.2f, 0.3f);
         for (int i = 0; i < 15; i++) {
+            anim.Play ("HeinzLaser");
             yield return new WaitForSeconds (repeatSpeed);
             Instantiate (aimGroundLaserPrefab, transform.position + transform.forward * 3, transform.rotation * Quaternion.Euler (90, 0, 0));
         }
@@ -396,44 +431,53 @@ public class WitchWestBoss : MonoBehaviour {
     }
 
     IEnumerator GroundLaserPhase3Attack () {
+        anim.Play ("HeinzDoubleGroundLaserStart");
         yield return new WaitForSeconds (1);
-        TalkIfNotTalking(groundLaserP3Voice);
+        TalkIfNotTalking (groundLaserP3Voice);
         Vector3 centerPos = new Vector3 (player.transform.position.x, floorYCoods + 0.1f, player.transform.position.z);
         float rngRange = 20;
         for (int i = 0; i < 5; i++) {
             Instantiate (groundLaser3Prefab, centerPos + new Vector3 (Random.Range (-rngRange, rngRange), 0, Random.Range (-rngRange, rngRange)), Quaternion.identity);
         }
-        yield return new WaitForSeconds (1);
+        yield return new WaitForSeconds (1f);
+        anim.Play ("HeinzDoubleGroundLaser", 0, 0);
         centerPos = new Vector3 (player.transform.position.x, floorYCoods + 0.1f, player.transform.position.z);
         for (int i = 0; i < 10; i++) {
             Instantiate (groundLaser3Prefab, centerPos + new Vector3 (Random.Range (-rngRange, rngRange), 0, Random.Range (-rngRange, rngRange)), Quaternion.identity);
         }
         yield return new WaitForSeconds (1);
+        anim.Play ("HeinzDoubleGroundLaser", 0, 0);
         centerPos = new Vector3 (player.transform.position.x, floorYCoods + 0.1f, player.transform.position.z);
         for (int i = 0; i < 20; i++) {
             Instantiate (groundLaser3Prefab, centerPos + new Vector3 (Random.Range (-rngRange, rngRange), 0, Random.Range (-rngRange, rngRange)), Quaternion.identity);
         }
         yield return new WaitForSeconds (1);
+        anim.Play ("HeinzDoubleGroundLaser", 0, 0);
         centerPos = new Vector3 (player.transform.position.x, floorYCoods + 0.1f, player.transform.position.z);
         for (int i = 0; i < 30; i++) {
             Instantiate (groundLaser3Prefab, centerPos + new Vector3 (Random.Range (-rngRange, rngRange), 0, Random.Range (-rngRange, rngRange)), Quaternion.identity);
         }
         yield return new WaitForSeconds (1);
+        anim.Play ("HeinzDoubleGroundLaser", 0, 0);
         centerPos = new Vector3 (player.transform.position.x, floorYCoods + 0.1f, player.transform.position.z);
         for (int i = 0; i < 35; i++) {
             Instantiate (groundLaser3Prefab, centerPos + new Vector3 (Random.Range (-rngRange, rngRange), 0, Random.Range (-rngRange, rngRange)), Quaternion.identity);
         }
         yield return new WaitForSeconds (1);
+        anim.Play ("HeinzDoubleGroundLaser", 0, 0);
         centerPos = new Vector3 (player.transform.position.x, floorYCoods + 0.1f, player.transform.position.z);
         for (int i = 0; i < 40; i++) {
             Instantiate (groundLaser3Prefab, centerPos + new Vector3 (Random.Range (-rngRange, rngRange), 0, Random.Range (-rngRange, rngRange)), Quaternion.identity);
         }
         yield return new WaitForSeconds (1);
+        anim.Play ("HeinzDoubleGroundLaser", 0, 0);
         StopAttack ();
     }
 
     IEnumerator LaserCircleAttack () {
-        TalkIfNotTalking(laserCircleVoice);
+        TalkIfNotTalking (laserCircleVoice);
+        anim.Play ("HeinzLaserCircle");
+        animRotator.enabled = true;
         GameObject g = Instantiate (laserCirclePrefab, transform.position, Quaternion.identity);
         for (int i = 0; i < g.transform.childCount; i++) {
             g.transform.GetChild (i).GetComponent<WitchWestLaser> ().activeTime /= 2;
@@ -443,14 +487,18 @@ public class WitchWestBoss : MonoBehaviour {
     }
 
     IEnumerator LaserCircleP2Attack () {
-        TalkIfNotTalking(laserCircleVoice);
+        anim.Play ("HeinzLaserCircle");
+        animRotator.enabled = true;
+        TalkIfNotTalking (laserCircleVoice);
         Instantiate (laserP2CirclePrefab, transform.position, Quaternion.identity);
-        yield return new WaitForSeconds (15);
+        yield return new WaitForSeconds (12.5f);
         StopAttack ();
     }
 
     IEnumerator LaserCircleP3Attack () {
-        TalkIfNotTalking(laserCircleVoice);
+        anim.Play ("HeinzLaserCircle");
+        animRotator.enabled = true;
+        TalkIfNotTalking (laserCircleVoice);
         Invoke ("NoLaser", 10.5f * 4);
         Instantiate (laserCirclePrefab, transform.position, Quaternion.identity).GetComponent<AutoRotate> ().v3 /= 10;
         Instantiate (laserCirclePrefab, transform.position, Quaternion.identity).GetComponent<AutoRotate> ().v3 /= -4;
@@ -460,63 +508,85 @@ public class WitchWestBoss : MonoBehaviour {
             Instantiate (groundLaser3Prefab, new Vector3 (player.transform.position.x, floorYCoods + 0.1f, player.transform.position.z), Quaternion.identity);
             yield return new WaitForSeconds (0.5f);
         }
+        yield return new WaitForSeconds (2f);
         StopAttack ();
     }
 
     IEnumerator AimShootP1 () {
         SmoothLookAtPlayer ();
-        TalkIfNotTalking(quickAttackP1Voice);
+        anim.Play ("HeinzPredictionShotStart");
+        TalkIfNotTalking (quickAttackP1Voice);
         yield return new WaitForSeconds (0.5f);
         SpawnShooterPrefab (player.transform.position + Vector3.up + player.transform.forward * 5, new Vector3 (0, 4, -3));
-        yield return new WaitForSeconds (0.3f);
+        yield return new WaitForSeconds (0.2f);
+        anim.Play ("HeinzPredictionShot");
+        yield return new WaitForSeconds (0.5f);
         StopAttack ();
         CancelInvoke ("SmoothLookAtPlayer");
     }
 
     IEnumerator AimShootP2 () {
+        anim.Play ("HeinzDoubleShotAStart");
         SmoothLookAtPlayer ();
         yield return new WaitForSeconds (0.5f);
         SpawnShooterPrefab (player.transform.position + Vector3.up, new Vector3 (-3, 3, -3));
         SpawnShooterPrefab (player.transform.position + Vector3.up, new Vector3 (3, 3, -3));
-        yield return new WaitForSeconds (0.5f);
+        yield return new WaitForSeconds (0.1f);
+        anim.Play ("HeinzDoubleShotA");
+        yield return new WaitForSeconds (0.4f);
         SpawnShooterPrefab (player.transform.position + Vector3.up + player.transform.forward * 5, new Vector3 (-4.3f, 3, -3));
         SpawnShooterPrefab (player.transform.position + Vector3.up + player.transform.forward * -5, new Vector3 (4.3f, 3, -3));
+        yield return new WaitForSeconds (0.1f);
+        anim.Play ("HeinzDoubleShotB");
         yield return new WaitForSeconds (0.3f);
         StopAttack ();
         CancelInvoke ("SmoothLookAtPlayer");
     }
 
     IEnumerator AimShootP3 () {
+        anim.Play ("HeinzRapidFireStart");
         float rngRange = 2;
         SmoothLookAtPlayer ();
         yield return new WaitForSeconds (0.5f);
-        TalkIfNotTalking(RatataP3Voice);
+        anim.Play ("HeinzRapidFireLoop");
+        TalkIfNotTalking (RatataP3Voice);
         SpawnShooterPrefab (player.transform.position + Vector3.up + new Vector3 (Random.Range (-rngRange, rngRange), 0, Random.Range (-rngRange, rngRange)), new Vector3 (0, 4, -3));
         for (int i = 0; i < 20; i++) {
             yield return new WaitForSeconds (0.1f);
             SpawnShooterPrefab (player.transform.position + Vector3.up + new Vector3 (Random.Range (-rngRange, rngRange), 0, Random.Range (-rngRange, rngRange)), new Vector3 (0, 4, -3));
         }
+        anim.Play ("HeinzPredictionShotStart");
         yield return new WaitForSeconds (1f);
         SpawnShooterPrefab (player.transform.position + Vector3.up + player.transform.forward * 5, new Vector3 (0, 4, -3));
         yield return new WaitForSeconds (0.1f);
+        anim.Play ("HeinzPredictionShot");
+        yield return new WaitForSeconds (0.3f);
         StopAttack ();
         CancelInvoke ("SmoothLookAtPlayer");
     }
 
     IEnumerator SurroundPlayer () {
         SmoothLookAtPlayer ();
-        yield return new WaitForSeconds (1);
-        TalkIfNotTalking(surroundPlayerP1Voice);
+        if (curState != State.FinalAttack) {
+            anim.Play ("HeinzNormalAttackStart");
+        }
+        yield return new WaitForSeconds (0.3f);
+        TalkIfNotTalking (surroundPlayerP1Voice);
         GameObject g = Instantiate (shooterPrefab2, player.transform.position + player.transform.forward * -10 + Vector3.up * 2, transform.rotation);
         g.transform.LookAt (new Vector3 (player.transform.position.x, transform.position.y, player.transform.position.z));
         g.transform.Rotate (90, 0, 0);
-        yield return new WaitForSeconds (1);
+        yield return new WaitForSeconds (0.6f);
+        if (curState != State.FinalAttack) {
+            anim.Play ("HeinzNormalAttack");
+        }
+        yield return new WaitForSeconds (0.3f);
         StopAttack ();
         CancelInvoke ("SmoothLookAtPlayer");
 
     }
 
     IEnumerator SurroundPlayer2 () {
+        anim.Play ("HeinzNormalAttackStart");
         SmoothLookAtPlayer ();
         yield return new WaitForSeconds (1);
         GameObject g = Instantiate (shooterPrefab2, player.transform.position + player.transform.forward * -10 + Vector3.up * 2, transform.rotation);
@@ -538,6 +608,8 @@ public class WitchWestBoss : MonoBehaviour {
         g.transform.LookAt (new Vector3 (player.transform.position.x, transform.position.y, player.transform.position.z));
         g.transform.Rotate (90, 0, 0);
 
+        yield return new WaitForSeconds (0.45f);
+        anim.Play ("HeinzNormalAttack");
         yield return new WaitForSeconds (1);
         StopAttack ();
         CancelInvoke ("SmoothLookAtPlayer");
@@ -546,8 +618,9 @@ public class WitchWestBoss : MonoBehaviour {
 
     IEnumerator SurroundPlayer3 () {
         SmoothLookAtPlayer ();
+        anim.Play ("HeinzDoubleShotBStart");
         yield return new WaitForSeconds (1);
-        TalkIfNotTalking(Phase3Attacks);
+        TalkIfNotTalking (Phase3Attacks);
         float curAngle = 0;
         for (int i = 0; i < 10; i++) {
             GameObject g = Instantiate (shooterPrefab2, player.transform.position + Vector3.up * 2, Quaternion.Euler (90, curAngle, 0));
@@ -556,7 +629,9 @@ public class WitchWestBoss : MonoBehaviour {
             g.transform.LookAt (player.transform.position + Vector3.up);
             g.transform.Rotate (90, 0, 0);
         }
-        yield return new WaitForSeconds (0.75f);
+        yield return new WaitForSeconds (0.6f);
+        anim.Play ("HeinzDoubleShotB");
+        yield return new WaitForSeconds (0.15f);
         curAngle = 0;
         for (int i = 0; i < 10; i++) {
             GameObject g = Instantiate (shooterPrefab2, player.transform.position + Vector3.up * 2, Quaternion.Euler (90, curAngle, 0));
@@ -565,7 +640,9 @@ public class WitchWestBoss : MonoBehaviour {
             g.transform.LookAt (player.transform.position + Vector3.up);
             g.transform.Rotate (90, 0, 0);
         }
-        yield return new WaitForSeconds (0.75f);
+        yield return new WaitForSeconds (0.6f);
+        anim.Play ("HeinzDoubleShotB");
+        yield return new WaitForSeconds (0.15f);
         curAngle = 0;
         for (int i = 0; i < 10; i++) {
             GameObject g = Instantiate (shooterPrefab2, player.transform.position + Vector3.up * 2, Quaternion.Euler (90, curAngle, 0));
@@ -574,13 +651,18 @@ public class WitchWestBoss : MonoBehaviour {
             g.transform.LookAt (player.transform.position + Vector3.up);
             g.transform.Rotate (90, 0, 0);
         }
-        yield return new WaitForSeconds (1);
+        yield return new WaitForSeconds (0.6f);
+        anim.Play ("HeinzDoubleShotB");
+        yield return new WaitForSeconds (0.4f);
         CancelInvoke ("SmoothLookAtPlayer");
         StopAttack ();
     }
 
     IEnumerator AroundWitch () {
         yield return new WaitForSeconds (1);
+        anim.Play ("HeinzBulletCircleLoop");
+        animRotator.enabled = true;
+        animRotator.v3 *= 2;
         float curAngle = 0;
         for (int i = 0; i < 10; i++) {
             GameObject g = Instantiate (shooterPrefab2, transform.position, Quaternion.Euler (90, curAngle, 0));
@@ -589,37 +671,47 @@ public class WitchWestBoss : MonoBehaviour {
             curAngle += 360 / 10;
         }
         yield return new WaitForSeconds (1);
+        animRotator.v3 /= 2;
         StopAttack ();
     }
 
     IEnumerator AroundWitch2 () {
-        yield return new WaitForSeconds (1);
-        TalkIfNotTalking(aroundWitchP2);
+        yield return new WaitForSeconds (0.5f);
+        anim.Play ("HeinzBulletCircleLoop");
+        animRotator.enabled = true;
+        animRotator.v3 *= 3;
+        TalkIfNotTalking (aroundWitchP2);
         float curAngle = 0;
         for (int i = 0; i < 100; i++) {
             GameObject g = Instantiate (shooterPrefab2, transform.position, Quaternion.Euler (90, curAngle, 0));
             g.transform.position -= g.transform.right * 5;
             g.transform.Rotate (0, 0, -90);
-            curAngle += 360 / 20;
+            curAngle += 360 / 20 + (i / 3f);
             yield return new WaitForEndOfFrame ();
         }
         yield return new WaitForSeconds (1);
+        animRotator.v3 /= 3;
         StopAttack ();
     }
     IEnumerator AroundWitch3 () {
-        yield return new WaitForSeconds (1);
-        TalkIfNotTalking(rapidFireP3Voice);
+        yield return new WaitForSeconds (0.4f);
+        anim.Play ("HeinzBulletCircleLoop");
+        animRotator.enabled = true;
+        animRotator.v3 *= 3;
+        yield return new WaitForSeconds (0.4f);
+        TalkIfNotTalking (rapidFireP3Voice);
         float curAngle = 0;
         float curForwardAmount = 2;
         for (int i = 0; i < 100; i++) {
             GameObject g = Instantiate (shooterPrefab2, transform.position, Quaternion.Euler (90, curAngle, 0));
             g.transform.position -= g.transform.right * curForwardAmount;
             g.transform.Rotate (0, 0, -90);
-            curAngle += 360 / 24;
+            curAngle += 360 / 24 + (i / 3f);
             curForwardAmount += 0.25f;
             yield return new WaitForSeconds (0.05f);
         }
         yield return new WaitForSeconds (1);
+        animRotator.v3 /= 3;
         StopAttack ();
     }
 
@@ -639,6 +731,9 @@ public class WitchWestBoss : MonoBehaviour {
         isAttacking = false;
         if (curState != State.FinalAttack) {
             curState = State.Idle;
+            anim.Play ("HeinzIdle");
+            animRotator.enabled = false;
+            heinzModel.localEulerAngles = Vector3.zero;
         }
     }
 }
