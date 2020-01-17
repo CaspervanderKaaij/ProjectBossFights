@@ -61,6 +61,7 @@ public class WitchWestBoss : MonoBehaviour {
     [SerializeField] AudioClip[] getHitVoices;
     [SerializeField] AudioClip ratataLoopSound;
     [SerializeField] AudioClip groundLaserBassBoost;
+    GameObject curVoice;
     [Header ("Animations")]
     [SerializeField] Animator anim;
     [SerializeField] AutoRotate animRotator;
@@ -252,19 +253,16 @@ public class WitchWestBoss : MonoBehaviour {
 
     void Talk (AudioClip[] clips) {
         AudioClip chosenClip = clips[Random.Range (0, clips.Length)];
-        SpawnAudio.SpawnVoice (chosenClip, 0, 1, 1, 0);
-        Invoke ("Talking", chosenClip.length);
+        Destroy(curVoice);
+        curVoice = SpawnAudio.SpawnVoice (chosenClip, 0, 1, 1, 0);
     }
 
     void TalkIfNotTalking (AudioClip[] clips) {
-        if (IsInvoking ("Talking") == false) {
+        if (curVoice == null) {
             Talk (clips);
         }
     }
 
-    void Talking () {
-
-    }
 
     float curDissolve = 0;
     void SetBarrierVisibility () {

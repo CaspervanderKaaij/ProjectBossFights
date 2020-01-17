@@ -191,6 +191,9 @@ public class PlayerController : MonoBehaviour {
                 if (IsInvoking ("IsStartingUp") == false) {
                     FinalMove ();
                 }
+                if (Input.GetButtonDown (jumpInput) == true && curState != State.WallJump) {
+                    Invoke ("JumpBuffer", 0.2f);
+                }
                 if (canBuffer == true) {
                     SpearInput ();
                 }
@@ -596,7 +599,10 @@ public class PlayerController : MonoBehaviour {
         if (isGrounded == true) {
             canAirDash = true;
         }
-        if (Input.GetButtonDown (dashInput) == true && IsInvoking ("IgnoreDashInput") == false && willpower > dashWPCost && hasDash == true) {
+        if (Input.GetButtonDown (dashInput) == true) {
+            Invoke ("BufferDash", 0.2f);
+        }
+        if (IsInvoking ("BufferDash") == true && IsInvoking ("IgnoreDashInput") == false && willpower > dashWPCost && hasDash == true) {
             bool willDash = false;
             if (isGrounded == false) {
                 if (canAirDash == true) {
@@ -607,6 +613,7 @@ public class PlayerController : MonoBehaviour {
                 willDash = true;
             }
             if (willDash == true) {
+                CancelInvoke ("BufferDash");
 
                 transform.eulerAngles = new Vector3 (transform.eulerAngles.x, angleGoal, transform.eulerAngles.z);
                 curState = State.Dash;
@@ -626,6 +633,10 @@ public class PlayerController : MonoBehaviour {
 
             }
         }
+    }
+
+    void BufferDash () {
+
     }
 
     void ShootInput () {
@@ -900,8 +911,8 @@ public class PlayerController : MonoBehaviour {
         spear.SetActive (false);
 
         GetComponent<Hitbox> ().enabled = false;
-        StopCoroutine("HitFlash");
-        StartCoroutine("HitFlash");
+        StopCoroutine ("HitFlash");
+        StartCoroutine ("HitFlash");
         CancelInvoke ("StopInvincible");
         Invoke ("StopInvincible", 1);
 
@@ -927,7 +938,7 @@ public class PlayerController : MonoBehaviour {
                     dashInvisible[i].SetActive (true);
                 }
             }
-            yield return new WaitForSecondsRealtime(0.02f);
+            yield return new WaitForSecondsRealtime (0.02f);
             StartCoroutine ("HitFlash");
         }
     }
@@ -975,10 +986,10 @@ public class PlayerController : MonoBehaviour {
             Vector3 oldPos = transform.position;
             if (ThreeDMode == false) {
                 Vector3 oldAngle = cameraTransform.eulerAngles;
-                cameraTransform.eulerAngles = new Vector3(0,playerCam.angleGoal.y,0);
+                cameraTransform.eulerAngles = new Vector3 (0, playerCam.angleGoal.y, 0);
 
-               // cc.Move(cameraTransform.TransformDirection(0,0,Vector3.Distance(oldPos,transform.position)));
-               movev3 = cameraTransform.TransformDirection(new Vector2(movev3.x,movev3.z).magnitude *  Mathf.Clamp(movev3.x + movev3.z,-1,1),movev3.y,0);
+                // cc.Move(cameraTransform.TransformDirection(0,0,Vector3.Distance(oldPos,transform.position)));
+                movev3 = cameraTransform.TransformDirection (new Vector2 (movev3.x, movev3.z).magnitude * Mathf.Clamp (movev3.x + movev3.z, -1, 1), movev3.y, 0);
 
                 cameraTransform.eulerAngles = oldAngle;
             }
