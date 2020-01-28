@@ -9,4 +9,8 @@ public class LandAction : MonoBehaviour
         
     }
 
+    public virtual void End(){
+        
+    }
+
 }

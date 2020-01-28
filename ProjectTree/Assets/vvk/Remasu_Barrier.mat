@@ -44,7 +44,7 @@ Material:
     - _OpacityTest: 0.13
     - _Scale: 1
     - _Timescale: 0.8
-    - __dirty: 1
+    - __dirty: 0
     - _hgbiuasdfghjklororfo43756: 0
     m_Colors:
     - _BarrierBaseColor: {r: 0, g: 1.3980107, b: 5.278032, a: 0}

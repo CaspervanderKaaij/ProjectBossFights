@@ -18,6 +18,7 @@ public class PlayerItemManager : MonoBehaviour {
     }
     void Update () {
         GetInput ();
+        GetAxisInput ();
     }
 
     void GetInput () {
@@ -26,6 +27,40 @@ public class PlayerItemManager : MonoBehaviour {
                 UseItem (i);
                 UpdateUIOwnedText ();
             }
+        }
+    }
+
+    bool canAxisInput = true;
+    void GetAxisInput () {
+        if (canAxisInput == true) {
+
+            if (Input.GetAxis (item1Button) != 0) {
+                canAxisInput = false;
+                if (Input.GetAxis (item1Button) > 0) {
+                    //print("right");
+                    UseItem (2);
+                } else {
+                   // print("left");
+                    UseItem (1);
+                }
+                UpdateUIOwnedText ();
+            }
+
+            if (Input.GetAxis (item3Button) != 0) {
+                canAxisInput = false;
+                if (Input.GetAxis (item3Button) > 0) {
+                 //   print("up");
+                    UseItem (0);
+                } else {
+                  //  print("down");
+                    UseItem (3);
+                }
+                UpdateUIOwnedText ();
+            }
+        }
+
+        if (Input.GetAxis (item1Button) == 0 && Input.GetAxis (item3Button) == 0) {
+            canAxisInput = true;
         }
     }
 

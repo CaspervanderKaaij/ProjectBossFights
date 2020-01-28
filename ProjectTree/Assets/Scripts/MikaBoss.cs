@@ -10,6 +10,15 @@ public class MikaBoss : MonoBehaviour {
         Attacking
     }
     public State curState = State.Idle;
+
+    public enum BarrierState {
+        NoOrbs,
+        Orbs,
+        Desroyed
+    }
+    public BarrierState barrierState = BarrierState.NoOrbs;
+    [SerializeField] GameObject orbsPrefab;
+    [SerializeField] GameObject shieldObj;
     bool isAttacking = false;
     PlayerController player;
     PlayerCam cam;
@@ -21,9 +30,9 @@ public class MikaBoss : MonoBehaviour {
     [SerializeField] GameObject teleslashHitbox;
     [SerializeField] GameObject jumpslashHitbox;
     [SerializeField] GameObject blackholeSlashHitbox;
-    [Header("Reality Slash")]
+    [Header ("Reality Slash")]
     [SerializeField] GameObject realitySlashHitbox;
-    [Header("Black Hole")]
+    [Header ("Black Hole")]
     [SerializeField] GameObject blackholePrefab;
 
     void Start () {
@@ -34,13 +43,49 @@ public class MikaBoss : MonoBehaviour {
         }
         player = FindObjectOfType<PlayerController> ();
         cam = FindObjectOfType<PlayerCam> ();
+        if (barrierState == BarrierState.Desroyed) {
+            lastBState = BarrierState.NoOrbs;
+        } else {
+            lastBState = BarrierState.Desroyed;
+        }
 
     }
 
     void Update () {
         UpdateBarrierActive ();
         DebugInput ();
-        SetCam();
+        SetOrbState ();
+        SetCam ();
+    }
+
+    void RunFromPlayer(){
+        print("run");
+    }
+
+    BarrierState lastBState;
+    void SetOrbState () {
+        if (barrierState != lastBState) {
+            print ("bState");
+            switch (barrierState) {
+                case BarrierState.Desroyed:
+                    Invoke ("BarrierBack", 5);
+                    break;
+                case BarrierState.NoOrbs:
+                    Invoke ("NewOrbs", 5);
+                    break;
+            }
+            lastBState = barrierState;
+        }
+
+    }
+
+    void BarrierBack () {
+        barrierState = BarrierState.NoOrbs;
+    }
+
+    void NewOrbs () {
+        barrierState = BarrierState.Orbs;
+        barrierPointsParent = Instantiate (orbsPrefab, transform.position, Quaternion.identity, transform).transform;
     }
 
     float camX = 10;
@@ -52,12 +97,26 @@ public class MikaBoss : MonoBehaviour {
 
     void DebugInput () {
         if (Input.GetKeyDown (KeyCode.Tab) == true) {
-            StartAttack (State.Attacking, "BlackHole");//activate attack
+            StartAttack (State.Attacking, "BlackHole"); //activate attack
+        }
+
+        if(barrierState != BarrierState.Desroyed){
+            //check the face, then attack
+        } else {
+            RunFromPlayer();
         }
     }
 
     void UpdateBarrierActive () {
-        SetHitboxActive ((barrierPointsParent.childCount <= 0));
+        if (barrierPointsParent != null) {
+            SetHitboxActive ((barrierPointsParent.childCount <= 0 && barrierState != BarrierState.NoOrbs));
+            if (barrierPointsParent.childCount <= 0) {
+                Destroy (barrierPointsParent.gameObject);
+                barrierState = BarrierState.Desroyed;
+            }
+        } else {
+            SetHitboxActive ((barrierState != BarrierState.NoOrbs));
+        }
     }
 
     void SetHitboxActive (bool active) {
@@ -70,6 +129,8 @@ public class MikaBoss : MonoBehaviour {
         if (active == false && wasActive == true) {
             myHitbox.enabled = active;
         }
+
+        shieldObj.SetActive (!active);
     }
 
     void StartAttack (State atk, string coroutineName) {
@@ -130,15 +191,15 @@ public class MikaBoss : MonoBehaviour {
         jumpSlashY = 45;
         JumpSlashMove ();
         float range = 3;
-        yield return new WaitForSeconds(0.3f);
+        yield return new WaitForSeconds (0.3f);
         for (int i = 0; i < 3; i++) {
             yield return new WaitForSeconds (0.1f);
             GameObject g = Instantiate (jumpslashHitbox, transform.position + transform.forward, Quaternion.identity);
             g.transform.LookAt (player.transform.position + player.transform.forward * -2);
-            g.transform.Rotate(0,0,Random.Range(0,360));
+            g.transform.Rotate (0, 0, Random.Range (0, 360));
             cam.MediumShake (0.2f);
         }
-        yield return new WaitForSeconds(0.3f);
+        yield return new WaitForSeconds (0.3f);
         CancelInvoke ("JumpSlashMove");
         JumpSlashFall ();
         yield return new WaitForSeconds (1.5f);
@@ -165,7 +226,7 @@ public class MikaBoss : MonoBehaviour {
         yield return new WaitForSeconds (1);
         StartCoroutine ("PushPlayerToBH");
         cam.SmallShake (2);
-        GameObject bHole = Instantiate(blackholePrefab,transform.position,Quaternion.identity);
+        GameObject bHole = Instantiate (blackholePrefab, transform.position, Quaternion.identity);
         yield return new WaitForSeconds (1);
         float curRot = 0;
         for (int i = 0; i < 10; i++) {
@@ -178,48 +239,45 @@ public class MikaBoss : MonoBehaviour {
             yield return new WaitForSeconds (0.15f);
         }
         yield return new WaitForSeconds (0.35f);
-        Destroy(bHole);
+        Destroy (bHole);
         StopCoroutine ("PushPlayerToBH");
         StopAttack ();
 
     }
 
-    List<GameObject> realitySlashHitboxes = new List<GameObject>();
-    IEnumerator RealitySlash(){
+    List<GameObject> realitySlashHitboxes = new List<GameObject> ();
+    IEnumerator RealitySlash () {
         camX = 50;
-        realitySlashHitboxes.Clear();
-        for (int i = 0; i < 5; i++)
-        {
-            GameObject g = Instantiate(realitySlashHitbox,transform.position,Quaternion.Euler(0,Random.Range(0,360),0));
-            g.transform.position += g.transform.forward * Random.Range(3,15);
-            g.transform.Rotate(0,Random.Range(0,360),90);
-            realitySlashHitboxes.Add(g);
-            yield return new WaitForSeconds(0.3f);
+        realitySlashHitboxes.Clear ();
+        for (int i = 0; i < 5; i++) {
+            GameObject g = Instantiate (realitySlashHitbox, transform.position, Quaternion.Euler (0, Random.Range (0, 360), 0));
+            g.transform.position += g.transform.forward * Random.Range (3, 15);
+            g.transform.Rotate (0, Random.Range (0, 360), 90);
+            realitySlashHitboxes.Add (g);
+            yield return new WaitForSeconds (0.3f);
         }
-        yield return new WaitForSeconds(0.5f);
-        for (int i = 0; i < 5; i++)
-        {
-            realitySlashHitboxes[i].GetComponent<Collider>().enabled = true;
-            Destroy(realitySlashHitboxes[i],0.5f);
+        yield return new WaitForSeconds (0.5f);
+        for (int i = 0; i < 5; i++) {
+            realitySlashHitboxes[i].GetComponent<Collider> ().enabled = true;
+            Destroy (realitySlashHitboxes[i], 0.5f);
         }
-        cam.HardShake(0.1f);
-        yield return new WaitForSeconds(1);
-        StopAttack();
+        cam.HardShake (0.1f);
+        yield return new WaitForSeconds (1);
+        StopAttack ();
         camX = 10;
     }
 
-    IEnumerator LastResort(){
+    IEnumerator LastResort () {
         cc = player.GetComponent<CharacterController> ();
-        for (int i = 0; i < memoryInfernoHitboxes.Length; i++)
-        {
-            memoryInfernoHitboxes[i].GetComponent<Hurtbox>().damage = JustDontGetHitAndItWillBeFine();
+        for (int i = 0; i < memoryInfernoHitboxes.Length; i++) {
+            memoryInfernoHitboxes[i].GetComponent<Hurtbox> ().damage = JustDontGetHitAndItWillBeFine ();
         }
-        yield return new WaitForSeconds(1);
+        yield return new WaitForSeconds (1);
         StartCoroutine ("PushPlayerToBH");
-        StartCoroutine(MemoryInferno());
+        StartCoroutine (MemoryInferno ());
     }
 
-    float JustDontGetHitAndItWillBeFine(){
+    float JustDontGetHitAndItWillBeFine () {
         return Mathf.Infinity;
     }
 

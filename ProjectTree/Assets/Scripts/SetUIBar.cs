@@ -12,4 +12,8 @@ public class SetUIBar : MonoBehaviour
     {
         bar.curPercent = (hp.hp / maxHP) * 100;
     }
+
+     void OnDestroy() {
+        bar.curPercent = 0;
+    }
 }

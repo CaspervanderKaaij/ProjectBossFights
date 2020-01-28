@@ -129,6 +129,8 @@ public class PlayerController : MonoBehaviour {
         }
         cc.enabled = false;
         Invoke ("SetStartPos", 0);
+
+        transform.SetParent (null);
     }
 
     void SetStartPos () {
@@ -140,6 +142,7 @@ public class PlayerController : MonoBehaviour {
 
     void Update () {
         playerCam.UpdateMe ();
+        transform.eulerAngles = new Vector3 (0, transform.eulerAngles.y, 0);
         anim.transform.localEulerAngles = new Vector3 (anim.transform.localEulerAngles.x, anim.transform.localEulerAngles.y, 0);
         shootMagicCircle.SetActive (false);
         speedMuliplier = Mathf.MoveTowards (speedMuliplier, 1, Time.deltaTime / 300);
@@ -293,10 +296,10 @@ public class PlayerController : MonoBehaviour {
     }
 
     float AnalMagnitude () {
-        return Mathf.Min (1, new Vector2 (GetHorInput (), GetVertInput ()).sqrMagnitude);
+        return Mathf.Min (1, Mathf.RoundToInt (new Vector2 (GetHorInput (), GetVertInput ()).sqrMagnitude));
     }
 
-    float angleGoal = 0;
+    [HideInInspector] public float angleGoal = 0;
     float zDifference = 0;
     void SetAngle () {
         if (AnalMagnitude () > 0) {
@@ -359,7 +362,11 @@ public class PlayerController : MonoBehaviour {
             anim.SetFloat ("curSpeed", AnalMagnitude ());
             anim.SetFloat ("speedMuliplier", speedMuliplier);
         } else if (curState != State.WallJump) {
-            Vector3 helper = new Vector3 (GetHorInput (), 0, GetVertInput ()) * moveStats[curMoveStats].speed * speedMuliplier;
+            float[] inputs = new float[2];
+            inputs[0] = Mathf.Clamp(GetHorInput() * 2,-1,1);
+            inputs[1] = Mathf.Clamp(GetVertInput() * 2,-1,1);
+            Vector3 helper = new Vector3 (inputs[0], 0, inputs[1]) * moveStats[curMoveStats].speed * speedMuliplier;
+
             float oldCamZ = cameraTransform.eulerAngles.z;
             cameraTransform.eulerAngles = new Vector3 (cameraTransform.eulerAngles.x, cameraTransform.eulerAngles.y, 0);
             helper = cameraTransform.TransformDirection (helper);
@@ -404,8 +411,14 @@ public class PlayerController : MonoBehaviour {
                 movev3.y = Mathf.MoveTowards (movev3.y, gravityStrength, Time.deltaTime * 100);
             }
 
+            if (Physics.Raycast (transform.position, Vector3.up, cc.height * 1.1f, LayerMask.GetMask ("Default"), QueryTriggerInteraction.Ignore) == true) {
+                movev3.y = -0.01f;
+                playerCam.SmallShake (0.1f);
+            }
+
         } else {
             movev3.y = Mathf.MoveTowards (movev3.y, gravityStrength, Time.deltaTime * 50);
+
         }
         if (isGrounded == true) {
             movev3.y = -1f;
@@ -413,6 +426,7 @@ public class PlayerController : MonoBehaviour {
     }
 
     float groundedTime = 0;
+    LandAction land;
     bool IsGrounded () {
 
         if (hasDoubleJump == true) {
@@ -433,10 +447,16 @@ public class PlayerController : MonoBehaviour {
                         Invoke ("CayoteTime", 0.1f);
                     }
                     if (hit.transform != null && hit.transform.GetComponent<LandAction> () != null) {
-                        hit.transform.GetComponent<LandAction> ().Activate ();
-                        footstep.curSoundType = hit.transform.GetComponent<LandAction> ().footstepSoundID;
+                        land = hit.transform.GetComponent<LandAction> ();
+                        land.Activate ();
+                        footstep.curSoundType = land.footstepSoundID;
+
                     } else {
                         footstep.curSoundType = 0;
+                        if (land != null) {
+                            land.End ();
+                            land = null;
+                        }
                     }
 
                     //print (Vector3.Angle (hit.normal, transform.up));
@@ -469,6 +489,10 @@ public class PlayerController : MonoBehaviour {
             }
 
         } else {
+            if (land != null) {
+                land.End ();
+                land = null;
+            }
             groundedTime = 0;
         }
 
@@ -595,12 +619,17 @@ public class PlayerController : MonoBehaviour {
 
     }
 
+    bool dashInputted = false;
     void DashInput () {
         if (isGrounded == true) {
             canAirDash = true;
         }
-        if (Input.GetButtonDown (dashInput) == true) {
+        if (Input.GetAxis (dashInput) <= 0) {
+            dashInputted = false;
+        }
+        if (Input.GetAxis (dashInput) > 0 && IsInvoking ("BufferDash") == false && dashInputted == false) {
             Invoke ("BufferDash", 0.2f);
+            dashInputted = true;
         }
         if (IsInvoking ("BufferDash") == true && IsInvoking ("IgnoreDashInput") == false && willpower > dashWPCost && hasDash == true) {
             bool willDash = false;
@@ -657,6 +686,7 @@ public class PlayerController : MonoBehaviour {
             }
             if ((Input.GetAxis (shootInput) != 0 || IsInvoking ("ShootInputBuffer")) && IsInvoking ("WaitShoot") == false) {
                 if (willpower > shootWPCost) {
+                    transform.rotation = Quaternion.Euler (transform.eulerAngles.x, angleGoal, transform.eulerAngles.z);
                     CancelInvoke ("ShootBufferInput");
                     anim.Play ("GunShot", 0, 0f);
                     willpower -= shootWPCost;
@@ -759,6 +789,7 @@ public class PlayerController : MonoBehaviour {
             }
             Invoke ("NoSwitchWeapon", 0.3f);
         }
+
         if (curWeapon == Weapon.Gun && hasGun == false) {
             curWeapon = Weapon.Spear;
         }
@@ -988,7 +1019,6 @@ public class PlayerController : MonoBehaviour {
                 Vector3 oldAngle = cameraTransform.eulerAngles;
                 cameraTransform.eulerAngles = new Vector3 (0, playerCam.angleGoal.y, 0);
 
-                // cc.Move(cameraTransform.TransformDirection(0,0,Vector3.Distance(oldPos,transform.position)));
                 movev3 = cameraTransform.TransformDirection (new Vector2 (movev3.x, movev3.z).magnitude * Mathf.Clamp (movev3.x + movev3.z, -1, 1), movev3.y, 0);
 
                 cameraTransform.eulerAngles = oldAngle;
