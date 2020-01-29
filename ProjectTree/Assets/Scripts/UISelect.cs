@@ -10,6 +10,11 @@ public class UISelect : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     [SerializeField] UnityEvent clickEv;
     [SerializeField] UnityEvent hoverEv;
     [SerializeField] UnityEvent leaveEv;
+    [Header("Neighbours")]
+    public UISelect upNeighbour;
+    public UISelect downNeighbour;
+    public UISelect leftNeighbour;
+    public UISelect rightNeighbour;
 
     public void OnPointerEnter (PointerEventData pointerEventData) {
         isOver = true;

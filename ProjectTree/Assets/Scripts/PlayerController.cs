@@ -70,6 +70,7 @@ public class PlayerController : MonoBehaviour {
     int bufferedAttack = 0;
     [SerializeField] GameObject spear;
     [SerializeField] AudioClip slamAttackAudio;
+    [SerializeField] TrailRenderer[] attackTrails;
     [Header ("Hitboxes")]
     [SerializeField] GameObject hitboxParent;
     List<GameObject> hitboxes = new List<GameObject> ();
@@ -141,109 +142,111 @@ public class PlayerController : MonoBehaviour {
     }
 
     void Update () {
-        playerCam.UpdateMe ();
-        transform.eulerAngles = new Vector3 (0, transform.eulerAngles.y, 0);
-        anim.transform.localEulerAngles = new Vector3 (anim.transform.localEulerAngles.x, anim.transform.localEulerAngles.y, 0);
-        shootMagicCircle.SetActive (false);
-        speedMuliplier = Mathf.MoveTowards (speedMuliplier, 1, Time.deltaTime / 300);
-        switch (curState) {
-            case State.Normal:
-                if (dashInvisible[0].activeSelf == false) {
-                    SetDashInvisible (false);
-                    playerCam._enabled = true;
-                }
-                WallJump ();
-                Jump (jumpStrength);
-                isGrounded = IsGrounded ();
-                SetAngle ();
-                MoveForward ();
-                Gravity ();
-                FinalMove ();
-                IdleFidget ();
-                SetWillpowerBar ();
-                SetHPBar ();
-                DashInput ();
-                SetCurWeapon ();
-                GetParryInput ();
-                if (interactables.Count == 0 && curState == State.Normal) {
-                    switch (curWeapon) {
-                        case Weapon.Gun:
-                            ShootInput ();
-                            break;
-                        case Weapon.Spear:
-                            SpearInput ();
-                            break;
+        if (timescaleManager.isPaused == false) {
+            playerCam.UpdateMe ();
+            transform.eulerAngles = new Vector3 (0, transform.eulerAngles.y, 0);
+            anim.transform.localEulerAngles = new Vector3 (anim.transform.localEulerAngles.x, anim.transform.localEulerAngles.y, 0);
+            shootMagicCircle.SetActive (false);
+            speedMuliplier = Mathf.MoveTowards (speedMuliplier, 1, Time.deltaTime / 300);
+            switch (curState) {
+                case State.Normal:
+                    if (dashInvisible[0].activeSelf == false) {
+                        SetDashInvisible (false);
+                        playerCam._enabled = true;
                     }
-                }
-                InteractCheck ();
-                DebugMoves ();
-                break;
-            case State.Dash:
-                isGrounded = false;
-                Dash ();
-                FinalMove ();
-                break;
-            case State.Knockback:
-
-                Gravity ();
-                FinalMove ();
-
-                break;
-
-            case State.Attack:
-                if (IsInvoking ("IsStartingUp") == false) {
+                    WallJump ();
+                    Jump (jumpStrength);
+                    isGrounded = IsGrounded ();
+                    SetAngle ();
+                    MoveForward ();
+                    Gravity ();
                     FinalMove ();
-                }
-                if (Input.GetButtonDown (jumpInput) == true && curState != State.WallJump) {
-                    Invoke ("JumpBuffer", 0.2f);
-                }
-                if (canBuffer == true) {
-                    SpearInput ();
-                }
-                break;
-            case State.Dialogue:
-                curAccDec = 0;
-                isGrounded = true;
-                wasGrounded = true;
-                break;
-            case State.SlamAttack:
-                isGrounded = IsGrounded ();
-                Gravity ();
-                movev3.x = Mathf.MoveTowards (movev3.x, 0, Time.deltaTime * moveStats[0].deceleration);
-                movev3.z = Mathf.MoveTowards (movev3.z, 0, Time.deltaTime * moveStats[0].deceleration);
-                FinalMove ();
-                if (isGrounded == true) {
-                    GetAttackInput (3);
-                    playerCam.MediumShake (0.1f);
-                    // playerCam.ripple.Emit ();
-                    Instantiate (WdRipple, hitboxes[1].transform.position, Quaternion.Euler (90, 0, 0));
-                    for (int i = 0; i < 10; i++) {
-                        Instantiate (stopDashParticle, transform.position, Quaternion.identity);
-                    }
-                    SpawnAudio.AudioSpawn (slamAttackAudio, 0.5f, Random.Range (4, 5), 0.5f);
-                    timescaleManager.SlowMo (0.3f, 0.2f, 0.1f);
-
-                } else {
+                    IdleFidget ();
+                    SetWillpowerBar ();
+                    SetHPBar ();
                     DashInput ();
-                }
-                break;
-            case State.Gun:
-                ShootInput ();
-                SetWillpowerBar ();
-                Jump (jumpStrength);
-                break;
-            case State.WallJump:
-                Gravity ();
-                FinalMove ();
-                break;
-            case State.WallSlide:
-                isGrounded = IsGrounded ();
-                WallSlide ();
-                FinalMove ();
-                break;
+                    SetCurWeapon ();
+                    GetParryInput ();
+                    if (interactables.Count == 0 && curState == State.Normal) {
+                        switch (curWeapon) {
+                            case Weapon.Gun:
+                                ShootInput ();
+                                break;
+                            case Weapon.Spear:
+                                SpearInput ();
+                                break;
+                        }
+                    }
+                    InteractCheck ();
+                    DebugMoves ();
+                    break;
+                case State.Dash:
+                    isGrounded = false;
+                    Dash ();
+                    FinalMove ();
+                    break;
+                case State.Knockback:
+
+                    Gravity ();
+                    FinalMove ();
+
+                    break;
+
+                case State.Attack:
+                    if (IsInvoking ("IsStartingUp") == false) {
+                        FinalMove ();
+                    }
+                    if (Input.GetButtonDown (jumpInput) == true && curState != State.WallJump) {
+                        Invoke ("JumpBuffer", 0.2f);
+                    }
+                    if (canBuffer == true) {
+                        SpearInput ();
+                    }
+                    break;
+                case State.Dialogue:
+                    curAccDec = 0;
+                    isGrounded = true;
+                    wasGrounded = true;
+                    break;
+                case State.SlamAttack:
+                    isGrounded = IsGrounded ();
+                    Gravity ();
+                    movev3.x = Mathf.MoveTowards (movev3.x, 0, Time.deltaTime * moveStats[0].deceleration);
+                    movev3.z = Mathf.MoveTowards (movev3.z, 0, Time.deltaTime * moveStats[0].deceleration);
+                    FinalMove ();
+                    if (isGrounded == true) {
+                        GetAttackInput (3);
+                        playerCam.MediumShake (0.1f);
+                        // playerCam.ripple.Emit ();
+                        Instantiate (WdRipple, hitboxes[1].transform.position, Quaternion.Euler (90, 0, 0));
+                        for (int i = 0; i < 10; i++) {
+                            Instantiate (stopDashParticle, transform.position, Quaternion.identity);
+                        }
+                        SpawnAudio.AudioSpawn (slamAttackAudio, 0.5f, Random.Range (4, 5), 0.5f);
+                        timescaleManager.SlowMo (0.3f, 0.2f, 0.1f);
+
+                    } else {
+                        DashInput ();
+                    }
+                    break;
+                case State.Gun:
+                    ShootInput ();
+                    SetWillpowerBar ();
+                    Jump (jumpStrength);
+                    break;
+                case State.WallJump:
+                    Gravity ();
+                    FinalMove ();
+                    break;
+                case State.WallSlide:
+                    isGrounded = IsGrounded ();
+                    WallSlide ();
+                    FinalMove ();
+                    break;
+            }
+            lowHPPostProccesing.SetActive ((hitbox.hp / maxHP < 0.3f));
+            playerCam.UpdateMe ();
         }
-        lowHPPostProccesing.SetActive ((hitbox.hp / maxHP < 0.3f));
-        playerCam.UpdateMe ();
     }
 
     // Inputs
@@ -363,8 +366,8 @@ public class PlayerController : MonoBehaviour {
             anim.SetFloat ("speedMuliplier", speedMuliplier);
         } else if (curState != State.WallJump) {
             float[] inputs = new float[2];
-            inputs[0] = Mathf.Clamp(GetHorInput() * 2,-1,1);
-            inputs[1] = Mathf.Clamp(GetVertInput() * 2,-1,1);
+            inputs[0] = Mathf.Clamp (GetHorInput () * 2, -1, 1);
+            inputs[1] = Mathf.Clamp (GetVertInput () * 2, -1, 1);
             Vector3 helper = new Vector3 (inputs[0], 0, inputs[1]) * moveStats[curMoveStats].speed * speedMuliplier;
 
             float oldCamZ = cameraTransform.eulerAngles.z;
@@ -686,7 +689,9 @@ public class PlayerController : MonoBehaviour {
             }
             if ((Input.GetAxis (shootInput) != 0 || IsInvoking ("ShootInputBuffer")) && IsInvoking ("WaitShoot") == false) {
                 if (willpower > shootWPCost) {
-                    transform.rotation = Quaternion.Euler (transform.eulerAngles.x, angleGoal, transform.eulerAngles.z);
+                    if (AnalMagnitude () > 0) {
+                        transform.rotation = Quaternion.Euler (transform.eulerAngles.x, angleGoal, transform.eulerAngles.z);
+                    }
                     CancelInvoke ("ShootBufferInput");
                     anim.Play ("GunShot", 0, 0f);
                     willpower -= shootWPCost;
@@ -805,6 +810,9 @@ public class PlayerController : MonoBehaviour {
     void SlamAttack () {
         if (IsInvoking ("CantAttack") == false) {
             transform.rotation = Quaternion.Euler (transform.eulerAngles.x, angleGoal, transform.eulerAngles.z);
+            for (int i = 0; i < attackTrails.Length; i++) {
+                attackTrails[i].emitting = true;
+            }
             curState = State.SlamAttack;
             anim.Play ("JumpAttackStart");
             movev3 = transform.forward * moveStats[0].speed * AnalMagnitude ();
@@ -833,6 +841,9 @@ public class PlayerController : MonoBehaviour {
         Vector3 helper = transform.TransformDirection (at.localVelocity);
         movev3.x = helper.x;
         movev3.z = helper.z;
+        for (int i = 0; i < attackTrails.Length; i++) {
+            attackTrails[i].emitting = true;
+        }
         CancelInvoke ("StopAttack");
         Invoke ("StopAttack", at.totalTime);
         anim.SetFloat ("curSpeed", 0);
@@ -866,6 +877,9 @@ public class PlayerController : MonoBehaviour {
 
     void StopAttack () {
         curState = State.Normal;
+        for (int i = 0; i < attackTrails.Length; i++) {
+            attackTrails[i].emitting = false;
+        }
     }
 
     public void ActivateHitbox (int num) {

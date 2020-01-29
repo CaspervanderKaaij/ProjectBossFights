@@ -7,6 +7,7 @@ public class PlayerItemManager : MonoBehaviour {
     public Item[] itemTypes;
     public InventoryValues[] myItems;
     public Text[] uiOwned;
+    TimescaleManager timeMan;
     [Header ("Input")]
     public string item1Button = "Item1";
     public string item2Button = "Item2";
@@ -14,11 +15,14 @@ public class PlayerItemManager : MonoBehaviour {
     public string item4Button = "Item4";
 
     void Start () {
+        timeMan = FindObjectOfType<TimescaleManager> ();
         UpdateUIOwnedText ();
     }
     void Update () {
-        GetInput ();
-        GetAxisInput ();
+        if (timeMan.isPaused == false) {
+            GetInput ();
+            GetAxisInput ();
+        }
     }
 
     void GetInput () {
@@ -40,7 +44,7 @@ public class PlayerItemManager : MonoBehaviour {
                     //print("right");
                     UseItem (2);
                 } else {
-                   // print("left");
+                    // print("left");
                     UseItem (1);
                 }
                 UpdateUIOwnedText ();
@@ -49,10 +53,10 @@ public class PlayerItemManager : MonoBehaviour {
             if (Input.GetAxis (item3Button) != 0) {
                 canAxisInput = false;
                 if (Input.GetAxis (item3Button) > 0) {
-                 //   print("up");
+                    //   print("up");
                     UseItem (0);
                 } else {
-                  //  print("down");
+                    //  print("down");
                     UseItem (3);
                 }
                 UpdateUIOwnedText ();
