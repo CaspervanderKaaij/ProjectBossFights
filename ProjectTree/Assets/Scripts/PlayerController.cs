@@ -916,6 +916,9 @@ public class PlayerController : MonoBehaviour {
     }
 
     void StopDash () {
+        for (int i = 0; i < attackTrails.Length; i++) {
+                attackTrails[i].emitting = false;
+            }
         if (curState == State.Dash) {
             curState = State.Normal;
             playerCam._enabled = true;
