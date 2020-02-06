@@ -23,6 +23,8 @@ public class MikaBoss : MonoBehaviour {
     PlayerController player;
     PlayerCam cam;
     [SerializeField] Vector3 centerPos;
+    [SerializeField] Animator anim;
+    [SerializeField] float camXBase = 20;
     [Header ("Memory inferno")]
     [SerializeField] GameObject[] memoryInfernoHitboxes = new GameObject[3];
     [SerializeField] GameObject[] memoryInfernoIndicators = new GameObject[3];
@@ -58,8 +60,10 @@ public class MikaBoss : MonoBehaviour {
         SetCam ();
     }
 
-    void RunFromPlayer(){
-        print("run");
+    void RunFromPlayer () {
+        if (anim.GetCurrentAnimatorStateInfo (0).IsName ("LoseBarrier") == false) {
+            print ("y ar u runin");
+        }
     }
 
     BarrierState lastBState;
@@ -88,7 +92,7 @@ public class MikaBoss : MonoBehaviour {
         barrierPointsParent = Instantiate (orbsPrefab, transform.position, Quaternion.identity, transform).transform;
     }
 
-    float camX = 10;
+    float camX = 20;
     void SetCam () {
         cam.angleGoal.x = camX;
         cam.angleGoal.y = Quaternion.LookRotation (transform.position - cam.transform.position, Vector3.up).eulerAngles.y;
@@ -97,13 +101,13 @@ public class MikaBoss : MonoBehaviour {
 
     void DebugInput () {
         if (Input.GetKeyDown (KeyCode.Tab) == true) {
-            StartAttack (State.Attacking, "BlackHole"); //activate attack
+            StartAttack (State.Attacking, "TeleSlash"); //activate attack
         }
 
-        if(barrierState != BarrierState.Desroyed){
-            //check the face, then attack
+        if (barrierState != BarrierState.Desroyed) {
+            //check the phase, then attack
         } else {
-            RunFromPlayer();
+            RunFromPlayer ();
         }
     }
 
@@ -124,6 +128,8 @@ public class MikaBoss : MonoBehaviour {
 
         if (active == true && wasActive == false) {
             myHitbox.enabled = active;
+
+            anim.Play ("LoseBarrier");
         }
 
         if (active == false && wasActive == true) {
@@ -170,7 +176,7 @@ public class MikaBoss : MonoBehaviour {
         }
         yield return new WaitForSeconds (0.5f * memoryInfernoSpeedMulitplier);
         StopCoroutine ("PushPlayerToBH");
-        camX = 10;
+        camX = camXBase;
         StopAttack ();
     }
 
@@ -264,7 +270,7 @@ public class MikaBoss : MonoBehaviour {
         cam.HardShake (0.1f);
         yield return new WaitForSeconds (1);
         StopAttack ();
-        camX = 10;
+        camX = camXBase;
     }
 
     IEnumerator LastResort () {
