@@ -7,8 +7,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: BlackHole 4
-  m_Shader: {fileID: 4800000, guid: f8f038f636f81f446b7ff4c65e64c8f2, type: 3}
+  m_Name: MikaBarrier
+  m_Shader: {fileID: 4800000, guid: 6448fd48f5565c44d9de963e56b92524, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 0
   m_EnableInstancingVariants: 0
@@ -19,23 +19,16 @@ Material:
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
-    - _Fade:
-        m_Texture: {fileID: 2800000, guid: c00953c130d0ce44e8fd53e79e48bdd9, type: 3}
+    - _Mask:
+        m_Texture: {fileID: 2800000, guid: fb45421da60d8844abb50f40ae9afab1, type: 3}
         m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _TextureSample0:
-        m_Texture: {fileID: 2800000, guid: 6e6cba53deb4f4e41a81667b73a1ca42, type: 3}
-        m_Scale: {x: 3.4, y: 8.07}
         m_Offset: {x: 0, y: 0}
     - _texcoord:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
-    - _CasperValue: 1
-    - _Cutoff: 0.35
-    - _Opacity: 0.88
+    - _BloomMultiplier: 0.65
     - __dirty: 0
     m_Colors:
-    - _Color0: {r: 20.201408, g: 8.9416065, b: 31.626795, a: 0}
-    - _Vector0: {r: -1.68, g: 2.05, b: 0, a: 0}
+    - _Color: {r: 0, g: 0.00742186, b: 0.26515338, a: 0}

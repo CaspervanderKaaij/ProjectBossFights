@@ -28,7 +28,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _TextureSample0:
-        m_Texture: {fileID: 2800000, guid: c60ce9d4c710434479c26cd5a98f7a9c, type: 3}
+        m_Texture: {fileID: 2800000, guid: e7715ad31a5979f4dbf93e80ca3a92df, type: 3}
         m_Scale: {x: 2, y: 2}
         m_Offset: {x: 3.4, y: 6.45}
     - _texcoord:
@@ -36,6 +36,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
+    - _CasperValue1: 1
     - _Opacity: 1.12
     - __dirty: 0
     m_Colors:
