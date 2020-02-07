@@ -18,7 +18,6 @@ public class MikaBoss : MonoBehaviour {
     }
     public BarrierState barrierState = BarrierState.NoOrbs;
     [SerializeField] GameObject orbsPrefab;
-    [SerializeField] GameObject shieldObj;
     bool isAttacking = false;
     PlayerController player;
     PlayerCam cam;
@@ -80,7 +79,6 @@ public class MikaBoss : MonoBehaviour {
             }
             lastBState = barrierState;
         }
-
     }
 
     void BarrierBack () {
@@ -89,7 +87,7 @@ public class MikaBoss : MonoBehaviour {
 
     void NewOrbs () {
         barrierState = BarrierState.Orbs;
-        barrierPointsParent = Instantiate (orbsPrefab, transform.position, Quaternion.identity, transform).transform;
+        barrierPointsParent = Instantiate (orbsPrefab, transform.position, Quaternion.identity).transform;
     }
 
     float camX = 20;
@@ -106,8 +104,19 @@ public class MikaBoss : MonoBehaviour {
 
         if (barrierState != BarrierState.Desroyed) {
             //check the phase, then attack
+            SetOrbLineRends ();
         } else {
             RunFromPlayer ();
+        }
+    }
+
+    void SetOrbLineRends () {
+        if (barrierPointsParent != null) {
+            LineRenderer[] lines = barrierPointsParent.GetComponentsInChildren<LineRenderer> ();
+            for (int i = 0; i < lines.Length; i++) {
+                lines[i].SetPosition (0, lines[i].transform.position);
+                lines[i].SetPosition (1, transform.position);
+            }
         }
     }
 
@@ -136,7 +145,6 @@ public class MikaBoss : MonoBehaviour {
             myHitbox.enabled = active;
         }
 
-        shieldObj.SetActive (!active);
     }
 
     void StartAttack (State atk, string coroutineName) {
@@ -182,9 +190,12 @@ public class MikaBoss : MonoBehaviour {
 
     IEnumerator TeleSlash () {
         yield return new WaitForSeconds (0.5f);
+        anim.Play ("MikaTeleslashCharge");
         transform.position = player.transform.position + (Vector3.up * 2) - player.transform.forward * 5;
         transform.LookAt (new Vector3 (player.transform.position.x, transform.position.y, player.transform.position.z));
-        yield return new WaitForSeconds (0.3f);
+        yield return new WaitForSeconds (0.1f);
+        anim.Play ("MikaTeleslash");
+        yield return new WaitForSeconds (0.2f);
         Instantiate (teleslashHitbox, transform.position + transform.forward, Quaternion.identity).transform.LookAt (new Vector3 (player.transform.position.x, transform.position.y, player.transform.position.z));
         cam.MediumShake (0.2f);
         yield return new WaitForSeconds (0.8f);
