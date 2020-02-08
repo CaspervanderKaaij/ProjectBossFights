@@ -103,7 +103,7 @@ public class MikaBoss : MonoBehaviour {
 
     void DebugInput () {
         if (Input.GetKeyDown (KeyCode.Tab) == true) {
-            StartAttack (State.Attacking, "TeleSlash"); //                                                                              --> activate attack <--
+            StartAttack (State.Attacking, "RealitySlash"); //                                                                              --> activate attack <--
         }
 
         if (barrierState != BarrierState.Desroyed) {
@@ -293,6 +293,7 @@ public class MikaBoss : MonoBehaviour {
     List<GameObject> realitySlashHitboxes = new List<GameObject> ();
     IEnumerator RealitySlash () {
         camX = 50;
+        yield return new WaitForSeconds (0.5f);
         realitySlashHitboxes.Clear ();
         for (int i = 0; i < 5; i++) {
             GameObject g = Instantiate (realitySlashHitbox, transform.position, Quaternion.Euler (0, Random.Range (0, 360), 0));
