@@ -190,7 +190,7 @@ public class MikaBoss : MonoBehaviour {
         yield return new WaitForSeconds (0.3f);
         anim.transform.eulerAngles = new Vector3 (anim.transform.eulerAngles.x, startY, anim.transform.eulerAngles.z);
         for (int i = 0; i < memoryInfernoCOunt; i++) {
-            Instantiate (memoryInfernoStartParticle, transform.position, memoryInfernoHitboxes[memoryInfernoPattern[i]].transform.rotation * Quaternion.Euler(90,0,0));
+            Instantiate (memoryInfernoStartParticle, transform.position, memoryInfernoHitboxes[memoryInfernoPattern[i]].transform.rotation * Quaternion.Euler (90, 0, 0));
             yield return new WaitForSeconds (0.4f);
             memoryInfernoHitboxes[memoryInfernoPattern[i]].SetActive (true);
             yield return new WaitForSeconds (0.45f * memoryInfernoSpeedMulitplier);
@@ -206,12 +206,12 @@ public class MikaBoss : MonoBehaviour {
 
     IEnumerator TeleSlash () {
         yield return new WaitForSeconds (0.5f);
-        Instantiate(teleportParicle,transform.position,Quaternion.identity);
+        Instantiate (teleportParicle, transform.position, Quaternion.identity);
         Vector3 oldScale = anim.transform.localScale;
         anim.transform.localScale = Vector3.zero;
-        yield return new WaitForSeconds (0.5f);
+        yield return new WaitForSeconds (0.1f);
         Vector3 savedPos = player.transform.position + (Vector3.up * 2) - player.transform.forward * 5;
-        Instantiate(teleportParicle,savedPos,Quaternion.identity);
+        Instantiate (teleportParicle, savedPos, Quaternion.identity);
         yield return new WaitForSeconds (0.1f);
         transform.position = savedPos;
         anim.transform.localScale = oldScale;
@@ -223,6 +223,12 @@ public class MikaBoss : MonoBehaviour {
         Instantiate (teleslashHitbox, transform.position + transform.forward, Quaternion.identity).transform.LookAt (new Vector3 (player.transform.position.x, transform.position.y, player.transform.position.z));
         cam.MediumShake (0.2f);
         yield return new WaitForSeconds (0.8f);
+        Instantiate (teleportParicle, transform.position, Quaternion.identity);
+        anim.transform.localScale = Vector3.zero;
+        yield return new WaitForSeconds (0.1f);
+        Instantiate (teleportParicle, centerPos, Quaternion.identity);
+        yield return new WaitForSeconds (0.1f);
+        anim.transform.localScale = oldScale;
         transform.position = centerPos;
         StopAttack ();
     }
@@ -298,7 +304,7 @@ public class MikaBoss : MonoBehaviour {
         yield return new WaitForSeconds (0.5f);
         for (int i = 0; i < 5; i++) {
             realitySlashHitboxes[i].GetComponent<Collider> ().enabled = true;
-            realitySlashHitboxes[i].GetComponent<LerpShaderValue>().SetValue(1);
+            realitySlashHitboxes[i].GetComponent<LerpShaderValue> ().SetValue (1);
             Destroy (realitySlashHitboxes[i], 0.5f);
         }
         cam.HardShake (0.1f);
