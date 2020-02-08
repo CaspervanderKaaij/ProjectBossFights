@@ -61,7 +61,7 @@ public class MikaBoss : MonoBehaviour {
 
     void RunFromPlayer () {
         if (anim.GetCurrentAnimatorStateInfo (0).IsName ("LoseBarrier") == false) {
-            print ("y ar u runin");
+           // print ("y ar u runin");
         }
     }
 
@@ -99,7 +99,7 @@ public class MikaBoss : MonoBehaviour {
 
     void DebugInput () {
         if (Input.GetKeyDown (KeyCode.Tab) == true) {
-            StartAttack (State.Attacking, "TeleSlash"); //activate attack
+            StartAttack (State.Attacking, "RealitySlash"); //activate attack
         }
 
         if (barrierState != BarrierState.Desroyed) {
@@ -168,20 +168,28 @@ public class MikaBoss : MonoBehaviour {
     float memoryInfernoSpeedMulitplier = 2;
     IEnumerator MemoryInferno () {
         camX = 40;
+        float startY = anim.transform.eulerAngles.y;
         yield return new WaitForSeconds (0.5f * memoryInfernoSpeedMulitplier);
         for (int i = 0; i < memoryInfernoCOunt; i++) {
-            memoryInfernoIndicators[memoryInfernoPattern[i]].SetActive (true);
+            GameObject g = memoryInfernoIndicators[memoryInfernoPattern[i]];
+            g.SetActive (true);
+            anim.Play ("MikaMemoryInfernoPoint", 0, 0);
+            anim.transform.eulerAngles = new Vector3 (anim.transform.eulerAngles.x, memoryInfernoHitboxes[memoryInfernoPattern[i]].transform.eulerAngles.y, anim.transform.eulerAngles.z);
+            anim.transform.Rotate (0, -20, 0);
             yield return new WaitForSeconds (0.2f * memoryInfernoSpeedMulitplier);
             memoryInfernoIndicators[memoryInfernoPattern[i]].SetActive (false);
             yield return new WaitForSeconds (0.05f * memoryInfernoSpeedMulitplier);
         }
         yield return new WaitForSeconds (0.5f * memoryInfernoSpeedMulitplier);
+        anim.Play ("MikaEvilLaugh", 0, 0);
+        anim.transform.eulerAngles = new Vector3 (anim.transform.eulerAngles.x, startY, anim.transform.eulerAngles.z);
         for (int i = 0; i < memoryInfernoCOunt; i++) {
             memoryInfernoHitboxes[memoryInfernoPattern[i]].SetActive (true);
             yield return new WaitForSeconds (0.45f * memoryInfernoSpeedMulitplier);
             memoryInfernoHitboxes[memoryInfernoPattern[i]].SetActive (false);
-            yield return new WaitForSeconds (0.05f * memoryInfernoSpeedMulitplier);
+            yield return new WaitForSeconds (0.2f * memoryInfernoSpeedMulitplier);
         }
+        anim.Play("MikaStopEvilLaugh",0,0);
         yield return new WaitForSeconds (0.5f * memoryInfernoSpeedMulitplier);
         StopCoroutine ("PushPlayerToBH");
         camX = camXBase;

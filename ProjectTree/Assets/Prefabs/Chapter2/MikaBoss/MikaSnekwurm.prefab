@@ -767,9 +767,9 @@ GameObject:
   - component: {fileID: 3169689656441536166}
   - component: {fileID: 345616651487635270}
   - component: {fileID: 7785645147655844137}
-  - component: {fileID: 4023646092203530739}
   - component: {fileID: 6247538497238256631}
   - component: {fileID: 4687308917000452980}
+  - component: {fileID: 95523881691075504}
   m_Layer: 0
   m_Name: SnekwurmPart
   m_TagString: Untagged
@@ -839,18 +839,6 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!114 &4023646092203530739
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3928689992914274524}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cd8b61a0d28f9d548b579a4e81b4f9ed, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!135 &6247538497238256631
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -883,6 +871,20 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   destroyOnHit: 0
+--- !u!114 &95523881691075504
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3928689992914274524}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5801bf0f224857c45b4a126d4e237d5c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  unscaled: 0
+  v3: {x: 0, y: 0, z: 100}
 --- !u!1 &3988023610549843224
 GameObject:
   m_ObjectHideFlags: 0
@@ -1180,20 +1182,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   parts:
-  - {fileID: 4023646092203530751}
-  - {fileID: 4023646092203530744}
-  - {fileID: 4023646092203530745}
-  - {fileID: 4023646092203530746}
-  - {fileID: 4023646092203530747}
-  - {fileID: 4023646092203530740}
-  - {fileID: 4023646092203530741}
+  - {fileID: 4023646092203530738}
+  - {fileID: 4023646092203530737}
+  - {fileID: 4023646092203530736}
   - {fileID: 4023646092203530742}
   - {fileID: 4023646092203530743}
-  - {fileID: 4023646092203530736}
-  - {fileID: 4023646092203530737}
-  - {fileID: 4023646092203530738}
-  - {fileID: 4023646092203530739}
-  partSpeed: 10
+  - {fileID: 4023646092203530741}
+  - {fileID: 4023646092203530740}
+  - {fileID: 4023646092203530747}
+  - {fileID: 4023646092203530746}
+  - {fileID: 4023646092203530744}
+  - {fileID: 4023646092203530745}
+  - {fileID: 4023646092203530751}
+  partSpeed: 20
   delay: 50
 --- !u!1 &5814934132784869869
 GameObject:
