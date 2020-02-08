@@ -15,6 +15,10 @@ public class LerpShaderValue : MonoBehaviour
         rend.material.SetFloat(value,startValue);
     }
 
+    public void SetValue(float newVal){
+        rend.material.SetFloat(value,newVal);
+    }
+
     void Update()
     {
         rend.material.SetFloat(value, Mathf.Lerp(rend.material.GetFloat(value),goalValue,speed * Time.deltaTime));

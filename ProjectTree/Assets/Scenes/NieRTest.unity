@@ -18516,6 +18516,8 @@ MonoBehaviour:
     type: 3}
   blackholeSlashHitbox: {fileID: 7209369110603936443, guid: 6b7a7913287b368459da98bfb34ad15e,
     type: 3}
+  teleportParicle: {fileID: 6055357856525942466, guid: 29211feb8802d30428437c63315803e6,
+    type: 3}
   realitySlashHitbox: {fileID: 425403286827894198, guid: 3b625679167101a459d231bc58ec152c,
     type: 3}
   blackholePrefab: {fileID: 4883678365687345618, guid: 34d4bf6cc31f8d54ab5dff64daccf9da,

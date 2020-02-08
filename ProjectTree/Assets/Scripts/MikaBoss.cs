@@ -34,6 +34,7 @@ public class MikaBoss : MonoBehaviour {
     [SerializeField] GameObject teleslashHitbox;
     [SerializeField] GameObject jumpslashHitbox;
     [SerializeField] GameObject blackholeSlashHitbox;
+    [SerializeField] GameObject teleportParicle;
     [Header ("Reality Slash")]
     [SerializeField] GameObject realitySlashHitbox;
     [Header ("Black Hole")]
@@ -102,7 +103,7 @@ public class MikaBoss : MonoBehaviour {
 
     void DebugInput () {
         if (Input.GetKeyDown (KeyCode.Tab) == true) {
-            StartAttack (State.Attacking, "MemoryInferno"); //              --> activate attack <--
+            StartAttack (State.Attacking, "TeleSlash"); //                                                                              --> activate attack <--
         }
 
         if (barrierState != BarrierState.Desroyed) {
@@ -205,8 +206,16 @@ public class MikaBoss : MonoBehaviour {
 
     IEnumerator TeleSlash () {
         yield return new WaitForSeconds (0.5f);
+        Instantiate(teleportParicle,transform.position,Quaternion.identity);
+        Vector3 oldScale = anim.transform.localScale;
+        anim.transform.localScale = Vector3.zero;
+        yield return new WaitForSeconds (0.5f);
+        Vector3 savedPos = player.transform.position + (Vector3.up * 2) - player.transform.forward * 5;
+        Instantiate(teleportParicle,savedPos,Quaternion.identity);
+        yield return new WaitForSeconds (0.1f);
+        transform.position = savedPos;
+        anim.transform.localScale = oldScale;
         anim.Play ("MikaTeleslashCharge");
-        transform.position = player.transform.position + (Vector3.up * 2) - player.transform.forward * 5;
         transform.LookAt (new Vector3 (player.transform.position.x, transform.position.y, player.transform.position.z));
         yield return new WaitForSeconds (0.1f);
         anim.Play ("MikaTeleslash");
@@ -282,13 +291,14 @@ public class MikaBoss : MonoBehaviour {
         for (int i = 0; i < 5; i++) {
             GameObject g = Instantiate (realitySlashHitbox, transform.position, Quaternion.Euler (0, Random.Range (0, 360), 0));
             g.transform.position += g.transform.forward * Random.Range (3, 15);
-            g.transform.Rotate (0, Random.Range (0, 360), 90);
+            g.transform.Rotate (180, Random.Range (0, 360), 90);
             realitySlashHitboxes.Add (g);
             yield return new WaitForSeconds (0.3f);
         }
         yield return new WaitForSeconds (0.5f);
         for (int i = 0; i < 5; i++) {
             realitySlashHitboxes[i].GetComponent<Collider> ().enabled = true;
+            realitySlashHitboxes[i].GetComponent<LerpShaderValue>().SetValue(1);
             Destroy (realitySlashHitboxes[i], 0.5f);
         }
         cam.HardShake (0.1f);
