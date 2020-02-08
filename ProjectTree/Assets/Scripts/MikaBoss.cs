@@ -28,6 +28,7 @@ public class MikaBoss : MonoBehaviour {
     [Header ("Memory inferno")]
     [SerializeField] GameObject[] memoryInfernoHitboxes = new GameObject[3];
     [SerializeField] GameObject[] memoryInfernoIndicators = new GameObject[3];
+    [SerializeField] GameObject memoryInfernoIdicatorParticle;
     [Header ("TeleSlash")]
     [SerializeField] GameObject teleslashHitbox;
     [SerializeField] GameObject jumpslashHitbox;
@@ -100,7 +101,7 @@ public class MikaBoss : MonoBehaviour {
 
     void DebugInput () {
         if (Input.GetKeyDown (KeyCode.Tab) == true) {
-            StartAttack (State.Attacking, "BlackHole"); //              --> activate attack <--
+            StartAttack (State.Attacking, "MemoryInferno"); //              --> activate attack <--
         }
 
         if (barrierState != BarrierState.Desroyed) {
@@ -177,6 +178,7 @@ public class MikaBoss : MonoBehaviour {
             anim.Play ("MikaMemoryInfernoPoint", 0, 0);
             anim.transform.eulerAngles = new Vector3 (anim.transform.eulerAngles.x, memoryInfernoHitboxes[memoryInfernoPattern[i]].transform.eulerAngles.y, anim.transform.eulerAngles.z);
             anim.transform.Rotate (0, -20, 0);
+            Instantiate(memoryInfernoIdicatorParticle,transform.position + (-anim.transform.right * 3),Quaternion.identity);
             yield return new WaitForSeconds (0.2f * memoryInfernoSpeedMulitplier);
             memoryInfernoIndicators[memoryInfernoPattern[i]].SetActive (false);
             yield return new WaitForSeconds (0.05f * memoryInfernoSpeedMulitplier);

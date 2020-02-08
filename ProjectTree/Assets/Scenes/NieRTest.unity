@@ -18506,6 +18506,8 @@ MonoBehaviour:
   - {fileID: 1993289718}
   - {fileID: 1993289717}
   - {fileID: 1993289716}
+  memoryInfernoIdicatorParticle: {fileID: 3475487343728262653, guid: 9f9ec69fd96667a4d9a1633ed4ac6324,
+    type: 3}
   teleslashHitbox: {fileID: 7209369110603936443, guid: 93f1c9161cbb6314da9853dabebd321a,
     type: 3}
   jumpslashHitbox: {fileID: 7209369110603936443, guid: ed7547a88d44e3a42a2cf26ae444d66e,
