@@ -1,0 +1,55 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 6
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: RenderCrack
+  m_Shader: {fileID: 4800000, guid: 5b3670b9f05fe8546bb7227e51594a80, type: 3}
+  m_ShaderKeywords: 
+  m_LightmapFlags: 0
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: 2001
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _TextureSample0:
+        m_Texture: {fileID: 2800000, guid: 6ea8c6817bb7627448a1a7d911bc8712, type: 3}
+        m_Scale: {x: 2.32, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _TextureSample1:
+        m_Texture: {fileID: 2800000, guid: 0e58a342aea9c4b4da7c78d466bc8610, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _texcoord:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Floats:
+    - _CellScale: 1
+    - _CellScale1: 1
+    - _CellSpeed: 1
+    - _CellSpeed1: 1
+    - _DissolveMultiplier: 1
+    - _H: 0
+    - _H1: -0.36
+    - _Skidaddle: 1.01
+    - _VoronoiScale: 9.98
+    - __dirty: 0
+    m_Colors:
+    - _Color: {r: 24.251463, g: 24.251463, b: 24.251463, a: 0}
+    - _Color0: {r: 2.6390157, g: 2.6390157, b: 2.6390157, a: 0}
+    - _Color1: {r: 126.29782, g: 0, b: 82.9305, a: 0}
+    - _NoiseMovement: {r: 0, g: 0, b: 0, a: 0}
+    - _NoiseMovement1: {r: 0, g: -2.32, b: 0, a: 0}
+    - _NoiseTiling: {r: 0, g: 0, b: 0, a: 0}
+    - _NoiseTiling1: {r: 18.65, g: 4.18, b: 0, a: 0}
+    - _VoronoiPan: {r: 0, g: 0, b: 0, a: 0}
+    - _yeet1: {r: -0.5, g: 0, b: 0, a: 0}
+    - _yeet2: {r: 0.5, g: 0, b: 0, a: 0}
