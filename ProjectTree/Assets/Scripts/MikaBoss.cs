@@ -29,6 +29,7 @@ public class MikaBoss : MonoBehaviour {
     [SerializeField] GameObject[] memoryInfernoHitboxes = new GameObject[3];
     [SerializeField] GameObject[] memoryInfernoIndicators = new GameObject[3];
     [SerializeField] GameObject memoryInfernoIdicatorParticle;
+    [SerializeField] GameObject memoryInfernoStartParticle;
     [Header ("TeleSlash")]
     [SerializeField] GameObject teleslashHitbox;
     [SerializeField] GameObject jumpslashHitbox;
@@ -76,7 +77,7 @@ public class MikaBoss : MonoBehaviour {
                     Invoke ("BarrierBack", 5);
                     break;
                 case BarrierState.NoOrbs:
-                    Invoke ("NewOrbs", 5);
+                    Invoke ("NewOrbs", 0.1f);
                     break;
             }
             lastBState = barrierState;
@@ -178,15 +179,18 @@ public class MikaBoss : MonoBehaviour {
             anim.Play ("MikaMemoryInfernoPoint", 0, 0);
             anim.transform.eulerAngles = new Vector3 (anim.transform.eulerAngles.x, memoryInfernoHitboxes[memoryInfernoPattern[i]].transform.eulerAngles.y, anim.transform.eulerAngles.z);
             anim.transform.Rotate (0, -20, 0);
-            Instantiate(memoryInfernoIdicatorParticle,transform.position + (-anim.transform.right * 3),Quaternion.identity);
+            Instantiate (memoryInfernoIdicatorParticle, transform.position + (-anim.transform.right * 3), Quaternion.identity);
             yield return new WaitForSeconds (0.2f * memoryInfernoSpeedMulitplier);
             memoryInfernoIndicators[memoryInfernoPattern[i]].SetActive (false);
             yield return new WaitForSeconds (0.05f * memoryInfernoSpeedMulitplier);
         }
         yield return new WaitForSeconds (0.5f * memoryInfernoSpeedMulitplier);
         anim.Play ("MikaEvilLaugh", 0, 0);
+        yield return new WaitForSeconds (0.3f);
         anim.transform.eulerAngles = new Vector3 (anim.transform.eulerAngles.x, startY, anim.transform.eulerAngles.z);
         for (int i = 0; i < memoryInfernoCOunt; i++) {
+            Instantiate (memoryInfernoStartParticle, transform.position, memoryInfernoHitboxes[memoryInfernoPattern[i]].transform.rotation * Quaternion.Euler(90,0,0));
+            yield return new WaitForSeconds (0.4f);
             memoryInfernoHitboxes[memoryInfernoPattern[i]].SetActive (true);
             yield return new WaitForSeconds (0.45f * memoryInfernoSpeedMulitplier);
             memoryInfernoHitboxes[memoryInfernoPattern[i]].SetActive (false);
