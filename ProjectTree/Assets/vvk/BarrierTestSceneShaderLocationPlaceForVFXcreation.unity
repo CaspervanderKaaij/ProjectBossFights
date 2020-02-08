@@ -1709,6 +1709,75 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 7167576592789372743}
   m_PrefabAsset: {fileID: 0}
+--- !u!1001 &6055357856627937413
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 6055357856525942466, guid: 29211feb8802d30428437c63315803e6,
+        type: 3}
+      propertyPath: m_Name
+      value: TeleportEffect
+      objectReference: {fileID: 0}
+    - target: {fileID: 6055357856525942477, guid: 29211feb8802d30428437c63315803e6,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6055357856525942477, guid: 29211feb8802d30428437c63315803e6,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 2.11
+      objectReference: {fileID: 0}
+    - target: {fileID: 6055357856525942477, guid: 29211feb8802d30428437c63315803e6,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6055357856525942477, guid: 29211feb8802d30428437c63315803e6,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6055357856525942477, guid: 29211feb8802d30428437c63315803e6,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6055357856525942477, guid: 29211feb8802d30428437c63315803e6,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6055357856525942477, guid: 29211feb8802d30428437c63315803e6,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6055357856525942477, guid: 29211feb8802d30428437c63315803e6,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 22
+      objectReference: {fileID: 0}
+    - target: {fileID: 6055357856525942477, guid: 29211feb8802d30428437c63315803e6,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6055357856525942477, guid: 29211feb8802d30428437c63315803e6,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6055357856525942477, guid: 29211feb8802d30428437c63315803e6,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 29211feb8802d30428437c63315803e6, type: 3}
 --- !u!1001 &6798089042075127126
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1794,6 +1863,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Omae Wa Mou Shindeiru
+      objectReference: {fileID: 0}
+    - target: {fileID: 7116135179687598994, guid: 7b5df8d45da1a3940ac3e2aa13e726bd,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7116135179687599085, guid: 7b5df8d45da1a3940ac3e2aa13e726bd,
         type: 3}
