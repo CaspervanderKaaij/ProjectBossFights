@@ -266,8 +266,202 @@ ModelImporter:
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
       events: []
-      transformMask: []
-      maskType: 3
+      transformMask:
+      - path: 
+        weight: 1
+      - path: Armature.000
+        weight: 1
+      - path: Armature.000/Spine
+        weight: 1
+      - path: Armature.000/Spine/BackLineThing1
+        weight: 0
+      - path: Armature.000/Spine/BackLineThing1/BackLineThing2
+        weight: 0
+      - path: Armature.000/Spine/BackLineThing1/BackLineThing2/BackLineThing3
+        weight: 0
+      - path: Armature.000/Spine/BackLineThing1/BackLineThing2/BackLineThing3/BackLineThing4
+        weight: 0
+      - path: Armature.000/Spine/BackLineThing1/BackLineThing2/BackLineThing3/BackLineThing4/BackLineThing4_end
+        weight: 0
+      - path: Armature.000/Spine/FrontLineThing1
+        weight: 0
+      - path: Armature.000/Spine/FrontLineThing1/FrontLineThing2
+        weight: 0
+      - path: Armature.000/Spine/FrontLineThing1/FrontLineThing2/FrontLineThing3
+        weight: 0
+      - path: Armature.000/Spine/FrontLineThing1/FrontLineThing2/FrontLineThing3/FrontLineThing3_end
+        weight: 0
+      - path: Armature.000/Spine/LeftArmor
+        weight: 0
+      - path: Armature.000/Spine/LeftArmor/LeftArmor_end
+        weight: 0
+      - path: Armature.000/Spine/RightArmor
+        weight: 0
+      - path: Armature.000/Spine/RightArmor/RightArmor_end
+        weight: 0
+      - path: Armature.000/Spine/Spine2
+        weight: 1
+      - path: Armature.000/Spine/Spine2/Chest
+        weight: 1
+      - path: Armature.000/Spine/Spine2/Chest/Neck
+        weight: 1
+      - path: Armature.000/Spine/Spine2/Chest/Neck/Head
+        weight: 1
+      - path: Armature.000/Spine/Spine2/Chest/Neck/Head/Head_end
+        weight: 0
+      - path: Armature.000/Spine/Spine2/Chest/UpperArm.L
+        weight: 1
+      - path: Armature.000/Spine/Spine2/Chest/UpperArm.L/UnderArm.L
+        weight: 1
+      - path: Armature.000/Spine/Spine2/Chest/UpperArm.L/UnderArm.L/UnderArm.L.001
+        weight: 1
+      - path: Armature.000/Spine/Spine2/Chest/UpperArm.L/UnderArm.L/UnderArm.L.001/MiddleFingerA.L
+        weight: 1
+      - path: Armature.000/Spine/Spine2/Chest/UpperArm.L/UnderArm.L/UnderArm.L.001/MiddleFingerA.L/MiddleFingerB.L
+        weight: 1
+      - path: Armature.000/Spine/Spine2/Chest/UpperArm.L/UnderArm.L/UnderArm.L.001/MiddleFingerA.L/MiddleFingerB.L/MiddleFingerC.L
+        weight: 1
+      - path: Armature.000/Spine/Spine2/Chest/UpperArm.L/UnderArm.L/UnderArm.L.001/MiddleFingerA.L/MiddleFingerB.L/MiddleFingerC.L/MiddleFingerC.L_end
+        weight: 0
+      - path: Armature.000/Spine/Spine2/Chest/UpperArm.L/UnderArm.L/UnderArm.L.001/PinkyA.L
+        weight: 1
+      - path: Armature.000/Spine/Spine2/Chest/UpperArm.L/UnderArm.L/UnderArm.L.001/PinkyA.L/PinkyB.L
+        weight: 1
+      - path: Armature.000/Spine/Spine2/Chest/UpperArm.L/UnderArm.L/UnderArm.L.001/PinkyA.L/PinkyB.L/PinkyC.L
+        weight: 1
+      - path: Armature.000/Spine/Spine2/Chest/UpperArm.L/UnderArm.L/UnderArm.L.001/PinkyA.L/PinkyB.L/PinkyC.L/PinkyC.L_end
+        weight: 0
+      - path: Armature.000/Spine/Spine2/Chest/UpperArm.L/UnderArm.L/UnderArm.L.001/PointA.L
+        weight: 1
+      - path: Armature.000/Spine/Spine2/Chest/UpperArm.L/UnderArm.L/UnderArm.L.001/PointA.L/PointB.L
+        weight: 1
+      - path: Armature.000/Spine/Spine2/Chest/UpperArm.L/UnderArm.L/UnderArm.L.001/PointA.L/PointB.L/PointC.L
+        weight: 1
+      - path: Armature.000/Spine/Spine2/Chest/UpperArm.L/UnderArm.L/UnderArm.L.001/PointA.L/PointB.L/PointC.L/PointC.L_end
+        weight: 0
+      - path: Armature.000/Spine/Spine2/Chest/UpperArm.L/UnderArm.L/UnderArm.L.001/RingA.L
+        weight: 1
+      - path: Armature.000/Spine/Spine2/Chest/UpperArm.L/UnderArm.L/UnderArm.L.001/RingA.L/RingB.L
+        weight: 1
+      - path: Armature.000/Spine/Spine2/Chest/UpperArm.L/UnderArm.L/UnderArm.L.001/RingA.L/RingB.L/RingC.L
+        weight: 1
+      - path: Armature.000/Spine/Spine2/Chest/UpperArm.L/UnderArm.L/UnderArm.L.001/RingA.L/RingB.L/RingC.L/RingC.L_end
+        weight: 0
+      - path: Armature.000/Spine/Spine2/Chest/UpperArm.L/UnderArm.L/UnderArm.L.001/ThumbA.L
+        weight: 1
+      - path: Armature.000/Spine/Spine2/Chest/UpperArm.L/UnderArm.L/UnderArm.L.001/ThumbA.L/ThumbB.L
+        weight: 1
+      - path: Armature.000/Spine/Spine2/Chest/UpperArm.L/UnderArm.L/UnderArm.L.001/ThumbA.L/ThumbB.L/ThumbB.L_end
+        weight: 0
+      - path: Armature.000/Spine/Spine2/Chest/UpperArm.R
+        weight: 1
+      - path: Armature.000/Spine/Spine2/Chest/UpperArm.R/UnderArm.R
+        weight: 1
+      - path: Armature.000/Spine/Spine2/Chest/UpperArm.R/UnderArm.R/UnderArm.R.001
+        weight: 1
+      - path: Armature.000/Spine/Spine2/Chest/UpperArm.R/UnderArm.R/UnderArm.R.001/MiddleFingerA.R
+        weight: 1
+      - path: Armature.000/Spine/Spine2/Chest/UpperArm.R/UnderArm.R/UnderArm.R.001/MiddleFingerA.R/MiddleFingerB.R
+        weight: 1
+      - path: Armature.000/Spine/Spine2/Chest/UpperArm.R/UnderArm.R/UnderArm.R.001/MiddleFingerA.R/MiddleFingerB.R/MiddleFingerC.R
+        weight: 1
+      - path: Armature.000/Spine/Spine2/Chest/UpperArm.R/UnderArm.R/UnderArm.R.001/MiddleFingerA.R/MiddleFingerB.R/MiddleFingerC.R/MiddleFingerC.R_end
+        weight: 0
+      - path: Armature.000/Spine/Spine2/Chest/UpperArm.R/UnderArm.R/UnderArm.R.001/PinkyA.R
+        weight: 1
+      - path: Armature.000/Spine/Spine2/Chest/UpperArm.R/UnderArm.R/UnderArm.R.001/PinkyA.R/PinkyB.R
+        weight: 1
+      - path: Armature.000/Spine/Spine2/Chest/UpperArm.R/UnderArm.R/UnderArm.R.001/PinkyA.R/PinkyB.R/PinkyC.R
+        weight: 1
+      - path: Armature.000/Spine/Spine2/Chest/UpperArm.R/UnderArm.R/UnderArm.R.001/PinkyA.R/PinkyB.R/PinkyC.R/PinkyC.R_end
+        weight: 0
+      - path: Armature.000/Spine/Spine2/Chest/UpperArm.R/UnderArm.R/UnderArm.R.001/PointA.R
+        weight: 1
+      - path: Armature.000/Spine/Spine2/Chest/UpperArm.R/UnderArm.R/UnderArm.R.001/PointA.R/PointB.R
+        weight: 1
+      - path: Armature.000/Spine/Spine2/Chest/UpperArm.R/UnderArm.R/UnderArm.R.001/PointA.R/PointB.R/PointC.R
+        weight: 1
+      - path: Armature.000/Spine/Spine2/Chest/UpperArm.R/UnderArm.R/UnderArm.R.001/PointA.R/PointB.R/PointC.R/PointC.R_end
+        weight: 0
+      - path: Armature.000/Spine/Spine2/Chest/UpperArm.R/UnderArm.R/UnderArm.R.001/RingA.R
+        weight: 1
+      - path: Armature.000/Spine/Spine2/Chest/UpperArm.R/UnderArm.R/UnderArm.R.001/RingA.R/RingB.R
+        weight: 1
+      - path: Armature.000/Spine/Spine2/Chest/UpperArm.R/UnderArm.R/UnderArm.R.001/RingA.R/RingB.R/RingC.R
+        weight: 1
+      - path: Armature.000/Spine/Spine2/Chest/UpperArm.R/UnderArm.R/UnderArm.R.001/RingA.R/RingB.R/RingC.R/RingC.R_end
+        weight: 0
+      - path: Armature.000/Spine/Spine2/Chest/UpperArm.R/UnderArm.R/UnderArm.R.001/Spear
+        weight: 1
+      - path: Armature.000/Spine/Spine2/Chest/UpperArm.R/UnderArm.R/UnderArm.R.001/Spear/Spear_end
+        weight: 1
+      - path: Armature.000/Spine/Spine2/Chest/UpperArm.R/UnderArm.R/UnderArm.R.001/ThumbA.R
+        weight: 1
+      - path: Armature.000/Spine/Spine2/Chest/UpperArm.R/UnderArm.R/UnderArm.R.001/ThumbA.R/ThumbB.R
+        weight: 1
+      - path: Armature.000/Spine/Spine2/Chest/UpperArm.R/UnderArm.R/UnderArm.R.001/ThumbA.R/ThumbB.R/ThumbB.R_end
+        weight: 0
+      - path: Armature.000/Spine/UpperLeg.L
+        weight: 1
+      - path: Armature.000/Spine/UpperLeg.L/UnderLeg.L
+        weight: 1
+      - path: Armature.000/Spine/UpperLeg.L/UnderLeg.L/UnderLeg.L.001
+        weight: 1
+      - path: Armature.000/Spine/UpperLeg.L/UnderLeg.L/UnderLeg.L.001/Foot.L
+        weight: 1
+      - path: Armature.000/Spine/UpperLeg.L/UnderLeg.L/UnderLeg.L.001/Foot.L/FootFront.L
+        weight: 1
+      - path: Armature.000/Spine/UpperLeg.L/UnderLeg.L/UnderLeg.L.001/Foot.L/FootFront.L/FootFront.L_end
+        weight: 0
+      - path: Armature.000/Spine/UpperLeg.L/UnderLeg.L/UnderLeg.L.001/FootBack.L
+        weight: 0
+      - path: Armature.000/Spine/UpperLeg.L/UnderLeg.L/UnderLeg.L.001/FootBack.L/FootBack.L_end
+        weight: 0
+      - path: Armature.000/Spine/UpperLeg.R
+        weight: 1
+      - path: Armature.000/Spine/UpperLeg.R/UnderLeg.R
+        weight: 1
+      - path: Armature.000/Spine/UpperLeg.R/UnderLeg.R/UnderLeg.R.001
+        weight: 1
+      - path: Armature.000/Spine/UpperLeg.R/UnderLeg.R/UnderLeg.R.001/Foot.R
+        weight: 1
+      - path: Armature.000/Spine/UpperLeg.R/UnderLeg.R/UnderLeg.R.001/Foot.R/FootFront.R
+        weight: 1
+      - path: Armature.000/Spine/UpperLeg.R/UnderLeg.R/UnderLeg.R.001/Foot.R/FootFront.R/FootFront.R_end
+        weight: 0
+      - path: Armature.000/Spine/UpperLeg.R/UnderLeg.R/UnderLeg.R.001/FootBack.R
+        weight: 0
+      - path: Armature.000/Spine/UpperLeg.R/UnderLeg.R/UnderLeg.R.001/FootBack.R/FootBack.R_end
+        weight: 0
+      - path: Cube.002
+        weight: 0
+      - path: Cube.011
+        weight: 0
+      - path: Cube.032
+        weight: 0
+      - path: Cube.033
+        weight: 0
+      - path: Cube.042
+        weight: 0
+      - path: Cube.045
+        weight: 0
+      - path: Cube.048
+        weight: 0
+      - path: Cube.049
+        weight: 0
+      - path: Cube.053
+        weight: 0
+      - path: Cube.054
+        weight: 0
+      - path: Cube.055
+        weight: 0
+      - path: Cube.057
+        weight: 0
+      - path: Cube.073
+        weight: 0
+      - path: Cube.074
+        weight: 0
+      maskType: 0
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16

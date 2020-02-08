@@ -18,6 +18,7 @@ public class MikaBoss : MonoBehaviour {
     }
     public BarrierState barrierState = BarrierState.NoOrbs;
     [SerializeField] GameObject orbsPrefab;
+    [SerializeField] Transform lineFollowTrans;
     bool isAttacking = false;
     PlayerController player;
     PlayerCam cam;
@@ -61,7 +62,7 @@ public class MikaBoss : MonoBehaviour {
 
     void RunFromPlayer () {
         if (anim.GetCurrentAnimatorStateInfo (0).IsName ("LoseBarrier") == false) {
-           // print ("y ar u runin");
+            // print ("y ar u runin");
         }
     }
 
@@ -99,7 +100,7 @@ public class MikaBoss : MonoBehaviour {
 
     void DebugInput () {
         if (Input.GetKeyDown (KeyCode.Tab) == true) {
-            StartAttack (State.Attacking, "RealitySlash"); //activate attack
+            StartAttack (State.Attacking, "BlackHole"); //              --> activate attack <--
         }
 
         if (barrierState != BarrierState.Desroyed) {
@@ -115,7 +116,7 @@ public class MikaBoss : MonoBehaviour {
             LineRenderer[] lines = barrierPointsParent.GetComponentsInChildren<LineRenderer> ();
             for (int i = 0; i < lines.Length; i++) {
                 lines[i].SetPosition (0, lines[i].transform.position);
-                lines[i].SetPosition (1, transform.position);
+                lines[i].SetPosition (1, lineFollowTrans.position);
             }
         }
     }
@@ -189,7 +190,7 @@ public class MikaBoss : MonoBehaviour {
             memoryInfernoHitboxes[memoryInfernoPattern[i]].SetActive (false);
             yield return new WaitForSeconds (0.2f * memoryInfernoSpeedMulitplier);
         }
-        anim.Play("MikaStopEvilLaugh",0,0);
+        anim.Play ("MikaStopEvilLaugh", 0, 0);
         yield return new WaitForSeconds (0.5f * memoryInfernoSpeedMulitplier);
         StopCoroutine ("PushPlayerToBH");
         camX = camXBase;
@@ -248,22 +249,20 @@ public class MikaBoss : MonoBehaviour {
 
     IEnumerator BlackHole () {
         cc = player.GetComponent<CharacterController> ();
+        anim.Play ("MikaBlackHoleStart");
+        anim.transform.position += Vector3.up * 5;
         yield return new WaitForSeconds (1);
+
+        anim.Play ("MikaBlackHole");
+
+        bHoleStr = 0;
         StartCoroutine ("PushPlayerToBH");
         cam.SmallShake (2);
         GameObject bHole = Instantiate (blackholePrefab, transform.position, Quaternion.identity);
-        yield return new WaitForSeconds (1);
-        float curRot = 0;
-        for (int i = 0; i < 10; i++) {
-            GameObject g = Instantiate (blackholeSlashHitbox, transform.position + transform.forward, Quaternion.Euler (0, curRot, Random.Range (-45, 45)));
-            //g.AddComponent<AutoScale> ().goal = transform.localScale + new Vector3 (transform.localScale.x * 10, 0, 0);
-            //g.transform.localScale = Vector3.one / 2;
-            //g.AddComponent<AutoScale> ().speed *= 2;
-            cam.MediumShake (0.2f);
-            curRot += 360 / 10;
-            yield return new WaitForSeconds (0.15f);
-        }
-        yield return new WaitForSeconds (0.35f);
+        bHole.transform.localScale = Vector3.zero;
+        yield return new WaitForSeconds (8);
+        anim.transform.position += Vector3.up * -5;
+        anim.Play ("MikaBlackHoleStop", 0, 0.8f);
         Destroy (bHole);
         StopCoroutine ("PushPlayerToBH");
         StopAttack ();
@@ -298,6 +297,7 @@ public class MikaBoss : MonoBehaviour {
             memoryInfernoHitboxes[i].GetComponent<Hurtbox> ().damage = JustDontGetHitAndItWillBeFine ();
         }
         yield return new WaitForSeconds (1);
+        bHoleStr = 0;
         StartCoroutine ("PushPlayerToBH");
         StartCoroutine (MemoryInferno ());
     }
@@ -307,10 +307,12 @@ public class MikaBoss : MonoBehaviour {
     }
 
     CharacterController cc;
+    float bHoleStr = 0;
     IEnumerator PushPlayerToBH () {
         Vector3 dir = -(player.transform.position - transform.position).normalized;
         dir.y = 0;
-        cc.Move (dir * 15 * Time.deltaTime);
+        cc.Move (dir * bHoleStr * Time.deltaTime);
+        bHoleStr = Mathf.MoveTowards (bHoleStr, 25, Time.deltaTime * 8);
         yield return new WaitForSeconds (0);
         StartCoroutine ("PushPlayerToBH");
     }

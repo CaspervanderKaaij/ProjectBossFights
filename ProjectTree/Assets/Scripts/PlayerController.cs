@@ -79,6 +79,7 @@ public class PlayerController : MonoBehaviour {
     public GunWeapon gunWeapon;
     [SerializeField] GameObject shootMagicCircle;
     [SerializeField] float shootWPCost = 5;
+    [SerializeField] LineRenderer shooterLineRend;
     [Header ("Particles")]
     [SerializeField] GameObject stopDashParticle;
     [SerializeField] GameObject getHitParticle;
@@ -676,13 +677,17 @@ public class PlayerController : MonoBehaviour {
         curModeText.text = "Shoot Mode";
         shootMagicCircle.SetActive ((curState == State.Gun));
         if (curState == State.Gun) {
+            shooterLineRend.SetPosition (0, shootMagicCircle.transform.position);
             if (UseMouse () == false) {
                 if (AnalMagnitude () > 0) {
                     angleGoal = AnalAngle () + cameraTransform.eulerAngles.y - 90;
                 }
                 transform.rotation = Quaternion.Lerp (transform.rotation, Quaternion.Euler (transform.eulerAngles.x, angleGoal, transform.eulerAngles.z), Time.deltaTime * moveStats[curMoveStats].rotSpeed * 2 * speedMuliplier);
+                shooterLineRend.SetPosition (1, transform.position + (Quaternion.AngleAxis(angleGoal,Vector3.up) * (Vector3.forward * 1000)));
             } else {
-                transform.rotation = Quaternion.Lerp (transform.rotation, Quaternion.LookRotation (-(transform.position - GetMousePlanePos ()), Vector3.up), Time.deltaTime * moveStats[curMoveStats].rotSpeed * 2 * speedMuliplier);
+                Vector3 mPos = transform.position - GetMousePlanePos ();
+                transform.rotation = Quaternion.Lerp (transform.rotation, Quaternion.LookRotation (-(mPos), Vector3.up), Time.deltaTime * moveStats[curMoveStats].rotSpeed * 2 * speedMuliplier);
+                shooterLineRend.SetPosition (1, new Vector3(transform.position.x, shootMagicCircle.transform.position.y,transform.position.z) - (new Vector3(mPos.x,0,mPos.z) * 1000));
             }
             if (Input.GetButtonDown (shootInput) == true) {
                 Invoke ("ShootInputBuffer", 0.3f);
@@ -917,8 +922,8 @@ public class PlayerController : MonoBehaviour {
 
     void StopDash () {
         for (int i = 0; i < attackTrails.Length; i++) {
-                attackTrails[i].emitting = false;
-            }
+            attackTrails[i].emitting = false;
+        }
         if (curState == State.Dash) {
             curState = State.Normal;
             playerCam._enabled = true;
