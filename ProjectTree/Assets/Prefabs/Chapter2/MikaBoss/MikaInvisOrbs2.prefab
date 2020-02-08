@@ -255,7 +255,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   toSpawn:
-  - {fileID: 2044419233194771478, guid: 88ab638e43c0de24a8a417ef1adc4733, type: 3}
+  - {fileID: 7577557267546444420, guid: 149130c53005e3940be156edee5cebbd, type: 3}
   addMyRotationInSpawn: 0
 --- !u!1 &1421277736603034907
 GameObject:
@@ -512,7 +512,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   toSpawn:
-  - {fileID: 2044419233194771478, guid: 88ab638e43c0de24a8a417ef1adc4733, type: 3}
+  - {fileID: 7577557267546444420, guid: 149130c53005e3940be156edee5cebbd, type: 3}
   addMyRotationInSpawn: 0
 --- !u!1 &1421277737415845411
 GameObject:
@@ -802,7 +802,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   toSpawn:
-  - {fileID: 2044419233194771478, guid: 88ab638e43c0de24a8a417ef1adc4733, type: 3}
+  - {fileID: 7577557267546444420, guid: 149130c53005e3940be156edee5cebbd, type: 3}
   addMyRotationInSpawn: 0
 --- !u!1001 &1694020512051585669
 PrefabInstance:

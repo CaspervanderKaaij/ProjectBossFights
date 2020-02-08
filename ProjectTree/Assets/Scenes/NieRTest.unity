@@ -18331,7 +18331,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   team: 2
   friends: 
-  hp: 100
+  hp: 700
   hitEv:
     m_PersistentCalls:
       m_Calls:
@@ -18492,7 +18492,7 @@ MonoBehaviour:
   barrierPointsParent: {fileID: 0}
   curState: 0
   barrierState: 0
-  orbsPrefab: {fileID: 1421277737415845411, guid: 3cf9b89f5d757da4c82a715dfb2ef58c,
+  orbsPrefab: {fileID: 1421277737415845411, guid: eb7dd65293625bd458aaeb05c16ce2fb,
     type: 3}
   lineFollowTrans: {fileID: 1512094661}
   centerPos: {x: 72, y: 0.89, z: -65.27}
@@ -18614,7 +18614,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bar: {fileID: 1893712933}
   hp: {fileID: 1164406461}
-  maxHP: 100
+  maxHP: 700
 --- !u!1 &1167967367
 GameObject:
   m_ObjectHideFlags: 0
