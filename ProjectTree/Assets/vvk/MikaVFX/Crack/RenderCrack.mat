@@ -36,7 +36,8 @@ Material:
     - _CellScale1: 1
     - _CellSpeed: 1
     - _CellSpeed1: 1
-    - _DissolveMultiplier: 0
+    - _Cutoff: 0.5
+    - _DissolveMultiplier: 1
     - _H: 0
     - _H1: -0.36
     - _Skidaddle: 1.01
