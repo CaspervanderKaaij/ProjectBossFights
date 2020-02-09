@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class MikaBoss : MonoBehaviour {
@@ -39,6 +40,13 @@ public class MikaBoss : MonoBehaviour {
     [SerializeField] GameObject realitySlashHitbox;
     [Header ("Black Hole")]
     [SerializeField] GameObject blackholePrefab;
+    [Header ("Spatialist Friend")]
+    [SerializeField] GameObject spatialistPortal;
+    [SerializeField] Material spatialistLineMat;
+    [Header("Pandemonim")]
+    [SerializeField] GameObject snekwurmPrefab;
+    [Header("Gluttony")]
+    [SerializeField] GameObject gluttonySnekwurm;
 
     void Start () {
         myHitbox = GetComponent<Collider> ();
@@ -103,7 +111,7 @@ public class MikaBoss : MonoBehaviour {
 
     void DebugInput () {
         if (Input.GetKeyDown (KeyCode.Tab) == true) {
-            StartAttack (State.Attacking, "RealitySlash"); //                                                                              --> activate attack <--
+            StartAttack (State.Attacking, "Gluttony"); //                                                                              --> activate attack <--
         }
 
         if (barrierState != BarrierState.Desroyed) {
@@ -314,15 +322,54 @@ public class MikaBoss : MonoBehaviour {
         camX = camXBase;
     }
 
-    IEnumerator LastResort () {
-        cc = player.GetComponent<CharacterController> ();
-        for (int i = 0; i < memoryInfernoHitboxes.Length; i++) {
-            memoryInfernoHitboxes[i].GetComponent<Hurtbox> ().damage = JustDontGetHitAndItWillBeFine ();
+    IEnumerator SpatialistFriend () {
+        List<int> pathOrder = new List<int> ();
+        for (int i = 0; i < 12; i++) {
+            pathOrder.Add (i);
         }
-        yield return new WaitForSeconds (1);
-        bHoleStr = 0;
-        StartCoroutine ("PushPlayerToBH");
-        StartCoroutine (MemoryInferno ());
+        pathOrder = pathOrder.OrderBy (x => Random.value).ToList ();
+
+        List<GameObject> portals = new List<GameObject> ();
+        for (int i = 0; i < 12; i++) {
+            portals.Add (Instantiate (spatialistPortal, centerPos + new Vector3 (Random.Range (-20, 20), 0, Random.Range (-20, 20)), Quaternion.identity));
+            yield return new WaitForSeconds (0.1f);
+        }
+
+        CreateSpatialistLine(transform.position,portals[0].transform.position);
+        for (int i = 0; i < 12; i += 2) {
+            CreateSpatialistLine (portals[i].transform.position, portals[i + 1].transform.position);
+
+        }
+        CreateSpatialistLine(portals[0].transform.position,portals[portals.Count - 1].transform.position);
+        yield return new WaitForSeconds (0.1f);
+        StopAttack ();
+    }
+
+    void CreateSpatialistLine (Vector3 startPos, Vector3 endPos) {
+        GameObject startLine = new GameObject ();
+        LineRenderer predicStartLine = startLine.AddComponent<LineRenderer> ();
+        predicStartLine.SetPosition (0, startPos);
+        predicStartLine.SetPosition (1, endPos);
+
+        predicStartLine.material = spatialistLineMat;
+        predicStartLine.startWidth = 0.1f;
+        predicStartLine.endWidth = 0.1f;
+        predicStartLine.textureMode = LineTextureMode.Tile;
+
+        Destroy(startLine,3);
+    }
+
+    IEnumerator Pandemonim(){
+        GameObject snek = Instantiate(snekwurmPrefab,transform.position,Quaternion.identity);
+        Destroy(snek,20);
+        yield return new WaitForSeconds(5);
+        StopAttack();
+    }
+
+    IEnumerator Gluttony(){
+        Instantiate(gluttonySnekwurm,new Vector3(player.transform.position.x,centerPos.y - 1,player.transform.position.z),Quaternion.identity);
+        yield return new WaitForSeconds(0.2f);
+        StopAttack();
     }
 
     float JustDontGetHitAndItWillBeFine () {
