@@ -13,16 +13,16 @@ Material:
   m_LightmapFlags: 0
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
-  m_CustomRenderQueue: -1
+  m_CustomRenderQueue: 2000
   stringTagMap: {}
   disabledShaderPasses: []
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
     - _TextureSample0:
-        m_Texture: {fileID: 2800000, guid: c60ce9d4c710434479c26cd5a98f7a9c, type: 3}
-        m_Scale: {x: 2.39, y: -0.54}
-        m_Offset: {x: -0.72, y: 0}
+        m_Texture: {fileID: 2800000, guid: e7715ad31a5979f4dbf93e80ca3a92df, type: 3}
+        m_Scale: {x: 3.78, y: -0.54}
+        m_Offset: {x: -3.34, y: 0}
     - _TextureSample1:
         m_Texture: {fileID: 2800000, guid: c60ce9d4c710434479c26cd5a98f7a9c, type: 3}
         m_Scale: {x: 2, y: 0.76}
@@ -37,7 +37,7 @@ Material:
     - _Float0: -0.05
     - __dirty: 0
     m_Colors:
-    - _Color0: {r: 0.0007314645, g: 0.0007314645, b: 0.0007314645, a: 1}
-    - _Color1: {r: 145.30357, g: 0, b: 220.26176, a: 0}
-    - _Panning: {r: -0.18, g: -0.48, b: 0, a: 0}
-    - _Panning2: {r: 0.09, g: -0.26, b: 0, a: 0}
+    - _Color0: {r: 0.3549214, g: 0, b: 1.9160944, a: 1}
+    - _Color1: {r: 8.029549, g: 6.117751, b: 13.928808, a: 1}
+    - _Panning: {r: -0.18, g: 0.48, b: 0, a: 0}
+    - _Panning2: {r: 0.09, g: 0.26, b: 0, a: 0}
