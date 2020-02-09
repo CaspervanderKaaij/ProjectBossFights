@@ -3995,11 +3995,11 @@ MonoBehaviour:
   maxHP: 100
   speedMuliplier: 1
   hasGun: 1
-  hasWallJump: 1
-  hasDoubleJump: 1
+  hasWallJump: 0
+  hasDoubleJump: 0
   hasDash: 1
   hasSpear: 1
-  hasParry: 1
+  hasParry: 0
   angleGoal: 0
 --- !u!143 &261147148
 CharacterController:
@@ -7795,13 +7795,13 @@ TrailRenderer:
       m_Mode: 0
       m_NumColorKeys: 2
       m_NumAlphaKeys: 2
-    numCornerVertices: 0
-    numCapVertices: 0
+    numCornerVertices: 2
+    numCapVertices: 2
     alignment: 0
     textureMode: 0
     shadowBias: 0.5
     generateLightingData: 0
-  m_MinVertexDistance: 0.1
+  m_MinVertexDistance: 0
   m_Autodestruct: 0
   m_Emitting: 0
 --- !u!1001 &580608717
@@ -18529,6 +18529,8 @@ MonoBehaviour:
     type: 3}
   gluttonySnekwurm: {fileID: 2044419233194771478, guid: 51b8d01b152223b4d822128c2175454c,
     type: 3}
+  centeroftheuniverseProjectile: {fileID: 2044419233194771478, guid: 51b8d01b152223b4d822128c2175454c,
+    type: 3}
 --- !u!65 &1164406464
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -19517,13 +19519,13 @@ TrailRenderer:
       m_Mode: 0
       m_NumColorKeys: 2
       m_NumAlphaKeys: 2
-    numCornerVertices: 0
-    numCapVertices: 0
+    numCornerVertices: 2
+    numCapVertices: 2
     alignment: 0
     textureMode: 0
     shadowBias: 0.5
     generateLightingData: 0
-  m_MinVertexDistance: 0.1
+  m_MinVertexDistance: 0
   m_Autodestruct: 0
   m_Emitting: 0
 --- !u!1001 &1251332654

@@ -47,6 +47,8 @@ public class MikaBoss : MonoBehaviour {
     [SerializeField] GameObject snekwurmPrefab;
     [Header("Gluttony")]
     [SerializeField] GameObject gluttonySnekwurm;
+    [Header("CenterOfTheUniverse")]
+    [SerializeField]GameObject centeroftheuniverseProjectile;
 
     void Start () {
         myHitbox = GetComponent<Collider> ();
@@ -61,6 +63,8 @@ public class MikaBoss : MonoBehaviour {
         } else {
             lastBState = BarrierState.Desroyed;
         }
+
+        cc = FindObjectOfType<PlayerController>().GetComponent<CharacterController>();
 
     }
 
@@ -111,7 +115,7 @@ public class MikaBoss : MonoBehaviour {
 
     void DebugInput () {
         if (Input.GetKeyDown (KeyCode.Tab) == true) {
-            StartAttack (State.Attacking, "Gluttony"); //                                                                              --> activate attack <--
+            StartAttack (State.Attacking, "RealitySlash"); //                                                                              --> activate attack <--
         }
 
         if (barrierState != BarrierState.Desroyed) {
@@ -277,7 +281,6 @@ public class MikaBoss : MonoBehaviour {
     }
 
     IEnumerator BlackHole () {
-        cc = player.GetComponent<CharacterController> ();
         anim.Play ("MikaBlackHoleStart");
         anim.transform.position += Vector3.up * 5;
         yield return new WaitForSeconds (1);
@@ -301,20 +304,24 @@ public class MikaBoss : MonoBehaviour {
     List<GameObject> realitySlashHitboxes = new List<GameObject> ();
     IEnumerator RealitySlash () {
         camX = 50;
+        int amount = 20;
         yield return new WaitForSeconds (0.5f);
         realitySlashHitboxes.Clear ();
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < amount; i++) {
             GameObject g = Instantiate (realitySlashHitbox, transform.position, Quaternion.Euler (0, Random.Range (0, 360), 0));
             g.transform.position += g.transform.forward * Random.Range (3, 15);
             g.transform.Rotate (180, Random.Range (0, 360), 90);
             realitySlashHitboxes.Add (g);
-            yield return new WaitForSeconds (0.3f);
+            yield return new WaitForSeconds (0.1f);
         }
-        yield return new WaitForSeconds (0.5f);
-        for (int i = 0; i < 5; i++) {
+        FindObjectOfType<TimescaleManager>().SlowMo(0.5f,0.1f);
+        yield return new WaitForSeconds (0.1f);
+        for (int i = 0; i < amount; i++) {
             realitySlashHitboxes[i].GetComponent<Collider> ().enabled = true;
             realitySlashHitboxes[i].GetComponent<LerpShaderValue> ().SetValue (1);
-            Destroy (realitySlashHitboxes[i], 0.5f);
+            realitySlashHitboxes[i].transform.GetChild(0).gameObject.SetActive(false);
+            realitySlashHitboxes[i].transform.GetChild(1).gameObject.SetActive(true);
+            Destroy (realitySlashHitboxes[i], 1);
         }
         cam.HardShake (0.1f);
         yield return new WaitForSeconds (1);
@@ -370,6 +377,33 @@ public class MikaBoss : MonoBehaviour {
         Instantiate(gluttonySnekwurm,new Vector3(player.transform.position.x,centerPos.y - 1,player.transform.position.z),Quaternion.identity);
         yield return new WaitForSeconds(0.2f);
         StopAttack();
+    }
+
+    IEnumerator CenterOfTheUniverse(){
+        anim.Play ("MikaBlackHoleStart");
+        anim.transform.position += Vector3.up * 5;
+        yield return new WaitForSeconds (1);
+
+        anim.Play ("MikaBlackHole");
+
+        bHoleStr = 0;
+        StartCoroutine ("PushPlayerToBH");
+        cam.SmallShake (2);
+        GameObject bHole = Instantiate (blackholePrefab, transform.position, Quaternion.identity);
+        bHole.transform.localScale = Vector3.zero;
+        
+        yield return new WaitForSeconds(1f);
+        for (int i = 0; i < 14; i++)
+        {
+            Instantiate(centeroftheuniverseProjectile,new Vector3(player.transform.position.x,centerPos.y - 1,player.transform.position.z),Quaternion.identity);
+            yield return new WaitForSeconds(0.5f);
+        }
+
+        anim.transform.position += Vector3.up * -5;
+        anim.Play ("MikaBlackHoleStop", 0, 0.8f);
+        Destroy (bHole);
+        StopCoroutine ("PushPlayerToBH");
+        StopAttack ();
     }
 
     float JustDontGetHitAndItWillBeFine () {
