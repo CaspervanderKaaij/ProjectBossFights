@@ -31,6 +31,7 @@ public class MikaBoss : MonoBehaviour {
     [SerializeField] GameObject[] memoryInfernoIndicators = new GameObject[3];
     [SerializeField] GameObject memoryInfernoIdicatorParticle;
     [SerializeField] GameObject memoryInfernoStartParticle;
+    [SerializeField] MikaMemPattern[] memPatterns;
     [Header ("TeleSlash")]
     [SerializeField] GameObject teleslashHitbox;
     [SerializeField] GameObject jumpslashHitbox;
@@ -43,19 +44,18 @@ public class MikaBoss : MonoBehaviour {
     [Header ("Spatialist Friend")]
     [SerializeField] GameObject spatialistPortal;
     [SerializeField] Material spatialistLineMat;
-    [Header("Pandemonim")]
+    [Header ("Pandemonim")]
     [SerializeField] GameObject snekwurmPrefab;
-    [Header("Gluttony")]
+    [Header ("Gluttony")]
     [SerializeField] GameObject gluttonySnekwurm;
-    [Header("CenterOfTheUniverse")]
-    [SerializeField]GameObject centeroftheuniverseProjectile;
+    [Header ("CenterOfTheUniverse")]
+    [SerializeField] GameObject centeroftheuniverseProjectile;
 
     void Start () {
         myHitbox = GetComponent<Collider> ();
-        memoryInfernoPattern = new int[10];
-        for (int i = 0; i < 10; i++) {
-            memoryInfernoPattern[i] = Random.Range (0, 3);
-        }
+  
+        memPattern = Random.Range (0, memPatterns.Length);
+
         player = FindObjectOfType<PlayerController> ();
         cam = FindObjectOfType<PlayerCam> ();
         if (barrierState == BarrierState.Desroyed) {
@@ -64,7 +64,7 @@ public class MikaBoss : MonoBehaviour {
             lastBState = BarrierState.Desroyed;
         }
 
-        cc = FindObjectOfType<PlayerController>().GetComponent<CharacterController>();
+        cc = FindObjectOfType<PlayerController> ().GetComponent<CharacterController> ();
 
     }
 
@@ -115,7 +115,14 @@ public class MikaBoss : MonoBehaviour {
 
     void DebugInput () {
         if (Input.GetKeyDown (KeyCode.Tab) == true) {
-            StartAttack (State.Attacking, "RealitySlash"); //                                                                              --> activate attack <--
+            StartAttack (State.Attacking, "Pandemonim"); //                                                                              --> activate attack <--
+            //MemoryInferno
+            //RealitySlash
+            //Gluttony
+            //CenterOfTheUniverse
+            //SpatialistFriend
+            //Pandemonim
+            //TeleSlash
         }
 
         if (barrierState != BarrierState.Desroyed) {
@@ -179,7 +186,7 @@ public class MikaBoss : MonoBehaviour {
         curState = State.Idle;
     }
 
-    int[] memoryInfernoPattern;
+    int memPattern;
     int memoryInfernoCOunt = 5;
     float memoryInfernoSpeedMulitplier = 2;
     IEnumerator MemoryInferno () {
@@ -187,14 +194,15 @@ public class MikaBoss : MonoBehaviour {
         float startY = anim.transform.eulerAngles.y;
         yield return new WaitForSeconds (0.5f * memoryInfernoSpeedMulitplier);
         for (int i = 0; i < memoryInfernoCOunt; i++) {
-            GameObject g = memoryInfernoIndicators[memoryInfernoPattern[i]];
+            int m = memPatterns[memPattern].pattern[i];
+            GameObject g = memoryInfernoIndicators[m];
             g.SetActive (true);
             anim.Play ("MikaMemoryInfernoPoint", 0, 0);
-            anim.transform.eulerAngles = new Vector3 (anim.transform.eulerAngles.x, memoryInfernoHitboxes[memoryInfernoPattern[i]].transform.eulerAngles.y, anim.transform.eulerAngles.z);
+            anim.transform.eulerAngles = new Vector3 (anim.transform.eulerAngles.x, memoryInfernoHitboxes[m].transform.eulerAngles.y, anim.transform.eulerAngles.z);
             anim.transform.Rotate (0, -20, 0);
             Instantiate (memoryInfernoIdicatorParticle, transform.position + (-anim.transform.right * 3), Quaternion.identity);
             yield return new WaitForSeconds (0.2f * memoryInfernoSpeedMulitplier);
-            memoryInfernoIndicators[memoryInfernoPattern[i]].SetActive (false);
+            memoryInfernoIndicators[m].SetActive (false);
             yield return new WaitForSeconds (0.05f * memoryInfernoSpeedMulitplier);
         }
         yield return new WaitForSeconds (0.5f * memoryInfernoSpeedMulitplier);
@@ -202,11 +210,12 @@ public class MikaBoss : MonoBehaviour {
         yield return new WaitForSeconds (0.3f);
         anim.transform.eulerAngles = new Vector3 (anim.transform.eulerAngles.x, startY, anim.transform.eulerAngles.z);
         for (int i = 0; i < memoryInfernoCOunt; i++) {
-            Instantiate (memoryInfernoStartParticle, transform.position, memoryInfernoHitboxes[memoryInfernoPattern[i]].transform.rotation * Quaternion.Euler (90, 0, 0));
+            int m = memPatterns[memPattern].pattern[i];
+            Instantiate (memoryInfernoStartParticle, transform.position, memoryInfernoHitboxes[m].transform.rotation * Quaternion.Euler (90, 0, 0));
             yield return new WaitForSeconds (0.4f);
-            memoryInfernoHitboxes[memoryInfernoPattern[i]].SetActive (true);
+            memoryInfernoHitboxes[m].SetActive (true);
             yield return new WaitForSeconds (0.45f * memoryInfernoSpeedMulitplier);
-            memoryInfernoHitboxes[memoryInfernoPattern[i]].SetActive (false);
+            memoryInfernoHitboxes[m].SetActive (false);
             yield return new WaitForSeconds (0.2f * memoryInfernoSpeedMulitplier);
         }
         anim.Play ("MikaStopEvilLaugh", 0, 0);
@@ -217,32 +226,39 @@ public class MikaBoss : MonoBehaviour {
     }
 
     IEnumerator TeleSlash () {
-        yield return new WaitForSeconds (0.5f);
+        DisableOrbs(false);
         Instantiate (teleportParicle, transform.position, Quaternion.identity);
         Vector3 oldScale = anim.transform.localScale;
         anim.transform.localScale = Vector3.zero;
-        yield return new WaitForSeconds (0.1f);
-        Vector3 savedPos = player.transform.position + (Vector3.up * 2) - player.transform.forward * 5;
+        yield return new WaitForSeconds (0.75f);
+        Vector3 savedPos = player.transform.position + (Vector3.up * 1) - player.transform.forward * 5;
         Instantiate (teleportParicle, savedPos, Quaternion.identity);
-        yield return new WaitForSeconds (0.1f);
         transform.position = savedPos;
         anim.transform.localScale = oldScale;
         anim.Play ("MikaTeleslashCharge");
         transform.LookAt (new Vector3 (player.transform.position.x, transform.position.y, player.transform.position.z));
         yield return new WaitForSeconds (0.1f);
         anim.Play ("MikaTeleslash");
-        yield return new WaitForSeconds (0.2f);
+        yield return new WaitForSeconds (0.15f);
         Instantiate (teleslashHitbox, transform.position + transform.forward, Quaternion.identity).transform.LookAt (new Vector3 (player.transform.position.x, transform.position.y, player.transform.position.z));
         cam.MediumShake (0.2f);
         yield return new WaitForSeconds (0.8f);
         Instantiate (teleportParicle, transform.position, Quaternion.identity);
         anim.transform.localScale = Vector3.zero;
-        yield return new WaitForSeconds (0.1f);
+        yield return new WaitForSeconds (0.5f);
         Instantiate (teleportParicle, centerPos, Quaternion.identity);
         yield return new WaitForSeconds (0.1f);
         anim.transform.localScale = oldScale;
+        DisableOrbs(true);
         transform.position = centerPos;
+        yield return new WaitForSeconds (0.3f);
         StopAttack ();
+    }
+
+    void DisableOrbs(bool able){
+        if(barrierPointsParent != null){
+            barrierPointsParent.gameObject.SetActive(able);
+        }
     }
 
     IEnumerator JumpSlash () {
@@ -304,23 +320,23 @@ public class MikaBoss : MonoBehaviour {
     List<GameObject> realitySlashHitboxes = new List<GameObject> ();
     IEnumerator RealitySlash () {
         camX = 50;
-        int amount = 20;
+        int amount = 15;
         yield return new WaitForSeconds (0.5f);
         realitySlashHitboxes.Clear ();
         for (int i = 0; i < amount; i++) {
             GameObject g = Instantiate (realitySlashHitbox, transform.position, Quaternion.Euler (0, Random.Range (0, 360), 0));
-            g.transform.position += g.transform.forward * Random.Range (3, 15);
+            g.transform.position += g.transform.forward * Random.Range (3, 20);
             g.transform.Rotate (180, Random.Range (0, 360), 90);
             realitySlashHitboxes.Add (g);
             yield return new WaitForSeconds (0.1f);
         }
-        FindObjectOfType<TimescaleManager>().SlowMo(0.5f,0.1f);
+        FindObjectOfType<TimescaleManager> ().SlowMo (0.5f, 0.1f);
         yield return new WaitForSeconds (0.1f);
         for (int i = 0; i < amount; i++) {
             realitySlashHitboxes[i].GetComponent<Collider> ().enabled = true;
             realitySlashHitboxes[i].GetComponent<LerpShaderValue> ().SetValue (1);
-            realitySlashHitboxes[i].transform.GetChild(0).gameObject.SetActive(false);
-            realitySlashHitboxes[i].transform.GetChild(1).gameObject.SetActive(true);
+            realitySlashHitboxes[i].transform.GetChild (0).gameObject.SetActive (false);
+            realitySlashHitboxes[i].transform.GetChild (1).gameObject.SetActive (true);
             Destroy (realitySlashHitboxes[i], 1);
         }
         cam.HardShake (0.1f);
@@ -342,12 +358,12 @@ public class MikaBoss : MonoBehaviour {
             yield return new WaitForSeconds (0.1f);
         }
 
-        CreateSpatialistLine(transform.position,portals[0].transform.position);
+        CreateSpatialistLine (transform.position, portals[0].transform.position);
         for (int i = 0; i < 12; i += 2) {
             CreateSpatialistLine (portals[i].transform.position, portals[i + 1].transform.position);
 
         }
-        CreateSpatialistLine(portals[0].transform.position,portals[portals.Count - 1].transform.position);
+        CreateSpatialistLine (portals[0].transform.position, portals[portals.Count - 1].transform.position);
         yield return new WaitForSeconds (0.1f);
         StopAttack ();
     }
@@ -363,23 +379,23 @@ public class MikaBoss : MonoBehaviour {
         predicStartLine.endWidth = 0.1f;
         predicStartLine.textureMode = LineTextureMode.Tile;
 
-        Destroy(startLine,3);
+        Destroy (startLine, 3);
     }
 
-    IEnumerator Pandemonim(){
-        GameObject snek = Instantiate(snekwurmPrefab,transform.position,Quaternion.identity);
-        Destroy(snek,20);
-        yield return new WaitForSeconds(5);
-        StopAttack();
+    IEnumerator Pandemonim () {
+        GameObject snek = Instantiate (snekwurmPrefab, transform.position, Quaternion.identity);
+        Destroy (snek, 20);
+        yield return new WaitForSeconds (5);
+        StopAttack ();
     }
 
-    IEnumerator Gluttony(){
-        Instantiate(gluttonySnekwurm,new Vector3(player.transform.position.x,centerPos.y - 1,player.transform.position.z),Quaternion.identity);
-        yield return new WaitForSeconds(0.2f);
-        StopAttack();
+    IEnumerator Gluttony () {
+        Instantiate (gluttonySnekwurm, new Vector3 (player.transform.position.x, centerPos.y - 1, player.transform.position.z), Quaternion.identity);
+        yield return new WaitForSeconds (0.2f);
+        StopAttack ();
     }
 
-    IEnumerator CenterOfTheUniverse(){
+    IEnumerator CenterOfTheUniverse () {
         anim.Play ("MikaBlackHoleStart");
         anim.transform.position += Vector3.up * 5;
         yield return new WaitForSeconds (1);
@@ -391,12 +407,11 @@ public class MikaBoss : MonoBehaviour {
         cam.SmallShake (2);
         GameObject bHole = Instantiate (blackholePrefab, transform.position, Quaternion.identity);
         bHole.transform.localScale = Vector3.zero;
-        
-        yield return new WaitForSeconds(1f);
-        for (int i = 0; i < 14; i++)
-        {
-            Instantiate(centeroftheuniverseProjectile,new Vector3(player.transform.position.x,centerPos.y - 1,player.transform.position.z),Quaternion.identity);
-            yield return new WaitForSeconds(0.5f);
+
+        yield return new WaitForSeconds (1f);
+        for (int i = 0; i < 14; i++) {
+            Instantiate (centeroftheuniverseProjectile, new Vector3 (player.transform.position.x, centerPos.y - 1, player.transform.position.z), Quaternion.identity);
+            yield return new WaitForSeconds (0.5f);
         }
 
         anim.transform.position += Vector3.up * -5;
@@ -420,4 +435,9 @@ public class MikaBoss : MonoBehaviour {
         yield return new WaitForSeconds (0);
         StartCoroutine ("PushPlayerToBH");
     }
+}
+
+[System.Serializable]
+public class MikaMemPattern {
+    public int[] pattern;
 }
