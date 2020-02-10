@@ -20,6 +20,7 @@ public class MikaSnekwurm : MonoBehaviour {
         for (int i = 0; i < parts.Length; i++) {
             yield return new WaitForSeconds (0.05f);
             parts[i].GetComponent<MeshRenderer> ().enabled = true;
+            parts[i].GetComponent<LineRenderer> ().enabled = true;
             Instantiate (spawnParticle, parts[i].transform.position, Quaternion.identity);
         }
         transform.GetChild (0).GetComponent<Collider> ().enabled = true;
@@ -41,6 +42,7 @@ public class MikaSnekwurm : MonoBehaviour {
         for (int i = 0; i < parts.Length; i++) {
             yield return new WaitForSeconds (0.05f);
             parts[parts.Length - i - 1].GetComponent<MeshRenderer> ().enabled = false;
+            parts[parts.Length - i - 1].GetComponent<LineRenderer> ().enabled = false;
             Instantiate (spawnParticle, parts[parts.Length - i - 1].transform.position, Quaternion.identity);
         }
         yield return new WaitForSeconds (0.05f);

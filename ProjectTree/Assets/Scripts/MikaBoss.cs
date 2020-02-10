@@ -53,7 +53,7 @@ public class MikaBoss : MonoBehaviour {
 
     void Start () {
         myHitbox = GetComponent<Collider> ();
-  
+
         memPattern = Random.Range (0, memPatterns.Length);
 
         player = FindObjectOfType<PlayerController> ();
@@ -115,7 +115,7 @@ public class MikaBoss : MonoBehaviour {
 
     void DebugInput () {
         if (Input.GetKeyDown (KeyCode.Tab) == true) {
-            StartAttack (State.Attacking, "Pandemonim"); //                                                                              --> activate attack <--
+            StartAttack (State.Attacking, "SpatialistFriend"); //                                                                              --> activate attack <--
             //MemoryInferno
             //RealitySlash
             //Gluttony
@@ -123,6 +123,7 @@ public class MikaBoss : MonoBehaviour {
             //SpatialistFriend
             //Pandemonim
             //TeleSlash
+            //BlackHole
         }
 
         if (barrierState != BarrierState.Desroyed) {
@@ -226,7 +227,7 @@ public class MikaBoss : MonoBehaviour {
     }
 
     IEnumerator TeleSlash () {
-        DisableOrbs(false);
+        DisableOrbs (false);
         Instantiate (teleportParicle, transform.position, Quaternion.identity);
         Vector3 oldScale = anim.transform.localScale;
         anim.transform.localScale = Vector3.zero;
@@ -249,15 +250,15 @@ public class MikaBoss : MonoBehaviour {
         Instantiate (teleportParicle, centerPos, Quaternion.identity);
         yield return new WaitForSeconds (0.1f);
         anim.transform.localScale = oldScale;
-        DisableOrbs(true);
+        DisableOrbs (true);
         transform.position = centerPos;
         yield return new WaitForSeconds (0.3f);
         StopAttack ();
     }
 
-    void DisableOrbs(bool able){
-        if(barrierPointsParent != null){
-            barrierPointsParent.gameObject.SetActive(able);
+    void DisableOrbs (bool able) {
+        if (barrierPointsParent != null) {
+            barrierPointsParent.gameObject.SetActive (able);
         }
     }
 
@@ -346,25 +347,40 @@ public class MikaBoss : MonoBehaviour {
     }
 
     IEnumerator SpatialistFriend () {
+        DisableOrbs (false);
+        int pairsToSpawn = 30;
         List<int> pathOrder = new List<int> ();
-        for (int i = 0; i < 12; i++) {
+        for (int i = 0; i < pairsToSpawn * 2; i++) {
             pathOrder.Add (i);
         }
         pathOrder = pathOrder.OrderBy (x => Random.value).ToList ();
 
         List<GameObject> portals = new List<GameObject> ();
-        for (int i = 0; i < 12; i++) {
-            portals.Add (Instantiate (spatialistPortal, centerPos + new Vector3 (Random.Range (-20, 20), 0, Random.Range (-20, 20)), Quaternion.identity));
-            yield return new WaitForSeconds (0.1f);
+        float curRot = 0;
+        for (int i = 0; i < pairsToSpawn * 2; i++) {
+            portals.Add (Instantiate (spatialistPortal, centerPos, Quaternion.Euler (0, curRot, 0)));
+            portals[i].transform.position -= portals[i].transform.forward * 30;
+            curRot += 180 / pairsToSpawn;
+            yield return new WaitForEndOfFrame ();
         }
 
-        CreateSpatialistLine (transform.position, portals[0].transform.position);
-        for (int i = 0; i < 12; i += 2) {
-            CreateSpatialistLine (portals[i].transform.position, portals[i + 1].transform.position);
-
+        int curPortal = Random.Range (0, pairsToSpawn * 2);
+        Vector3 oldScale = anim.transform.localScale;
+        anim.transform.localScale = Vector3.zero;
+        CreateSpatialistLine (transform.position, portals[curPortal].transform.position);
+        yield return new WaitForSeconds (0.3f);
+        for (int i = 0; i < pairsToSpawn * 2; i += 2) {
+            CreateSpatialistLine (portals[curPortal].transform.position, portals[(int) Mathf.Repeat (curPortal + pairsToSpawn, pairsToSpawn * 2)].transform.position);
+            curPortal = Random.Range (0, pairsToSpawn * 2);
+            yield return new WaitForSeconds (0.3f);
         }
-        CreateSpatialistLine (portals[0].transform.position, portals[portals.Count - 1].transform.position);
-        yield return new WaitForSeconds (0.1f);
+        CreateSpatialistLine (portals[curPortal].transform.position,transform.position);
+        yield return new WaitForSeconds (1);
+        for (int i = 0; i < portals.Count; i++) {
+            Destroy (portals[i]);
+        }
+        anim.transform.localScale = oldScale;
+        DisableOrbs (true);
         StopAttack ();
     }
 
@@ -379,12 +395,12 @@ public class MikaBoss : MonoBehaviour {
         predicStartLine.endWidth = 0.1f;
         predicStartLine.textureMode = LineTextureMode.Tile;
 
-        Destroy (startLine, 3);
+        Destroy (startLine, 0.15f);
     }
 
     IEnumerator Pandemonim () {
-        GameObject snek = Instantiate (snekwurmPrefab, player.transform.position + Vector3.up + -player.transform.forward, Quaternion.Euler(90,player.angleGoal,0));
-        snek.GetComponent<MikaSnekwurm>().StartCoroutine(snek.GetComponent<MikaSnekwurm>().DeathEv(20));
+        GameObject snek = Instantiate (snekwurmPrefab, player.transform.position + Vector3.up + -player.transform.forward, Quaternion.Euler (90, player.angleGoal, 0));
+        snek.GetComponent<MikaSnekwurm> ().StartCoroutine (snek.GetComponent<MikaSnekwurm> ().DeathEv (20));
         yield return new WaitForSeconds (2.5f);
         StopAttack ();
     }
