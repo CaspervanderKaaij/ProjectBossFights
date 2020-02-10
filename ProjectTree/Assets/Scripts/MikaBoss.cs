@@ -383,9 +383,9 @@ public class MikaBoss : MonoBehaviour {
     }
 
     IEnumerator Pandemonim () {
-        GameObject snek = Instantiate (snekwurmPrefab, transform.position, Quaternion.identity);
-        Destroy (snek, 20);
-        yield return new WaitForSeconds (5);
+        GameObject snek = Instantiate (snekwurmPrefab, player.transform.position + Vector3.up + -player.transform.forward, Quaternion.Euler(90,player.angleGoal,0));
+        snek.GetComponent<MikaSnekwurm>().StartCoroutine(snek.GetComponent<MikaSnekwurm>().DeathEv(20));
+        yield return new WaitForSeconds (2.5f);
         StopAttack ();
     }
 
