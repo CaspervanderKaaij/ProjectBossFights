@@ -129,8 +129,8 @@ public class MikaBoss : MonoBehaviour {
     }
 
     void DebugInput () {
-        //if (Input.GetKeyDown (KeyCode.Tab) == true) {
-        //StartAttack (State.Attacking, "SpatialistFriend"); //                                                                              --> activate attack <--
+    if (Input.GetKeyDown (KeyCode.Tab) == true) {
+        StartAttack (State.Attacking, "SpatialistFriend"); //                                                                              --> activate attack <--
         //MemoryInferno
         //RealitySlash
         //Gluttony
@@ -139,6 +139,8 @@ public class MikaBoss : MonoBehaviour {
         //Pandemonim
         //TeleSlash
         //BlackHole
+
+        /*
 
         if (hp.hp > (maxHp / 30) * 2) {
             print ("phase 1");
@@ -151,7 +153,8 @@ public class MikaBoss : MonoBehaviour {
             ActivatePhase3Attack ();
         }
 
-        //}
+         */
+        }
 
         if (barrierState != BarrierState.Desroyed) {
             //check the phase, then attack
