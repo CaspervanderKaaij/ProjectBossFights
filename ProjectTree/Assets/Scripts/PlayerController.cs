@@ -388,7 +388,7 @@ public class PlayerController : MonoBehaviour {
             if (jumpsLeft < maxJumps - 1 && (anim.GetCurrentAnimatorStateInfo (0).IsName ("Fall") == true || anim.GetCurrentAnimatorStateInfo (0).IsName ("ShootAir") == true || anim.GetCurrentAnimatorStateInfo (0).IsName ("DoubleJump") || anim.GetCurrentAnimatorStateInfo (0).IsName ("GetHit"))) {
                 anim.Play ("DoubleJump");
             }
-            movev3.y = strength;
+            movev3.y = strength + (curAccDec * 2);
             CancelInvoke ("JumpBuffer");
             CancelInvoke ("CayoteTime");
             if (Random.Range (0, 100) <= 40) {
@@ -952,7 +952,7 @@ public class PlayerController : MonoBehaviour {
             playerCam.MediumShake (0.3f);
             timescaleManager.SlowMo (0.2f, 0f);
         }
-        playerCam.SpeedLines (0.3f, 0);
+        playerCam.SpeedLines (0.1f, 0);
         Instantiate (getHitParticle, transform.position + transform.up, Quaternion.identity);
         SetDashInvisible (false);
         movev3.x = -transform.forward.x * 10;

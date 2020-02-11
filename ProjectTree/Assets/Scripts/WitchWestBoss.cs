@@ -246,6 +246,7 @@ public class WitchWestBoss : MonoBehaviour {
             if (curState != State.FinalAttack) {
                 camXRotation = 50;
                 Talk (barrierDownVoice);
+                cam.Flash(Color.white,10);
             }
             anim.Play ("HeinzShieldDown");
         }

@@ -87,6 +87,7 @@ public class MikaBoss : MonoBehaviour {
             print ("bState");
             switch (barrierState) {
                 case BarrierState.Desroyed:
+                    cam.Flash(Color.white,7.5f);
                     Invoke ("BarrierBack", 5);
                     break;
                 case BarrierState.NoOrbs:
@@ -408,7 +409,7 @@ public class MikaBoss : MonoBehaviour {
             predicStartLine.startWidth = 2;
             predicStartLine.endWidth = 2;
 
-            FindObjectOfType<PlayerCam>().MediumShake(0.1f);
+            cam.MediumShake(0.1f);
 
             h.team = 2;
             h.damage = 45;

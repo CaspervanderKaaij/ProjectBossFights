@@ -13,6 +13,7 @@ public class PlayerCam : MonoBehaviour {
     float shakeSTR = 0;
     [HideInInspector] public RippleEffect ripple;
     [SerializeField] ParticleSystem speedlines;
+    [SerializeField] FadeImg flash;
 
     public LimitCamArea limiter = null;
     void Start () {
@@ -74,6 +75,10 @@ public class PlayerCam : MonoBehaviour {
         Invoke ("StopSpeedlines", time + delay);
         CancelInvoke ("StartSpeedlines");
         Invoke ("StartSpeedlines", delay);
+    }
+
+    public void Flash(Color clr,float speed){
+        flash.StartFlash(speed,clr);
     }
 
     void StartSpeedlines () {
