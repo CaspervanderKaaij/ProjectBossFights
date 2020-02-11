@@ -111,16 +111,16 @@ public class MikaBoss : MonoBehaviour {
 
     void NewOrbs () {
         barrierState = BarrierState.Orbs;
-        if (hp.hp > (maxHp / 30) * 2) {
+        if (hp.hp > (maxHp / 3) * 2) {
             //  phase 1
-            barrierPointsParent = Instantiate (orbsPrefab[0], transform.position, Quaternion.identity).transform;
-        } else if (hp.hp > maxHp / 30) {
+            barrierPointsParent = Instantiate (orbsPrefab[0], centerPos, Quaternion.identity).transform;
+        } else if (hp.hp > maxHp / 3) {
             // phase 2
-            barrierPointsParent = Instantiate (orbsPrefab[1], transform.position, Quaternion.identity).transform;
+            barrierPointsParent = Instantiate (orbsPrefab[1], centerPos, Quaternion.identity).transform;
 
         } else {
             //phase 3
-            barrierPointsParent = Instantiate (orbsPrefab[2], transform.position, Quaternion.identity).transform;
+            barrierPointsParent = Instantiate (orbsPrefab[2], centerPos, Quaternion.identity).transform;
 
         }
     }
@@ -133,8 +133,11 @@ public class MikaBoss : MonoBehaviour {
     }
 
     void DebugInput () {
+        /*
         if (Input.GetKeyDown (KeyCode.Tab) == true) {
-            StartAttack (State.Attacking, "SpatialistFriend"); //                                                                              --> activate attack <--
+            StartAttack (State.Attacking, "TeleSlash"); //                                                                              --> activate attack <--
+        }
+
             //MemoryInferno
             //RealitySlash
             //Gluttony
@@ -144,21 +147,18 @@ public class MikaBoss : MonoBehaviour {
             //TeleSlash
             //BlackHole
 
-            /*
 
-            if (hp.hp > (maxHp / 30) * 2) {
+             */
+            if (hp.hp > (maxHp / 3) * 2) {
                 print ("phase 1");
-                ActivatePhase2Attack ();
-            } else if (hp.hp > maxHp / 30) {
+                ActivatePhase1Attack ();
+            } else if (hp.hp > maxHp / 3) {
                 print ("phase 2");
                 ActivatePhase2Attack ();
             } else {
                 print ("phase 3");
                 ActivatePhase3Attack ();
             }
-
-             */
-        }
 
         if (barrierState != BarrierState.Desroyed) {
             //check the phase, then attack
@@ -262,6 +262,11 @@ public class MikaBoss : MonoBehaviour {
     IEnumerator MemoryInferno () {
         camX = 40;
         float startY = anim.transform.eulerAngles.y;
+        if (hp.hp < (maxHp / 3) * 2) {
+            for (int i = 0; i < memoryInfernoHitboxes.Length; i++) {
+                memoryInfernoHitboxes[i].GetComponent<Hurtbox> ().damage = 99;
+            }
+        }
         yield return new WaitForSeconds (0.5f * memoryInfernoSpeedMulitplier);
         for (int i = 0; i < memoryInfernoCOunt; i++) {
             int m = memPatterns[memPattern].pattern[i];
@@ -302,17 +307,23 @@ public class MikaBoss : MonoBehaviour {
         Instantiate (teleportParicle, transform.position, Quaternion.identity);
         Vector3 oldScale = anim.transform.localScale;
         anim.transform.localScale = Vector3.zero;
-        yield return new WaitForSeconds (0.75f);
+        yield return new WaitForSeconds (0.75f); //0.25 er bij
+        if (hp.hp < (maxHp / 3) * 2) {
+            yield return new WaitForSeconds (0.25f);
+        }
         Vector3 savedPos = player.transform.position + (Vector3.up * 1) - player.transform.forward * 5;
         Instantiate (teleportParicle, savedPos, Quaternion.identity);
         transform.position = savedPos;
         anim.transform.localScale = oldScale;
         anim.Play ("MikaTeleslashCharge");
         transform.LookAt (new Vector3 (player.transform.position.x, transform.position.y, player.transform.position.z));
-        yield return new WaitForSeconds (0.1f);
+        yield return new WaitForSeconds (0.1f); // 0.5 er af
+        if (hp.hp >= (maxHp / 3) * 2) {
+            yield return new WaitForSeconds (0.5f);
+        }
         anim.Play ("MikaTeleslash");
         yield return new WaitForSeconds (0.15f);
-        Instantiate (teleslashHitbox, transform.position + transform.forward, Quaternion.identity).transform.LookAt (new Vector3 (player.transform.position.x, transform.position.y, player.transform.position.z));
+        Instantiate (teleslashHitbox, transform.position + transform.forward, transform.rotation);
         cam.MediumShake (0.2f);
         yield return new WaitForSeconds (0.8f);
         Instantiate (teleportParicle, transform.position, Quaternion.identity);
@@ -393,6 +404,9 @@ public class MikaBoss : MonoBehaviour {
     IEnumerator RealitySlash () {
         camX = 50;
         int amount = 15;
+        if (hp.hp < (maxHp / 3) * 2) {
+            amount *= 2;
+        }
         yield return new WaitForSeconds (0.5f);
         realitySlashHitboxes.Clear ();
         for (int i = 0; i < amount; i++) {
