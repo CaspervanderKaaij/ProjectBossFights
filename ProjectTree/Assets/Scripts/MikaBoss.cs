@@ -18,13 +18,16 @@ public class MikaBoss : MonoBehaviour {
         Desroyed
     }
     public BarrierState barrierState = BarrierState.NoOrbs;
-    [SerializeField] GameObject orbsPrefab;
+    [SerializeField] GameObject[] orbsPrefab;
     [SerializeField] Transform lineFollowTrans;
     PlayerController player;
     PlayerCam cam;
     [SerializeField] Vector3 centerPos;
     [SerializeField] Animator anim;
     [SerializeField] float camXBase = 20;
+
+    [SerializeField] Hitbox hp;
+    [SerializeField] float maxHp = 1200;
     [Header ("Memory inferno")]
     [SerializeField] GameObject[] memoryInfernoHitboxes = new GameObject[3];
     [SerializeField] GameObject[] memoryInfernoIndicators = new GameObject[3];
@@ -87,7 +90,7 @@ public class MikaBoss : MonoBehaviour {
             print ("bState");
             switch (barrierState) {
                 case BarrierState.Desroyed:
-                    cam.Flash(Color.white,7.5f);
+                    cam.Flash (Color.white, 7.5f);
                     Invoke ("BarrierBack", 5);
                     break;
                 case BarrierState.NoOrbs:
@@ -104,7 +107,18 @@ public class MikaBoss : MonoBehaviour {
 
     void NewOrbs () {
         barrierState = BarrierState.Orbs;
-        barrierPointsParent = Instantiate (orbsPrefab, transform.position, Quaternion.identity).transform;
+        if (hp.hp > (maxHp / 30) * 2) {
+            //  phase 1
+            barrierPointsParent = Instantiate (orbsPrefab[0], transform.position, Quaternion.identity).transform;
+        } else if (hp.hp > maxHp / 30) {
+            // phase 2
+            barrierPointsParent = Instantiate (orbsPrefab[1], transform.position, Quaternion.identity).transform;
+
+        } else {
+            //phase 3
+            barrierPointsParent = Instantiate (orbsPrefab[2], transform.position, Quaternion.identity).transform;
+
+        }
     }
 
     float camX = 20;
@@ -115,17 +129,29 @@ public class MikaBoss : MonoBehaviour {
     }
 
     void DebugInput () {
-        if (Input.GetKeyDown (KeyCode.Tab) == true) {
-            StartAttack (State.Attacking, "SpatialistFriend"); //                                                                              --> activate attack <--
-            //MemoryInferno
-            //RealitySlash
-            //Gluttony
-            //CenterOfTheUniverse
-            //SpatialistFriend
-            //Pandemonim
-            //TeleSlash
-            //BlackHole
+        //if (Input.GetKeyDown (KeyCode.Tab) == true) {
+        //StartAttack (State.Attacking, "SpatialistFriend"); //                                                                              --> activate attack <--
+        //MemoryInferno
+        //RealitySlash
+        //Gluttony
+        //CenterOfTheUniverse
+        //SpatialistFriend
+        //Pandemonim
+        //TeleSlash
+        //BlackHole
+
+        if (hp.hp > (maxHp / 30) * 2) {
+            print ("phase 1");
+            ActivatePhase2Attack ();
+        } else if (hp.hp > maxHp / 30) {
+            print ("phase 2");
+            ActivatePhase2Attack ();
+        } else {
+            print ("phase 3");
+            ActivatePhase3Attack ();
         }
+
+        //}
 
         if (barrierState != BarrierState.Desroyed) {
             //check the phase, then attack
@@ -133,6 +159,43 @@ public class MikaBoss : MonoBehaviour {
         } else {
             RunFromPlayer ();
         }
+    }
+
+    void ActivatePhase1Attack () {
+        int rng = Random.Range (0, 3);
+        switch (rng) {
+            case 0:
+                StartAttack (State.Attacking, "TeleSlash");
+                break;
+            case 1:
+                StartAttack (State.Attacking, "MemoryInferno");
+                break;
+            case 2:
+                StartAttack (State.Attacking, "RealitySlash");
+                break;
+        }
+    }
+
+    void ActivatePhase2Attack () {
+        int rng = Random.Range (0, 4);
+        switch (rng) {
+            case 0:
+                StartAttack (State.Attacking, "TeleSlash");
+                break;
+            case 1:
+                StartAttack (State.Attacking, "MemoryInferno");
+                break;
+            case 2:
+                StartAttack (State.Attacking, "RealitySlash");
+                break;
+            case 3:
+                StartAttack (State.Attacking, "BlackHole");
+                break;
+        }
+    }
+
+    void ActivatePhase3Attack () {
+
     }
 
     void SetOrbLineRends () {
@@ -187,7 +250,7 @@ public class MikaBoss : MonoBehaviour {
     }
 
     int memPattern;
-    int memoryInfernoCOunt = 5;
+    int memoryInfernoCOunt = 1;
     float memoryInfernoSpeedMulitplier = 2;
     IEnumerator MemoryInferno () {
         camX = 40;
@@ -223,6 +286,8 @@ public class MikaBoss : MonoBehaviour {
         StopCoroutine ("PushPlayerToBH");
         camX = camXBase;
         StopAttack ();
+
+        memoryInfernoCOunt = Mathf.Min (memoryInfernoCOunt + 1, 10);
     }
 
     IEnumerator TeleSlash () {
@@ -409,7 +474,7 @@ public class MikaBoss : MonoBehaviour {
             predicStartLine.startWidth = 2;
             predicStartLine.endWidth = 2;
 
-            cam.MediumShake(0.1f);
+            cam.MediumShake (0.1f);
 
             h.team = 2;
             h.damage = 45;

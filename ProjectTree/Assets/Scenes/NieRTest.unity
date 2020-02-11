@@ -12461,7 +12461,7 @@ TrailRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 570239045}
   m_Enabled: 1
-  m_CastShadows: 1
+  m_CastShadows: 0
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
   m_MotionVectors: 1
@@ -12494,7 +12494,7 @@ TrailRenderer:
   m_Time: 0.1
   m_Parameters:
     serializedVersion: 3
-    widthMultiplier: 0.2
+    widthMultiplier: 0.1
     widthCurve:
       serializedVersion: 2
       m_Curve:
@@ -23084,7 +23084,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1164406461
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -23099,7 +23099,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   team: 2
   friends: 
-  hp: 700
+  hp: 1200
   hitEv:
     m_PersistentCalls:
       m_Calls:
@@ -23260,12 +23260,16 @@ MonoBehaviour:
   barrierPointsParent: {fileID: 0}
   curState: 0
   barrierState: 0
-  orbsPrefab: {fileID: 1421277737415845411, guid: eb7dd65293625bd458aaeb05c16ce2fb,
-    type: 3}
+  orbsPrefab:
+  - {fileID: 1421277737415845411, guid: 3cf9b89f5d757da4c82a715dfb2ef58c, type: 3}
+  - {fileID: 1421277737415845411, guid: 7730d7f30e4e24f469536f992cde7fac, type: 3}
+  - {fileID: 1421277737415845411, guid: eb7dd65293625bd458aaeb05c16ce2fb, type: 3}
   lineFollowTrans: {fileID: 1512094661}
   centerPos: {x: 72, y: 0.89, z: -65.27}
   anim: {fileID: 490166233}
   camXBase: 20
+  hp: {fileID: 1164406461}
+  maxHp: 1200
   memoryInfernoHitboxes:
   - {fileID: 706380526}
   - {fileID: 1094691536}
@@ -23397,7 +23401,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bar: {fileID: 1893712933}
   hp: {fileID: 1164406461}
-  maxHP: 700
+  maxHP: 1200
 --- !u!1 &1167967367
 GameObject:
   m_ObjectHideFlags: 0
@@ -24206,7 +24210,7 @@ TrailRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1240544582}
   m_Enabled: 1
-  m_CastShadows: 1
+  m_CastShadows: 0
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
   m_MotionVectors: 1
@@ -24239,7 +24243,7 @@ TrailRenderer:
   m_Time: 0.1
   m_Parameters:
     serializedVersion: 3
-    widthMultiplier: 0.2
+    widthMultiplier: 0.1
     widthCurve:
       serializedVersion: 2
       m_Curve:
