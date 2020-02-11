@@ -23302,7 +23302,10 @@ MonoBehaviour:
   spatialistPortal: {fileID: 6733775748406419800, guid: 9c1db8c0ffc8df04cbfe243a6a338381,
     type: 3}
   spatialistLineMat: {fileID: 2100000, guid: 08cae4eb31ea31e4185a2871353154ae, type: 2}
-  spatialistMikaMat: {fileID: 2100000, guid: 8d851e8c81ce440409e2a4044350cad5, type: 2}
+  spatialistMikaMat: {fileID: 2100000, guid: a83836f7ff72bea439659dd5c0dd508c, type: 2}
+  spatialistChargeTime: 0.2
+  spatialistAttackTime: 0.09
+  spatialistPortals: 20
   snekwurmPrefab: {fileID: 4969495530857119754, guid: de34e2606b19bf748b932c7d15e1085b,
     type: 3}
   gluttonySnekwurm: {fileID: 2044419233194771478, guid: 51b8d01b152223b4d822128c2175454c,
