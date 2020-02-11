@@ -1,0 +1,47 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 6
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: SpatialistsPortal
+  m_Shader: {fileID: 4800000, guid: bd6a43e6a5731904eb08f318a1b94666, type: 3}
+  m_ShaderKeywords: 
+  m_LightmapFlags: 0
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _Stars:
+        m_Texture: {fileID: 2800000, guid: 0f5bf58ec144a044397def9e4bd85083, type: 3}
+        m_Scale: {x: 0.6, y: 0.6}
+        m_Offset: {x: 0, y: 0}
+    - _texcoord:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Floats:
+    - _Angle: 0
+    - _EdgeLength: 50
+    - _FresP: 0.03
+    - _OffsetMultiplier: 0.13
+    - _Scale: 6.84
+    - _Strength: -0.8
+    - _TimeScale: 3.63
+    - _TimeSped: -2.3
+    - __dirty: 0
+    m_Colors:
+    - _BepicStars: {r: 47.937256, g: 47.937256, b: 47.937256, a: 0}
+    - _Color: {r: 8.373908, g: 0, b: 97.00585, a: 0}
+    - _Color0: {r: 0.2978537, g: 0, b: 0.4631154, a: 0}
+    - _Color1: {r: 0, g: 0, b: 0, a: 0}
+    - _Color2: {r: 1, g: 1, b: 1, a: 0}
+    - _Scale: {r: 5.95, g: 1, b: 1, a: 0}
+    - _Scales: {r: 1, g: 0, b: 1, a: 0}
