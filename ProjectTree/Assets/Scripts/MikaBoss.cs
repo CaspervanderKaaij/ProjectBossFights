@@ -47,6 +47,10 @@ public class MikaBoss : MonoBehaviour {
     [SerializeField] GameObject spatialistPortal;
     [SerializeField] Material spatialistLineMat;
     [SerializeField] Material spatialistMikaMat;
+    [SerializeField] float spatialistChargeTime = 0.3f;
+    [SerializeField] float spatialistAttackTime = 0.3f;
+    [SerializeField] int spatialistPortals = 30;
+
     [Header ("Pandemonim")]
     [SerializeField] GameObject snekwurmPrefab;
     [Header ("Gluttony")]
@@ -129,31 +133,31 @@ public class MikaBoss : MonoBehaviour {
     }
 
     void DebugInput () {
-    if (Input.GetKeyDown (KeyCode.Tab) == true) {
-        StartAttack (State.Attacking, "SpatialistFriend"); //                                                                              --> activate attack <--
-        //MemoryInferno
-        //RealitySlash
-        //Gluttony
-        //CenterOfTheUniverse
-        //SpatialistFriend
-        //Pandemonim
-        //TeleSlash
-        //BlackHole
+        if (Input.GetKeyDown (KeyCode.Tab) == true) {
+            StartAttack (State.Attacking, "SpatialistFriend"); //                                                                              --> activate attack <--
+            //MemoryInferno
+            //RealitySlash
+            //Gluttony
+            //CenterOfTheUniverse
+            //SpatialistFriend
+            //Pandemonim
+            //TeleSlash
+            //BlackHole
 
-        /*
+            /*
 
-        if (hp.hp > (maxHp / 30) * 2) {
-            print ("phase 1");
-            ActivatePhase2Attack ();
-        } else if (hp.hp > maxHp / 30) {
-            print ("phase 2");
-            ActivatePhase2Attack ();
-        } else {
-            print ("phase 3");
-            ActivatePhase3Attack ();
-        }
+            if (hp.hp > (maxHp / 30) * 2) {
+                print ("phase 1");
+                ActivatePhase2Attack ();
+            } else if (hp.hp > maxHp / 30) {
+                print ("phase 2");
+                ActivatePhase2Attack ();
+            } else {
+                print ("phase 3");
+                ActivatePhase3Attack ();
+            }
 
-         */
+             */
         }
 
         if (barrierState != BarrierState.Desroyed) {
@@ -415,7 +419,7 @@ public class MikaBoss : MonoBehaviour {
 
     IEnumerator SpatialistFriend () {
         DisableOrbs (false);
-        int pairsToSpawn = 30;
+        int pairsToSpawn = spatialistPortals;
         List<int> pathOrder = new List<int> ();
         for (int i = 0; i < pairsToSpawn * 2; i++) {
             pathOrder.Add (i);
@@ -433,22 +437,25 @@ public class MikaBoss : MonoBehaviour {
 
         int curPortal = Random.Range (0, pairsToSpawn * 2);
         Vector3 oldScale = anim.transform.localScale;
-        CreateSpatialistLine (transform.position, portals[curPortal].transform.position, 0.3f, false, spatialistLineMat);
-        yield return new WaitForSeconds (0.3f);
+        CreateSpatialistLine (transform.position, portals[curPortal].transform.position, spatialistAttackTime, false, spatialistLineMat);
+        yield return new WaitForSeconds (spatialistChargeTime);
         //fist hurtbox
         anim.transform.localScale = Vector3.zero;
-        CreateSpatialistLine (transform.position, portals[curPortal].transform.position, 0.3f, true, spatialistMikaMat);
-        yield return new WaitForSeconds (0.3f);
+        CreateSpatialistLine (transform.position, portals[curPortal].transform.position, spatialistAttackTime, true, spatialistMikaMat);
+        yield return new WaitForSeconds (spatialistChargeTime);
         for (int i = 0; i < pairsToSpawn; i += 2) {
             curPortal = Random.Range (0, pairsToSpawn * 2);
-            CreateSpatialistLine (portals[curPortal].transform.position, portals[(int) Mathf.Repeat (curPortal + pairsToSpawn, pairsToSpawn * 2)].transform.position, 0.6f, false, spatialistLineMat);
-            yield return new WaitForSeconds (0.6f);
+            CreateSpatialistLine (portals[curPortal].transform.position, portals[(int) Mathf.Repeat (curPortal + pairsToSpawn, pairsToSpawn * 2)].transform.position, spatialistChargeTime * 2, false, spatialistLineMat);
+            yield return new WaitForSeconds (spatialistChargeTime * 2);
             //hurtbox
-            CreateSpatialistLine (portals[curPortal].transform.position, portals[(int) Mathf.Repeat (curPortal + pairsToSpawn, pairsToSpawn * 2)].transform.position, 0.15f, true, spatialistMikaMat);
-            yield return new WaitForSeconds (0.3f);
+            CreateSpatialistLine (portals[curPortal].transform.position, portals[(int) Mathf.Repeat (curPortal + pairsToSpawn, pairsToSpawn * 2)].transform.position, spatialistAttackTime / 2, true, spatialistMikaMat);
+            yield return new WaitForSeconds (spatialistChargeTime);
 
         }
-        CreateSpatialistLine (portals[curPortal].transform.position, transform.position, 0.3f, false, spatialistLineMat);
+        CreateSpatialistLine (portals[curPortal].transform.position, transform.position, spatialistAttackTime, false, spatialistLineMat);
+        yield return new WaitForSeconds (spatialistChargeTime);
+        CreateSpatialistLine (portals[curPortal].transform.position, transform.position, spatialistAttackTime, true, spatialistMikaMat);
+
         yield return new WaitForSeconds (1);
         for (int i = 0; i < portals.Count; i++) {
             Destroy (portals[i]);
