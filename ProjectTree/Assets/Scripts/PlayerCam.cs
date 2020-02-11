@@ -12,6 +12,7 @@ public class PlayerCam : MonoBehaviour {
     public bool _enabled = true;
     float shakeSTR = 0;
     [HideInInspector] public RippleEffect ripple;
+    [SerializeField] ParticleSystem speedlines;
 
     public LimitCamArea limiter = null;
     void Start () {
@@ -45,7 +46,7 @@ public class PlayerCam : MonoBehaviour {
 
         if (limiter != null) {
             Vector3 v3Helper = transform.position;
-           v3Helper = limiter.col.ClosestPoint(v3Helper);
+            v3Helper = limiter.col.ClosestPoint (v3Helper);
 
             transform.position = v3Helper;
             goalPos = transform.position;
@@ -59,13 +60,28 @@ public class PlayerCam : MonoBehaviour {
     }
 
     public void SmallShake (float time) {
-        CustomShake (time, 1);
+        CustomShake (time, 4);
     }
     public void MediumShake (float time) {
         CustomShake (time, 10);
     }
     public void HardShake (float time) {
         CustomShake (time, 15);
+    }
+
+    public void SpeedLines (float time, float delay) {
+        CancelInvoke ("StopSpeedlines");
+        Invoke ("StopSpeedlines", time + delay);
+        CancelInvoke ("StartSpeedlines");
+        Invoke ("StartSpeedlines", delay);
+    }
+
+    void StartSpeedlines () {
+        speedlines.Play ();
+    }
+
+    void StopSpeedlines () {
+        speedlines.Stop ();
     }
 
     public void CustomShake (float time, float strength) {

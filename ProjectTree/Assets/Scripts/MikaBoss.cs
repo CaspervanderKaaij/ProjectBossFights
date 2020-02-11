@@ -20,7 +20,6 @@ public class MikaBoss : MonoBehaviour {
     public BarrierState barrierState = BarrierState.NoOrbs;
     [SerializeField] GameObject orbsPrefab;
     [SerializeField] Transform lineFollowTrans;
-    bool isAttacking = false;
     PlayerController player;
     PlayerCam cam;
     [SerializeField] Vector3 centerPos;
@@ -44,6 +43,7 @@ public class MikaBoss : MonoBehaviour {
     [Header ("Spatialist Friend")]
     [SerializeField] GameObject spatialistPortal;
     [SerializeField] Material spatialistLineMat;
+    [SerializeField] Material spatialistMikaMat;
     [Header ("Pandemonim")]
     [SerializeField] GameObject snekwurmPrefab;
     [Header ("Gluttony")]
@@ -172,18 +172,16 @@ public class MikaBoss : MonoBehaviour {
     }
 
     void StartAttack (State atk, string coroutineName) {
-        if (isAttacking == false) {
+        if (curState != State.Attacking) {
 
             curState = atk;
 
             StartCoroutine (coroutineName);
-            isAttacking = true;
 
         }
     }
 
     void StopAttack () {
-        isAttacking = false;
         curState = State.Idle;
     }
 
@@ -366,15 +364,22 @@ public class MikaBoss : MonoBehaviour {
 
         int curPortal = Random.Range (0, pairsToSpawn * 2);
         Vector3 oldScale = anim.transform.localScale;
-        anim.transform.localScale = Vector3.zero;
-        CreateSpatialistLine (transform.position, portals[curPortal].transform.position);
+        CreateSpatialistLine (transform.position, portals[curPortal].transform.position, 0.3f, false, spatialistLineMat);
         yield return new WaitForSeconds (0.3f);
-        for (int i = 0; i < pairsToSpawn * 2; i += 2) {
-            CreateSpatialistLine (portals[curPortal].transform.position, portals[(int) Mathf.Repeat (curPortal + pairsToSpawn, pairsToSpawn * 2)].transform.position);
+        //fist hurtbox
+        anim.transform.localScale = Vector3.zero;
+        CreateSpatialistLine (transform.position, portals[curPortal].transform.position, 0.3f, true, spatialistMikaMat);
+        yield return new WaitForSeconds (0.3f);
+        for (int i = 0; i < pairsToSpawn; i += 2) {
             curPortal = Random.Range (0, pairsToSpawn * 2);
+            CreateSpatialistLine (portals[curPortal].transform.position, portals[(int) Mathf.Repeat (curPortal + pairsToSpawn, pairsToSpawn * 2)].transform.position, 0.6f, false, spatialistLineMat);
+            yield return new WaitForSeconds (0.6f);
+            //hurtbox
+            CreateSpatialistLine (portals[curPortal].transform.position, portals[(int) Mathf.Repeat (curPortal + pairsToSpawn, pairsToSpawn * 2)].transform.position, 0.15f, true, spatialistMikaMat);
             yield return new WaitForSeconds (0.3f);
+
         }
-        CreateSpatialistLine (portals[curPortal].transform.position,transform.position);
+        CreateSpatialistLine (portals[curPortal].transform.position, transform.position, 0.3f, false, spatialistLineMat);
         yield return new WaitForSeconds (1);
         for (int i = 0; i < portals.Count; i++) {
             Destroy (portals[i]);
@@ -384,18 +389,32 @@ public class MikaBoss : MonoBehaviour {
         StopAttack ();
     }
 
-    void CreateSpatialistLine (Vector3 startPos, Vector3 endPos) {
+    void CreateSpatialistLine (Vector3 startPos, Vector3 endPos, float destroyTime, bool hasHurtbox, Material mat) {
         GameObject startLine = new GameObject ();
         LineRenderer predicStartLine = startLine.AddComponent<LineRenderer> ();
         predicStartLine.SetPosition (0, startPos);
         predicStartLine.SetPosition (1, endPos);
 
-        predicStartLine.material = spatialistLineMat;
+        predicStartLine.material = mat;
         predicStartLine.startWidth = 0.1f;
         predicStartLine.endWidth = 0.1f;
         predicStartLine.textureMode = LineTextureMode.Tile;
 
-        Destroy (startLine, 0.15f);
+        if (hasHurtbox == true) {
+            predicStartLine.gameObject.AddComponent<LineHurtbox> ().line = predicStartLine;
+            predicStartLine.gameObject.GetComponent<LineHurtbox> ().hurtbox = predicStartLine.GetComponent<Hurtbox> ();
+            Hurtbox h = predicStartLine.GetComponent<Hurtbox> ();
+
+            predicStartLine.startWidth = 2;
+            predicStartLine.endWidth = 2;
+
+            FindObjectOfType<PlayerCam>().MediumShake(0.1f);
+
+            h.team = 2;
+            h.damage = 45;
+        }
+
+        Destroy (startLine, destroyTime);
     }
 
     IEnumerator Pandemonim () {

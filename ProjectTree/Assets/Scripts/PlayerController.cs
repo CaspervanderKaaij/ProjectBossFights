@@ -220,11 +220,9 @@ public class PlayerController : MonoBehaviour {
                         playerCam.MediumShake (0.1f);
                         // playerCam.ripple.Emit ();
                         Instantiate (WdRipple, hitboxes[1].transform.position, Quaternion.Euler (90, 0, 0));
-                        for (int i = 0; i < 10; i++) {
-                            Instantiate (stopDashParticle, transform.position, Quaternion.identity);
-                        }
+                        Instantiate (stopDashParticle, transform.position, Quaternion.identity);
                         SpawnAudio.AudioSpawn (slamAttackAudio, 0.5f, Random.Range (4, 5), 0.5f);
-                        timescaleManager.SlowMo (0.3f, 0.2f, 0.1f);
+                        timescaleManager.SlowMo (0.2f, 0.1f, 0);
 
                     } else {
                         DashInput ();
@@ -683,11 +681,11 @@ public class PlayerController : MonoBehaviour {
                     angleGoal = AnalAngle () + cameraTransform.eulerAngles.y - 90;
                 }
                 transform.rotation = Quaternion.Lerp (transform.rotation, Quaternion.Euler (transform.eulerAngles.x, angleGoal, transform.eulerAngles.z), Time.deltaTime * moveStats[curMoveStats].rotSpeed * 2 * speedMuliplier);
-                shooterLineRend.SetPosition (1, transform.position + (Quaternion.AngleAxis(angleGoal,Vector3.up) * (Vector3.forward * 1000)));
+                shooterLineRend.SetPosition (1, transform.position + (Quaternion.AngleAxis (angleGoal, Vector3.up) * (Vector3.forward * 1000)));
             } else {
                 Vector3 mPos = transform.position - GetMousePlanePos ();
                 transform.rotation = Quaternion.Lerp (transform.rotation, Quaternion.LookRotation (-(mPos), Vector3.up), Time.deltaTime * moveStats[curMoveStats].rotSpeed * 2 * speedMuliplier);
-                shooterLineRend.SetPosition (1, new Vector3(transform.position.x, shootMagicCircle.transform.position.y,transform.position.z) - (new Vector3(mPos.x,0,mPos.z) * 1000));
+                shooterLineRend.SetPosition (1, new Vector3 (transform.position.x, shootMagicCircle.transform.position.y, transform.position.z) - (new Vector3 (mPos.x, 0, mPos.z) * 1000));
             }
             if (Input.GetButtonDown (shootInput) == true) {
                 Invoke ("ShootInputBuffer", 0.3f);
@@ -901,6 +899,8 @@ public class PlayerController : MonoBehaviour {
         SpawnAudio.AudioSpawn (hitEffectAudio, 1f, Random.Range (0.95f, 1.45f), 0.1f);
         SpawnAudio.AudioSpawn (dashAudio[1], 0.3f, Random.Range (4.5f, 5.5f), 1);
 
+        playerCam.SpeedLines (0.1f, 0);
+
     }
 
     public void SetDashInvisible (bool isDash) {
@@ -952,6 +952,7 @@ public class PlayerController : MonoBehaviour {
             playerCam.MediumShake (0.3f);
             timescaleManager.SlowMo (0.2f, 0f);
         }
+        playerCam.SpeedLines (0.3f, 0);
         Instantiate (getHitParticle, transform.position + transform.up, Quaternion.identity);
         SetDashInvisible (false);
         movev3.x = -transform.forward.x * 10;
