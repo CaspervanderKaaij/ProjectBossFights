@@ -133,10 +133,31 @@ public class MikaBoss : MonoBehaviour {
     }
 
     void DebugInput () {
-        /*
-        if (Input.GetKeyDown (KeyCode.Tab) == true) {
-            StartAttack (State.Attacking, "TeleSlash"); //                                                                              --> activate attack <--
+        if (Input.GetKeyDown (KeyCode.Keypad0) == true) {
+            StartAttack (State.Attacking, "MemoryInferno");
         }
+        if (Input.GetKeyDown (KeyCode.Keypad1) == true) {
+            StartAttack (State.Attacking, "RealitySlash"); 
+        }
+        if (Input.GetKeyDown (KeyCode.Keypad2) == true) {
+            StartAttack (State.Attacking, "Gluttony"); 
+        }
+        if (Input.GetKeyDown (KeyCode.Keypad3) == true) {
+            StartAttack (State.Attacking, "CenterOfTheUniverse");
+        }
+        if (Input.GetKeyDown (KeyCode.Keypad4) == true) {
+            StartAttack (State.Attacking, "SpatialistFriend"); 
+        }
+        if (Input.GetKeyDown (KeyCode.Keypad5) == true) {
+            StartAttack (State.Attacking, "Pandemonim"); 
+        }
+        if (Input.GetKeyDown (KeyCode.Keypad6) == true) {
+            StartAttack (State.Attacking, "TeleSlash"); 
+        }
+        if (Input.GetKeyDown (KeyCode.Keypad7) == true) {
+            StartAttack (State.Attacking, "BlackHole");                                                                            
+        }
+        /*
 
             //MemoryInferno
             //RealitySlash
@@ -148,7 +169,6 @@ public class MikaBoss : MonoBehaviour {
             //BlackHole
 
 
-             */
             if (hp.hp > (maxHp / 3) * 2) {
                 print ("phase 1");
                 ActivatePhase1Attack ();
@@ -159,6 +179,7 @@ public class MikaBoss : MonoBehaviour {
                 print ("phase 3");
                 ActivatePhase3Attack ();
             }
+             */
 
         if (barrierState != BarrierState.Desroyed) {
             //check the phase, then attack
