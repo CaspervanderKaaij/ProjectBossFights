@@ -37,9 +37,9 @@ public class WallVisibleMat : MonoBehaviour {
     }
 
     void SetVis () {
-        if (Physics.Raycast (cam.position, -(cam.position - rendRefrences[0].transform.position), Vector3.Distance (cam.position, rendRefrences[0].transform.position), LayerMask.GetMask ("Default"), QueryTriggerInteraction.Ignore)) {
+        if (Physics.Raycast (cam.position, -(cam.position - rendRefrences[0].transform.position), Vector3.Distance (cam.position, rendRefrences[0].transform.position) * 0.8f, LayerMask.GetMask ("Default"), QueryTriggerInteraction.Ignore)) {
             vis = false;
-        } else if (Physics.Raycast (cam.position, -(cam.position - rendRefrences[0].transform.position), Vector3.Distance (cam.position, rendRefrences[0].transform.position), LayerMask.GetMask ("TriggerViewBlock"), QueryTriggerInteraction.Collide)) {
+        } else if (Physics.Raycast (cam.position, -(cam.position - rendRefrences[0].transform.position), Vector3.Distance (cam.position, rendRefrences[0].transform.position) * 0.8f, LayerMask.GetMask ("TriggerViewBlock"), QueryTriggerInteraction.Collide)) {
             vis = false;
         } else {
             vis = true;

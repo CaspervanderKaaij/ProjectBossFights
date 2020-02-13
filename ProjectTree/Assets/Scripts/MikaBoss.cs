@@ -133,6 +133,7 @@ public class MikaBoss : MonoBehaviour {
     }
 
     void DebugInput () {
+        /*
         if (Input.GetKeyDown (KeyCode.Keypad0) == true) {
             StartAttack (State.Attacking, "MemoryInferno");
         }
@@ -157,7 +158,6 @@ public class MikaBoss : MonoBehaviour {
         if (Input.GetKeyDown (KeyCode.Keypad7) == true) {
             StartAttack (State.Attacking, "BlackHole");                                                                            
         }
-        /*
 
             //MemoryInferno
             //RealitySlash
@@ -167,19 +167,18 @@ public class MikaBoss : MonoBehaviour {
             //Pandemonim
             //TeleSlash
             //BlackHole
-
-
-            if (hp.hp > (maxHp / 3) * 2) {
-                print ("phase 1");
-                ActivatePhase1Attack ();
-            } else if (hp.hp > maxHp / 3) {
-                print ("phase 2");
-                ActivatePhase2Attack ();
-            } else {
-                print ("phase 3");
-                ActivatePhase3Attack ();
-            }
              */
+
+        if (hp.hp > (maxHp / 3) * 2) {
+            print ("phase 1");
+            ActivatePhase1Attack ();
+        } else if (hp.hp > maxHp / 3) {
+            print ("phase 2");
+            ActivatePhase2Attack ();
+        } else {
+            print ("phase 3");
+            ActivatePhase3Attack ();
+        }
 
         if (barrierState != BarrierState.Desroyed) {
             //check the phase, then attack
@@ -223,7 +222,18 @@ public class MikaBoss : MonoBehaviour {
     }
 
     void ActivatePhase3Attack () {
-
+        int rng = Random.Range (0, 3);
+        switch (rng) {
+            case 0:
+                StartAttack (State.Attacking, "SpatialistFriend");
+                break;
+            case 1:
+                StartAttack (State.Attacking, "Pandemonim");
+                break;
+            case 2:
+                StartAttack (State.Attacking, "Gluttony");
+                break;
+        }
     }
 
     void SetOrbLineRends () {
