@@ -32,11 +32,11 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
-    - _Skiddadle: -0.15
+    - _Skiddadle: 0.17
     - _Skiddadle1: -0.1
     - __dirty: 0
     m_Colors:
-    - _Color0: {r: 0.2383259, g: 0.06632654, b: 0.1502212, a: 0}
+    - _Color0: {r: 4.396586, g: 1.2252781, b: 2.738857, a: 0}
     - _Panner: {r: 0, g: -0.42, b: 0, a: 0}
     - _Panning: {r: 0, g: 0.16, b: 0, a: 0}
     - _Panning1: {r: 0, g: -0.24, b: 0, a: 0}

@@ -7,23 +7,23 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: PortalEffect 1
-  m_Shader: {fileID: 4800000, guid: 01cf838bd913c324895ecdbff54e3aff, type: 3}
+  m_Name: Re-EntryFire 1
+  m_Shader: {fileID: 4800000, guid: 893d86a7b3922e84590e490d9dce30d9, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 0
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
-  m_CustomRenderQueue: 2449
+  m_CustomRenderQueue: -1
   stringTagMap: {}
   disabledShaderPasses: []
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
     - _Noise:
-        m_Texture: {fileID: 2800000, guid: e28dc97a9541e3642a48c0e3886688c5, type: 3}
-        m_Scale: {x: 10, y: 1}
+        m_Texture: {fileID: 2800000, guid: c60ce9d4c710434479c26cd5a98f7a9c, type: 3}
+        m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
-    - _Noise1:
+    - _TextureSample0:
         m_Texture: {fileID: 2800000, guid: c60ce9d4c710434479c26cd5a98f7a9c, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
@@ -32,11 +32,10 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
-    - _Skiddadle: -0.03
-    - _Skiddadle1: -0.1
+    - _OpacityMultiplier: 1
+    - _Skiddadle: -0.16
     - __dirty: 0
     m_Colors:
-    - _Color0: {r: 140.4163, g: 0, b: 58.286015, a: 1}
-    - _Panner: {r: 0, g: -0.42, b: 0, a: 0}
-    - _Panning: {r: 0, g: -0.19, b: 0, a: 0}
-    - _Panning1: {r: 0, g: -0.24, b: 0, a: 0}
+    - _Flame: {r: 3.9999995, g: 0, b: 0.51695055, a: 0}
+    - _HighLight: {r: 61.335377, g: 40.263695, b: 19.962929, a: 0}
+    - _Panning: {r: 0, g: -1.96, b: 0, a: 0}
