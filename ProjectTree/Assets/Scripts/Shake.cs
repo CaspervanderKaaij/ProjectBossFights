@@ -8,25 +8,26 @@ public class Shake : MonoBehaviour {
     float shakestr = 0.5f;
     [SerializeField] float shakeScale = 1;
     Vector3 rngRemover;
+    [SerializeField] bool usePosition = false;
 
     void FixedUpdate () {
         if (shakeScale > 0) {
             if (isShaking == true) {
                 transform.localEulerAngles = new Vector3 (transform.localEulerAngles.x, transform.localEulerAngles.y, 0);
                 Shaking (shakestr);
-                
+
             }
 
         }
     }
 
     void StartShake (float time, float strength) {
-            CancelInvoke ("StopShake");
-            isShaking = true;
-            shakestr = strength;
-            Invoke ("StopShake", time);
-            transform.eulerAngles -= rngRemover;
-            rngRemover = Vector3.zero;
+        CancelInvoke ("StopShake");
+        isShaking = true;
+        shakestr = strength;
+        Invoke ("StopShake", time);
+        transform.eulerAngles -= rngRemover;
+        rngRemover = Vector3.zero;
     }
 
     public void SmallShake () {
@@ -52,9 +53,16 @@ public class Shake : MonoBehaviour {
     }
 
     void Shaking (float str) {
-        transform.eulerAngles -= rngRemover;
-        str *= shakeScale;
-        rngRemover = new Vector3 (Random.Range (-str, str), Random.Range (-str, str), Random.Range (-str, str));
-        transform.localEulerAngles = new Vector3 (transform.eulerAngles.x + rngRemover.x, transform.eulerAngles.y + rngRemover.y, rngRemover.z);
+        if (usePosition == false) {
+            transform.eulerAngles -= rngRemover;
+            str *= shakeScale;
+            rngRemover = new Vector3 (Random.Range (-str, str), Random.Range (-str, str), Random.Range (-str, str));
+            transform.localEulerAngles = new Vector3 (transform.localEulerAngles.x + rngRemover.x, transform.localEulerAngles.y + rngRemover.y, rngRemover.z);
+        } else {
+            transform.position -= rngRemover;
+            str *= shakeScale;
+            rngRemover = new Vector3 (Random.Range (-str, str), Random.Range (-str, str), Random.Range (-str, str));
+            transform.localPosition = new Vector3 (transform.localPosition.x + rngRemover.x, transform.localPosition.y + rngRemover.y, rngRemover.z);
+        }
     }
 }

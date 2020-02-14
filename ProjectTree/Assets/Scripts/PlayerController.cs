@@ -860,6 +860,14 @@ public class PlayerController : MonoBehaviour {
             Invoke ("CantAttack", at.totalTime + at.bufferDuration);
         }
         Invoke ("IsStartingUp", at.startupTime);
+
+        //aim helper
+        Collider[] col = Physics.OverlapSphere (transform.position, 3, LayerMask.GetMask ("Enemy"), QueryTriggerInteraction.Collide);
+        if (col.Length > 0 && Vector3.Dot((col[0].transform.position - transform.position).normalized,transform.forward) > 0) {
+            angleGoal = Quaternion.LookRotation (transform.position - col[0].transform.position, Vector3.up).eulerAngles.y;
+            angleGoal += 180;
+            transform.rotation = Quaternion.Euler (transform.eulerAngles.x, angleGoal, transform.eulerAngles.z);
+        }
     }
 
     void IsStartingUp () {

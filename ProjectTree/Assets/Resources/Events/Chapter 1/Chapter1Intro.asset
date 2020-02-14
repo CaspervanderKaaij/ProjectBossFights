@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: Chapter1Intro
   m_EditorClassIdentifier: 
   scenes:
-  - HeinzGreybox
+  - HeinzShop
   - C1_Heinz
   nextScene: Events/Chapter 1/Chapter1Intro

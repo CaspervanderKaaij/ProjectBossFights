@@ -14,6 +14,9 @@ public class WitchWestBoss : MonoBehaviour {
     public State curState = State.Idle;
     PlayerController player;
     public float floorYCoods = 0;
+    [Header ("Intro")]
+    [SerializeField] GameObject introCam;
+    [SerializeField] Camera introCamc;
     [Header ("GroundLaser")]
     public GameObject groundLaserPrefab;
     [Header ("GroundLaserPhase2")]
@@ -61,6 +64,8 @@ public class WitchWestBoss : MonoBehaviour {
     [SerializeField] AudioClip[] getHitVoices;
     [SerializeField] AudioClip ratataLoopSound;
     [SerializeField] AudioClip groundLaserBassBoost;
+    [SerializeField] AudioClip introSound;
+    [SerializeField] AudioClip bozingBellSound;
     GameObject curVoice;
     [Header ("Animations")]
     [SerializeField] Animator anim;
@@ -76,10 +81,36 @@ public class WitchWestBoss : MonoBehaviour {
         SetBarrierActive (true);
         InvokeRepeating ("Taunt", 20, 20);
         Invoke ("StartWait", 3);
+        StartCoroutine (IntroEv ());
     }
 
     void StartWait () {
 
+    }
+
+    IEnumerator IntroEv () {
+        anim.Play ("HeinzIntro",0,0.45f);
+        yield return new WaitForSeconds (0.4f);
+        FindObjectOfType<TimescaleManager> ().SlowMo (0.9f, 0.5f);
+        yield return new WaitForSeconds (0.1f);
+        introCam.SetActive (true);
+        SpawnAudio.AudioSpawn(introSound,0,2,1);//bozingBellSound
+        for (int i = 0; i < 60; i++) {
+            introCamc.fieldOfView = Mathf.MoveTowards (introCamc.fieldOfView, 70, Time.unscaledDeltaTime * 1000);
+            yield return new WaitForEndOfFrame ();
+        }
+        introCamc.fieldOfView = 70;
+        yield return new WaitForSeconds (1);
+        FindObjectOfType<TimescaleManager> ().SlowMo (0.9f, 0.5f);
+        anim.Play ("HeinzIdle");
+        Talk (phase1Start);
+        introCam.SetActive (false);
+        cam.Flash (Color.white, 5);
+        SpawnAudio.AudioSpawn(bozingBellSound,0,1,0.3f);
+        yield return new WaitForSeconds(0.1f);
+        SpawnAudio.AudioSpawn(bozingBellSound,0,1,0.3f);
+        yield return new WaitForSeconds(0.1f);
+        SpawnAudio.AudioSpawn(bozingBellSound,0,1,0.3f);
     }
 
     void Taunt () {
@@ -233,8 +264,6 @@ public class WitchWestBoss : MonoBehaviour {
                     phase3Voiced = true;
                     Talk (phase3Start);
                 } else if (phase1Voiced == false) {
-                    Talk (phase1Start);
-                    anim.Play ("HeinzIntro");
                     phase1Voiced = true;
                 } else {
                     Talk (barrierVoiceBackAudio);
@@ -246,7 +275,7 @@ public class WitchWestBoss : MonoBehaviour {
             if (curState != State.FinalAttack) {
                 camXRotation = 50;
                 Talk (barrierDownVoice);
-                cam.Flash(Color.white,10);
+                cam.Flash (Color.white, 10);
             }
             anim.Play ("HeinzShieldDown");
         }
@@ -254,7 +283,7 @@ public class WitchWestBoss : MonoBehaviour {
 
     void Talk (AudioClip[] clips) {
         AudioClip chosenClip = clips[Random.Range (0, clips.Length)];
-        Destroy(curVoice);
+        Destroy (curVoice);
         curVoice = SpawnAudio.SpawnVoice (chosenClip, 0, 1, 1, 0);
     }
 
@@ -263,7 +292,6 @@ public class WitchWestBoss : MonoBehaviour {
             Talk (clips);
         }
     }
-
 
     float curDissolve = 0;
     void SetBarrierVisibility () {
