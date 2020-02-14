@@ -41,7 +41,7 @@ Material:
     - _GradientLinesScaleDotCom: 0.27
     - _LineStrength: 1
     - _LinesSpeedScale: 0.06
-    - _OpacityTest: 0.13
+    - _OpacityTest: 0.72
     - _Scale: 1
     - _Timescale: 0.8
     - __dirty: 0

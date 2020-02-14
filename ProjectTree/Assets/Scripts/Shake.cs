@@ -13,9 +13,7 @@ public class Shake : MonoBehaviour {
     void FixedUpdate () {
         if (shakeScale > 0) {
             if (isShaking == true) {
-                transform.localEulerAngles = new Vector3 (transform.localEulerAngles.x, transform.localEulerAngles.y, 0);
                 Shaking (shakestr);
-
             }
 
         }
@@ -26,7 +24,11 @@ public class Shake : MonoBehaviour {
         isShaking = true;
         shakestr = strength;
         Invoke ("StopShake", time);
-        transform.eulerAngles -= rngRemover;
+        if (usePosition == true) {
+            transform.localPosition -= rngRemover;
+        } else {
+            transform.localEulerAngles -= rngRemover;
+        }
         rngRemover = Vector3.zero;
     }
 
@@ -48,7 +50,11 @@ public class Shake : MonoBehaviour {
 
     void StopShake () {
         isShaking = false;
-        transform.eulerAngles -= rngRemover;
+        if (usePosition == true) {
+            transform.localPosition -= rngRemover;
+        } else {
+            transform.localEulerAngles -= rngRemover;
+        }
         rngRemover = Vector3.zero;
     }
 

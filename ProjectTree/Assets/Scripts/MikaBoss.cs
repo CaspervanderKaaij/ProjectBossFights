@@ -8,7 +8,8 @@ public class MikaBoss : MonoBehaviour {
     [SerializeField] Transform barrierPointsParent;
     public enum State {
         Idle,
-        Attacking
+        Attacking,
+        Dazed
     }
     public State curState = State.Idle;
 
@@ -28,6 +29,7 @@ public class MikaBoss : MonoBehaviour {
 
     [SerializeField] Hitbox hp;
     [SerializeField] float maxHp = 1200;
+    [SerializeField] AutoScale protectionCircle;
     [Header ("Memory inferno")]
     [SerializeField] GameObject[] memoryInfernoHitboxes = new GameObject[3];
     [SerializeField] GameObject[] memoryInfernoIndicators = new GameObject[3];
@@ -57,6 +59,11 @@ public class MikaBoss : MonoBehaviour {
     [SerializeField] GameObject gluttonySnekwurm;
     [Header ("CenterOfTheUniverse")]
     [SerializeField] GameObject centeroftheuniverseProjectile;
+    [Header("Intro")]
+    [SerializeField] GameObject introCamObj;
+    [SerializeField] Camera introCam;
+    [SerializeField] AudioClip boxingBellSound;
+    [SerializeField] GameObject introHandOrb;
 
     void Start () {
         myHitbox = GetComponent<Collider> ();
@@ -73,19 +80,35 @@ public class MikaBoss : MonoBehaviour {
 
         cc = FindObjectOfType<PlayerController> ().GetComponent<CharacterController> ();
 
+        StartCoroutine(StartEv());
+
+    }
+
+    bool started = false;
+    IEnumerator StartEv(){
+        yield return new WaitForSeconds(2f);
+        introCamObj.SetActive(true);
+        anim.Play("MikaIntro",0,0.7f);
+        yield return new WaitForSeconds(3);
+        introCamObj.SetActive(false);
+        introHandOrb.SetActive(false);
+        cam.Flash(Color.white,5);
+        SpawnAudio.AudioSpawn(boxingBellSound,0,1,0.3f);
+        yield return new WaitForSeconds(0.2f);
+        SpawnAudio.AudioSpawn(boxingBellSound,0,1,0.3f);
+        yield return new WaitForSeconds(0.2f);
+        SpawnAudio.AudioSpawn(boxingBellSound,0,1,0.3f);
+        started = true;
+
     }
 
     void Update () {
         UpdateBarrierActive ();
+        if(started == true){
         DebugInput ();
+        }
         SetOrbState ();
         SetCam ();
-    }
-
-    void RunFromPlayer () {
-        if (anim.GetCurrentAnimatorStateInfo (0).IsName ("LoseBarrier") == false) {
-            // print ("y ar u runin");
-        }
     }
 
     BarrierState lastBState;
@@ -183,8 +206,13 @@ public class MikaBoss : MonoBehaviour {
         if (barrierState != BarrierState.Desroyed) {
             //check the phase, then attack
             SetOrbLineRends ();
-        } else {
-            RunFromPlayer ();
+        }
+    }
+
+    public void GetHit(){
+        if(curState != State.Dazed){
+            StopAllCoroutines();
+            curState = State.Dazed;
         }
     }
 
@@ -263,8 +291,6 @@ public class MikaBoss : MonoBehaviour {
 
         if (active == true && wasActive == false) {
             myHitbox.enabled = active;
-
-            anim.Play ("LoseBarrier");
         }
 
         if (active == false && wasActive == true) {
@@ -338,6 +364,7 @@ public class MikaBoss : MonoBehaviour {
         Instantiate (teleportParicle, transform.position, Quaternion.identity);
         Vector3 oldScale = anim.transform.localScale;
         anim.transform.localScale = Vector3.zero;
+        protectionCircle.gameObject.SetActive(false);
         yield return new WaitForSeconds (0.75f); //0.25 er bij
         if (hp.hp < (maxHp / 3) * 2) {
             yield return new WaitForSeconds (0.25f);
@@ -365,6 +392,7 @@ public class MikaBoss : MonoBehaviour {
         anim.transform.localScale = oldScale;
         DisableOrbs (true);
         transform.position = centerPos;
+        protectionCircle.gameObject.SetActive(true);
         yield return new WaitForSeconds (0.3f);
         StopAttack ();
     }
