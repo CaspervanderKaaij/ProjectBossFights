@@ -60,7 +60,7 @@ public class MikaBoss : MonoBehaviour {
     [SerializeField] GameObject gluttonySnekwurm;
     [Header ("CenterOfTheUniverse")]
     [SerializeField] GameObject centeroftheuniverseProjectile;
-    [Header("Intro")]
+    [Header ("Intro")]
     [SerializeField] GameObject introCamObj;
     [SerializeField] Camera introCam;
     [SerializeField] AudioClip boxingBellSound;
@@ -81,32 +81,32 @@ public class MikaBoss : MonoBehaviour {
 
         cc = FindObjectOfType<PlayerController> ().GetComponent<CharacterController> ();
 
-        StartCoroutine(StartEv());
+        StartCoroutine (StartEv ());
 
     }
 
     bool started = false;
-    IEnumerator StartEv(){
-        yield return new WaitForSeconds(2f);
-        introCamObj.SetActive(true);
-        anim.Play("MikaIntro",0,0.7f);
-        yield return new WaitForSeconds(3);
-        introCamObj.SetActive(false);
-        introHandOrb.SetActive(false);
-        cam.Flash(Color.white,5);
-        SpawnAudio.AudioSpawn(boxingBellSound,0,1,0.3f);
-        yield return new WaitForSeconds(0.2f);
-        SpawnAudio.AudioSpawn(boxingBellSound,0,1,0.3f);
-        yield return new WaitForSeconds(0.2f);
-        SpawnAudio.AudioSpawn(boxingBellSound,0,1,0.3f);
+    IEnumerator StartEv () {
+        yield return new WaitForSeconds (2f);
+        introCamObj.SetActive (true);
+        anim.Play ("MikaIntro", 0, 0.7f);
+        yield return new WaitForSeconds (3);
+        introCamObj.SetActive (false);
+        introHandOrb.SetActive (false);
+        cam.Flash (Color.white, 5);
+        SpawnAudio.AudioSpawn (boxingBellSound, 0, 1, 0.3f);
+        yield return new WaitForSeconds (0.2f);
+        SpawnAudio.AudioSpawn (boxingBellSound, 0, 1, 0.3f);
+        yield return new WaitForSeconds (0.2f);
+        SpawnAudio.AudioSpawn (boxingBellSound, 0, 1, 0.3f);
         started = true;
 
     }
 
     void Update () {
         UpdateBarrierActive ();
-        if(started == true){
-        DebugInput ();
+        if (started == true) {
+            DebugInput ();
         }
         SetOrbState ();
         SetCam ();
@@ -130,6 +130,9 @@ public class MikaBoss : MonoBehaviour {
 
     void BarrierBack () {
         barrierState = BarrierState.NoOrbs;
+        if(curState == State.Dazed){
+            curState = State.Idle;
+        }
     }
 
     void NewOrbs () {
@@ -156,29 +159,29 @@ public class MikaBoss : MonoBehaviour {
     }
 
     void DebugInput () {
-        if (Input.GetKeyDown (KeyCode.Keypad0) == true) {
+        if (Input.GetKeyDown (KeyCode.Alpha3) == true) {
             StartAttack (State.Attacking, "MemoryInferno");
         }
-        if (Input.GetKeyDown (KeyCode.Keypad1) == true) {
-            StartAttack (State.Attacking, "RealitySlash"); 
+        if (Input.GetKeyDown (KeyCode.Alpha4) == true) {
+            StartAttack (State.Attacking, "RealitySlash");
         }
-        if (Input.GetKeyDown (KeyCode.Keypad2) == true) {
-            StartAttack (State.Attacking, "Gluttony"); 
+        if (Input.GetKeyDown (KeyCode.Alpha5) == true) {
+            StartAttack (State.Attacking, "Gluttony");
         }
-        if (Input.GetKeyDown (KeyCode.Keypad3) == true) {
+        if (Input.GetKeyDown (KeyCode.Alpha6) == true) {
             StartAttack (State.Attacking, "CenterOfTheUniverse");
         }
-        if (Input.GetKeyDown (KeyCode.Keypad4) == true) {
-            StartAttack (State.Attacking, "SpatialistFriend"); 
+        if (Input.GetKeyDown (KeyCode.Alpha7) == true) {
+            StartAttack (State.Attacking, "SpatialistFriend");
         }
-        if (Input.GetKeyDown (KeyCode.Keypad5) == true) {
-            StartAttack (State.Attacking, "Pandemonim"); 
+        if (Input.GetKeyDown (KeyCode.Alpha8) == true) {
+            StartAttack (State.Attacking, "Pandemonim");
         }
-        if (Input.GetKeyDown (KeyCode.Keypad6) == true) {
-            StartAttack (State.Attacking, "TeleSlash"); 
+        if (Input.GetKeyDown (KeyCode.Alpha9) == true) {
+            StartAttack (State.Attacking, "TeleSlash");
         }
-        if (Input.GetKeyDown (KeyCode.Keypad7) == true) {
-            StartAttack (State.Attacking, "BlackHole");                                                                            
+        if (Input.GetKeyDown (KeyCode.Alpha0) == true) {
+            StartAttack (State.Attacking, "BlackHole");
         }
         /*
 
@@ -209,11 +212,23 @@ public class MikaBoss : MonoBehaviour {
         }
     }
 
-    public void GetHit(){
-        if(curState != State.Dazed){
-            StopAllCoroutines();
+    List<GameObject> curAttackObjects = new List<GameObject> ();
+    public void GetHit () {
+        if (curState != State.Dazed) {
+            StopAllCoroutines ();
             curState = State.Dazed;
-            print("DAZE!!");
+            camX = camXBase;
+            for (int i = 0; i < curAttackObjects.Count; i++) {
+                Destroy (curAttackObjects[i]);
+            }
+            for (int i = 0; i < memoryInfernoIndicators.Length; i++) {
+                memoryInfernoIndicators[i].SetActive (false);
+                memoryInfernoHitboxes[i].SetActive (false);
+            }
+
+            CancelInvoke ("BarrierBack");
+            CancelInvoke ("NewOrbs");
+            Invoke ("BarrierBack", 7.5f);
         }
     }
 
@@ -314,6 +329,7 @@ public class MikaBoss : MonoBehaviour {
 
     void StopAttack () {
         curState = State.Idle;
+        curAttackObjects.Clear ();
     }
 
     int memPattern;
@@ -367,7 +383,7 @@ public class MikaBoss : MonoBehaviour {
         Instantiate (teleportParicle, transform.position, Quaternion.identity);
         Vector3 oldScale = anim.transform.localScale;
         anim.transform.localScale = Vector3.zero;
-        protectionCircle.gameObject.SetActive(false);
+        protectionCircle.gameObject.SetActive (false);
         yield return new WaitForSeconds (0.75f); //0.25 er bij
         if (hp.hp < (maxHp / 3) * 2) {
             yield return new WaitForSeconds (0.25f);
@@ -395,7 +411,7 @@ public class MikaBoss : MonoBehaviour {
         anim.transform.localScale = oldScale;
         DisableOrbs (true);
         transform.position = centerPos;
-        protectionCircle.gameObject.SetActive(true);
+        protectionCircle.gameObject.SetActive (true);
         yield return new WaitForSeconds (0.3f);
         StopAttack ();
     }
@@ -473,6 +489,7 @@ public class MikaBoss : MonoBehaviour {
         realitySlashHitboxes.Clear ();
         for (int i = 0; i < amount; i++) {
             GameObject g = Instantiate (realitySlashHitbox, transform.position, Quaternion.Euler (0, Random.Range (0, 360), 0));
+            curAttackObjects.Add (g);
             g.transform.position += g.transform.forward * Random.Range (3, 20);
             g.transform.Rotate (180, Random.Range (0, 360), 90);
             realitySlashHitboxes.Add (g);
@@ -592,7 +609,7 @@ public class MikaBoss : MonoBehaviour {
         bHoleStr = 0;
         StartCoroutine ("PushPlayerToBH");
         cam.SmallShake (2);
-        cam.SpeedLines(8,0);
+        cam.SpeedLines (8, 0);
         GameObject bHole = Instantiate (blackHoleEXPrefab, transform.position, Quaternion.identity);
         bHole.transform.localScale = Vector3.zero;
 
@@ -619,7 +636,11 @@ public class MikaBoss : MonoBehaviour {
         Vector3 dir = -(player.transform.position - transform.position).normalized;
         dir.y = 0;
         cc.Move (dir * bHoleStr * Time.deltaTime);
-        bHoleStr = Mathf.MoveTowards (bHoleStr, 25, Time.deltaTime * 8);
+        if (hp.hp > maxHp / 3) {
+            bHoleStr = Mathf.MoveTowards (bHoleStr, 15, Time.deltaTime * 8);
+        } else {
+            bHoleStr = Mathf.MoveTowards (bHoleStr, 25, Time.deltaTime * 8);
+        }
         yield return new WaitForSeconds (0);
         StartCoroutine ("PushPlayerToBH");
     }

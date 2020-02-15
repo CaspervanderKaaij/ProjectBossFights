@@ -904,7 +904,8 @@ public class PlayerController : MonoBehaviour {
         playerCam.MediumShake (0.3f);
         Instantiate (hitEffectParticle, hitboxes[hitter].transform.position, Quaternion.identity);
         timescaleManager.SlowMo (0.1f, 0f);
-        SpawnAudio.AudioSpawn (hitEffectAudio, 1f, Random.Range (0.95f, 1.45f), 0.1f);
+        SpawnAudio.AudioSpawn (hitEffectAudio, 0f, Random.Range (4.95f, 6.45f), 1);
+        SpawnAudio.AudioSpawn (hitEffectAudio, 0f, Random.Range (0.95f, 1.45f), 1);
         SpawnAudio.AudioSpawn (dashAudio[1], 0.3f, Random.Range (4.5f, 5.5f), 1);
 
         playerCam.SpeedLines (0.1f, 0);

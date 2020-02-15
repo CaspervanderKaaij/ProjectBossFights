@@ -19859,7 +19859,7 @@ GameObject:
   - component: {fileID: 1164406462}
   - component: {fileID: 1164406461}
   - component: {fileID: 1164406468}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: MikaBoss
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -38729,36 +38729,26 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 8566275655107373651, guid: 5b3bb5eb1a96bc544b7f7a50e8859a9d,
+    - target: {fileID: 8566275653628957901, guid: 5b3bb5eb1a96bc544b7f7a50e8859a9d,
         type: 3}
-      propertyPath: m_RootOrder
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8566275654212340023, guid: 5b3bb5eb1a96bc544b7f7a50e8859a9d,
-        type: 3}
-      propertyPath: m_RootOrder
+      propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 8566275654054014579, guid: 5b3bb5eb1a96bc544b7f7a50e8859a9d,
+    - target: {fileID: 7693985869771758017, guid: 5b3bb5eb1a96bc544b7f7a50e8859a9d,
         type: 3}
-      propertyPath: m_RenderingPath
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 8566275654054014583, guid: 5b3bb5eb1a96bc544b7f7a50e8859a9d,
-        type: 3}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8566275654054014573, guid: 5b3bb5eb1a96bc544b7f7a50e8859a9d,
+      propertyPath: m_Materials.Array.data[1]
+      value: 
+      objectReference: {fileID: 2100000, guid: 0c95ed0bb5c944f49abe1d0dc6788385, type: 2}
+    - target: {fileID: 8566275653628957905, guid: 5b3bb5eb1a96bc544b7f7a50e8859a9d,
         type: 3}
       propertyPath: m_Enabled
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 8566275654054014576, guid: 5b3bb5eb1a96bc544b7f7a50e8859a9d,
+    - target: {fileID: 5619658265809876804, guid: 5b3bb5eb1a96bc544b7f7a50e8859a9d,
         type: 3}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
+      propertyPath: m_Materials.Array.data[1]
+      value: 
+      objectReference: {fileID: 2100000, guid: 0c95ed0bb5c944f49abe1d0dc6788385, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5b3bb5eb1a96bc544b7f7a50e8859a9d, type: 3}
 --- !u!1001 &9078530664843330023
