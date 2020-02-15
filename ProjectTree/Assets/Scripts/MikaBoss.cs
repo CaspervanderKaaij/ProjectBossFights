@@ -45,6 +45,7 @@ public class MikaBoss : MonoBehaviour {
     [SerializeField] GameObject realitySlashHitbox;
     [Header ("Black Hole")]
     [SerializeField] GameObject blackholePrefab;
+    [SerializeField] GameObject blackHoleEXPrefab;
     [Header ("Spatialist Friend")]
     [SerializeField] GameObject spatialistPortal;
     [SerializeField] Material spatialistLineMat;
@@ -114,7 +115,6 @@ public class MikaBoss : MonoBehaviour {
     BarrierState lastBState;
     void SetOrbState () {
         if (barrierState != lastBState) {
-            print ("bState");
             switch (barrierState) {
                 case BarrierState.Desroyed:
                     cam.Flash (Color.white, 7.5f);
@@ -156,7 +156,6 @@ public class MikaBoss : MonoBehaviour {
     }
 
     void DebugInput () {
-        /*
         if (Input.GetKeyDown (KeyCode.Keypad0) == true) {
             StartAttack (State.Attacking, "MemoryInferno");
         }
@@ -181,6 +180,7 @@ public class MikaBoss : MonoBehaviour {
         if (Input.GetKeyDown (KeyCode.Keypad7) == true) {
             StartAttack (State.Attacking, "BlackHole");                                                                            
         }
+        /*
 
             //MemoryInferno
             //RealitySlash
@@ -190,19 +190,19 @@ public class MikaBoss : MonoBehaviour {
             //Pandemonim
             //TeleSlash
             //BlackHole
-             */
 
         if (hp.hp > (maxHp / 3) * 2) {
-            print ("phase 1");
+           // print ("phase 1");
             ActivatePhase1Attack ();
         } else if (hp.hp > maxHp / 3) {
-            print ("phase 2");
+          //  print ("phase 2");
             ActivatePhase2Attack ();
         } else {
-            print ("phase 3");
+           // print ("phase 3");
             ActivatePhase3Attack ();
         }
 
+             */
         if (barrierState != BarrierState.Desroyed) {
             //check the phase, then attack
             SetOrbLineRends ();
@@ -213,6 +213,7 @@ public class MikaBoss : MonoBehaviour {
         if(curState != State.Dazed){
             StopAllCoroutines();
             curState = State.Dazed;
+            print("DAZE!!");
         }
     }
 
@@ -291,16 +292,18 @@ public class MikaBoss : MonoBehaviour {
 
         if (active == true && wasActive == false) {
             myHitbox.enabled = active;
+            protectionCircle.goal = Vector3.zero;
         }
 
         if (active == false && wasActive == true) {
             myHitbox.enabled = active;
+            protectionCircle.goal = Vector3.one * 0.3075801f;
         }
 
     }
 
     void StartAttack (State atk, string coroutineName) {
-        if (curState != State.Attacking) {
+        if (curState != State.Attacking && curState != State.Dazed) {
 
             curState = atk;
 
@@ -589,7 +592,8 @@ public class MikaBoss : MonoBehaviour {
         bHoleStr = 0;
         StartCoroutine ("PushPlayerToBH");
         cam.SmallShake (2);
-        GameObject bHole = Instantiate (blackholePrefab, transform.position, Quaternion.identity);
+        cam.SpeedLines(8,0);
+        GameObject bHole = Instantiate (blackHoleEXPrefab, transform.position, Quaternion.identity);
         bHole.transform.localScale = Vector3.zero;
 
         yield return new WaitForSeconds (1f);

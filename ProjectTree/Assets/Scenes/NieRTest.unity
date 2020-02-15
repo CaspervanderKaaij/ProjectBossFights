@@ -1689,7 +1689,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   goal: {x: 0.3075801, y: 0.3075801, z: 0.3075801}
-  speed: 1
+  speed: 6
 --- !u!1001 &157888155
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -20005,6 +20005,17 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 1164406463}
+        m_MethodName: GetHit
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   deathEv:
     m_PersistentCalls:
       m_Calls: []
@@ -20080,6 +20091,8 @@ MonoBehaviour:
   realitySlashHitbox: {fileID: 425403286827894198, guid: 3b625679167101a459d231bc58ec152c,
     type: 3}
   blackholePrefab: {fileID: 4883678365687345618, guid: 34d4bf6cc31f8d54ab5dff64daccf9da,
+    type: 3}
+  blackHoleEXPrefab: {fileID: 4947752480797127781, guid: 50852725bbfa6924b8f3cecf60eb8d0d,
     type: 3}
   spatialistPortal: {fileID: 6733775748406419800, guid: 9c1db8c0ffc8df04cbfe243a6a338381,
     type: 3}
