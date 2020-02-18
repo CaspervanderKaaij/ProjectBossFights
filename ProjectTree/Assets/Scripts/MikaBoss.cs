@@ -535,6 +535,7 @@ public class MikaBoss : MonoBehaviour {
         //fist hurtbox
         anim.transform.localScale = Vector3.zero;
         CreateSpatialistLine (transform.position, portals[curPortal].transform.position, spatialistAttackTime, true, spatialistMikaMat);
+        cam.SpeedLines(0.2f,0);
         yield return new WaitForSeconds (spatialistChargeTime);
         for (int i = 0; i < pairsToSpawn; i += 2) {
             curPortal = Random.Range (0, pairsToSpawn * 2);
@@ -542,14 +543,16 @@ public class MikaBoss : MonoBehaviour {
             yield return new WaitForSeconds (spatialistChargeTime * 2);
             //hurtbox
             CreateSpatialistLine (portals[curPortal].transform.position, portals[(int) Mathf.Repeat (curPortal + pairsToSpawn, pairsToSpawn * 2)].transform.position, spatialistAttackTime / 2, true, spatialistMikaMat);
+            cam.SpeedLines(0.1f,0);
+            portals[curPortal].transform.localScale *= 1.5f;
             yield return new WaitForSeconds (spatialistChargeTime);
 
         }
         CreateSpatialistLine (portals[curPortal].transform.position, transform.position, spatialistAttackTime, false, spatialistLineMat);
         yield return new WaitForSeconds (spatialistChargeTime);
         CreateSpatialistLine (portals[curPortal].transform.position, transform.position, spatialistAttackTime, true, spatialistMikaMat);
+        cam.SpeedLines(0.2f,0);
 
-        yield return new WaitForSeconds (1);
         for (int i = 0; i < portals.Count; i++) {
             Destroy (portals[i]);
         }
@@ -574,8 +577,8 @@ public class MikaBoss : MonoBehaviour {
             predicStartLine.gameObject.GetComponent<LineHurtbox> ().hurtbox = predicStartLine.GetComponent<Hurtbox> ();
             Hurtbox h = predicStartLine.GetComponent<Hurtbox> ();
 
-            predicStartLine.startWidth = 2;
-            predicStartLine.endWidth = 2;
+            predicStartLine.startWidth = 4;
+            predicStartLine.endWidth = 4;
 
             cam.MediumShake (0.1f);
 

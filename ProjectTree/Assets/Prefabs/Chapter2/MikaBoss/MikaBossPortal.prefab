@@ -93,7 +93,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   goal: {x: 2, y: 2, z: 2}
-  speed: 4
+  speed: 8
 --- !u!1001 &409034573121374884
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -14413,7 +14413,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &8566275654861444871
 Transform:
   m_ObjectHideFlags: 0
@@ -15669,6 +15669,11 @@ PrefabInstance:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: 32a2858a5ea7ce7498d250415a3eedc5, type: 2}
+    - target: {fileID: -4963935212664822237, guid: b9cf076fa728b7b40b335735eee8aef0,
+        type: 3}
+      propertyPath: m_Materials.Array.data[1]
+      value: 
+      objectReference: {fileID: 2100000, guid: 0c95ed0bb5c944f49abe1d0dc6788385, type: 2}
     - target: {fileID: -6988135313518289377, guid: b9cf076fa728b7b40b335735eee8aef0,
         type: 3}
       propertyPath: m_CastShadows
@@ -15724,6 +15729,11 @@ PrefabInstance:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: 769dc52185ec5374a87f4aced1398c4e, type: 2}
+    - target: {fileID: -7194780573641029466, guid: b9cf076fa728b7b40b335735eee8aef0,
+        type: 3}
+      propertyPath: m_Materials.Array.data[1]
+      value: 
+      objectReference: {fileID: 2100000, guid: 0c95ed0bb5c944f49abe1d0dc6788385, type: 2}
     - target: {fileID: -1320854150808076148, guid: b9cf076fa728b7b40b335735eee8aef0,
         type: 3}
       propertyPath: m_CastShadows

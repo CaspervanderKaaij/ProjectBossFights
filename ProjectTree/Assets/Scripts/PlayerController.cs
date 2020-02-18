@@ -700,7 +700,7 @@ public class PlayerController : MonoBehaviour {
                     willpower -= shootWPCost;
                     gunWeapon.GetInput ();
                     Invoke ("WaitShoot", 0.3f);
-                    timescaleManager.SlowMo (0.2f, 0.05f);
+                    timescaleManager.SlowMo (0.1f, 0.05f);
                     Instantiate (hitEffectParticle, gunWeapon.spawnPoint.position, Quaternion.identity);
                     SpawnAudio.AudioSpawn (dashAudio, 0, Random.Range (2.5f, 3), 1);
                     playerCam.SmallShake (0.2f);
@@ -744,11 +744,14 @@ public class PlayerController : MonoBehaviour {
     bool mouseControlled = true;
     bool UseMouse () {
         if (mouseControlled == true) {
-            if (AnalMagnitude () > 0) {
+            //if (AnalMagnitude () > 0) {
+            if (Input.GetButtonDown (horInput) == true || Input.GetButtonDown (vertInput) == true) {
                 mouseControlled = false;
             }
-        } else if (Vector2.SqrMagnitude (new Vector2 (Input.GetAxis ("Mouse X"), Input.GetAxis ("Mouse Y"))) != 0 && AnalMagnitude () == 0) {
-            mouseControlled = true;
+        } else {
+            if (Vector2.SqrMagnitude (new Vector2 (Input.GetAxis ("Mouse X"), Input.GetAxis ("Mouse Y"))) != 0 && AnalMagnitude () == 0) {
+                mouseControlled = true;
+            }
         }
         return mouseControlled;
     }
@@ -863,7 +866,7 @@ public class PlayerController : MonoBehaviour {
 
         //aim helper
         Collider[] col = Physics.OverlapSphere (transform.position, 3, LayerMask.GetMask ("Enemy"), QueryTriggerInteraction.Collide);
-        if (col.Length > 0 && Vector3.Dot((col[0].transform.position - transform.position).normalized,transform.forward) > 0) {
+        if (col.Length > 0 && Vector3.Dot ((col[0].transform.position - transform.position).normalized, transform.forward) > 0) {
             angleGoal = Quaternion.LookRotation (transform.position - col[0].transform.position, Vector3.up).eulerAngles.y;
             angleGoal += 180;
             transform.rotation = Quaternion.Euler (transform.eulerAngles.x, angleGoal, transform.eulerAngles.z);
