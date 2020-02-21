@@ -6,7 +6,7 @@ using UnityEngine.Events;
 
 public class Hitbox : MonoBehaviour {
     public uint team = 0;
-    [SerializeField] uint[] friends;
+    public uint[] friends;
     public float hp = 100;
     public UnityEvent hitEv;
     public UnityEvent deathEv;

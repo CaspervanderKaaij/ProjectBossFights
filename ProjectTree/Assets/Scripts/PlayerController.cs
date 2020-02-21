@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering;
 using UnityEngine.Rendering.PostProcessing;
 using UnityEngine.UI;
 [RequireComponent (typeof (CharacterController))]
@@ -37,6 +38,7 @@ public class PlayerController : MonoBehaviour {
     public string parryInput = "Parry";
     public string switchWeaponInput = "Mouse ScrollWheel";
     public string interactInput = "Interact";
+    public string reverseInput = "Reverse";
     [Header ("Stats")]
     public MoveStats[] moveStats;
     public int curMoveStats = 0;
@@ -108,6 +110,9 @@ public class PlayerController : MonoBehaviour {
     public float maxHP = 100;
     [Header ("Buffs")]
     public float speedMuliplier = 1;
+    [Header ("Reverse")]
+    [SerializeField] SetMaterialGroup normalMats;
+    [SerializeField] SetMaterialGroup reverseMats;
     [Header ("AbilitiesUnlocked")]
     [SerializeField] bool hasGun = true;
     [SerializeField] bool hasWallJump = true;
@@ -115,6 +120,14 @@ public class PlayerController : MonoBehaviour {
     [SerializeField] bool hasDash = true;
     [SerializeField] bool hasSpear = true;
     [SerializeField] bool hasParry = true;
+    [SerializeField] bool hasQuickGun = false;
+    [SerializeField] bool hasReverse = false;
+    public enum ShadowProgress {
+        NoShadow,
+        Shadow,
+        Reverse
+    }
+    public ShadowProgress shadow = ShadowProgress.NoShadow;
 
     void Start () {
         if (FindObjectOfType<StartSaveInitializer> () != null) {
@@ -133,6 +146,17 @@ public class PlayerController : MonoBehaviour {
         Invoke ("SetStartPos", 0);
 
         transform.SetParent (null);
+
+        if (shadow != ShadowProgress.NoShadow) {
+            for (int i = 0; i < dashInvisible.Length; i++) {
+                if (dashInvisible[i].GetComponent<Renderer> () != null) {
+                    dashInvisible[i].GetComponent<Renderer> ().shadowCastingMode = ShadowCastingMode.TwoSided;
+                }
+            }
+        }
+
+        normalMats.SetToGroup ();
+
     }
 
     void SetStartPos () {
@@ -161,6 +185,7 @@ public class PlayerController : MonoBehaviour {
                     SetAngle ();
                     MoveForward ();
                     Gravity ();
+                    Reverse ();
                     FinalMove ();
                     IdleFidget ();
                     SetWillpowerBar ();
@@ -222,7 +247,7 @@ public class PlayerController : MonoBehaviour {
                         Instantiate (WdRipple, hitboxes[1].transform.position, Quaternion.Euler (90, 0, 0));
                         Instantiate (stopDashParticle, transform.position, Quaternion.identity);
                         SpawnAudio.AudioSpawn (slamAttackAudio, 0.5f, Random.Range (4, 5), 0.5f);
-                        timescaleManager.SlowMo (0.2f, 0.1f, 0);
+                        timescaleManager.SlowMo (0.15f, 0.05f, 0.1f);
 
                     } else {
                         DashInput ();
@@ -346,7 +371,7 @@ public class PlayerController : MonoBehaviour {
         lastPos = transform.position;
     }
 
-    float curAccDec = 0;
+    [HideInInspector] public float curAccDec = 0;
     void MoveForward () {
 
         if (isGrounded == true) {
@@ -697,10 +722,15 @@ public class PlayerController : MonoBehaviour {
                     }
                     CancelInvoke ("ShootBufferInput");
                     anim.Play ("GunShot", 0, 0f);
-                    willpower -= shootWPCost;
                     gunWeapon.GetInput ();
-                    Invoke ("WaitShoot", 0.3f);
-                    timescaleManager.SlowMo (0.1f, 0.05f);
+                    if (hasQuickGun == false) {
+                    willpower -= shootWPCost;
+                        Invoke ("WaitShoot", 0.3f);
+                        timescaleManager.SlowMo (0.1f, 0.05f);
+                    } else {
+                        willpower -= shootWPCost / 3;
+                        Invoke ("WaitShoot", 0.1f);
+                    }
                     Instantiate (hitEffectParticle, gunWeapon.spawnPoint.position, Quaternion.identity);
                     SpawnAudio.AudioSpawn (dashAudio, 0, Random.Range (2.5f, 3), 1);
                     playerCam.SmallShake (0.2f);
@@ -1044,6 +1074,22 @@ public class PlayerController : MonoBehaviour {
         parryPP.weight = Mathf.MoveTowards (parryPP.weight, 0, Time.deltaTime / 2);
         if (parryPP.weight != 0) {
             Invoke ("SetParryPPWeight", 0);
+        }
+    }
+
+    bool isReverse = false;
+    void Reverse () {
+        if (hasReverse == true) {
+            if (Input.GetButtonDown (reverseInput) == true) {
+                if (isReverse == false) {
+                    reverseMats.SetToGroup ();
+                    hitbox.friends[2] = 3;
+                } else {
+                    normalMats.SetToGroup ();
+                    hitbox.friends[2] = 4;
+                }
+                isReverse = !isReverse;
+            }
         }
     }
 

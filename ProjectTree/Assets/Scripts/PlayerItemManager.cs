@@ -13,6 +13,8 @@ public class PlayerItemManager : MonoBehaviour {
     public string item2Button = "Item2";
     public string item3Button = "Item3";
     public string item4Button = "Item4";
+    public string controllerItemAxisHor = "ItemHor";
+    public string controllerItemAxisVert = "ItemVert";
 
     void Start () {
         timeMan = FindObjectOfType<TimescaleManager> ();
@@ -20,8 +22,8 @@ public class PlayerItemManager : MonoBehaviour {
     }
     void Update () {
         if (timeMan.isPaused == false) {
-            GetInput ();
             GetAxisInput ();
+            GetInput ();
         }
     }
 
@@ -38,9 +40,9 @@ public class PlayerItemManager : MonoBehaviour {
     void GetAxisInput () {
         if (canAxisInput == true) {
 
-            if (Input.GetAxis (item1Button) != 0) {
+            if (Input.GetAxis (controllerItemAxisHor) != 0) {
                 canAxisInput = false;
-                if (Input.GetAxis (item1Button) > 0) {
+                if (Input.GetAxis (controllerItemAxisHor) > 0) {
                     //print("right");
                     UseItem (2);
                 } else {
@@ -50,9 +52,9 @@ public class PlayerItemManager : MonoBehaviour {
                 UpdateUIOwnedText ();
             }
 
-            if (Input.GetAxis (item3Button) != 0) {
+            if (Input.GetAxis (controllerItemAxisVert) != 0) {
                 canAxisInput = false;
-                if (Input.GetAxis (item3Button) > 0) {
+                if (Input.GetAxis (controllerItemAxisVert) > 0) {
                     //   print("up");
                     UseItem (0);
                 } else {
@@ -63,7 +65,7 @@ public class PlayerItemManager : MonoBehaviour {
             }
         }
 
-        if (Input.GetAxis (item1Button) == 0 && Input.GetAxis (item3Button) == 0) {
+        if (Input.GetAxis (controllerItemAxisHor) == 0 && Input.GetAxis (controllerItemAxisVert) == 0) {
             canAxisInput = true;
         }
     }
@@ -77,8 +79,13 @@ public class PlayerItemManager : MonoBehaviour {
     public void UseItem (int inventorySlot) {
         if (myItems[inventorySlot].owned > 0) {
             if (itemTypes[myItems[inventorySlot].itemID].CanUse () == true) {
-                itemTypes[myItems[inventorySlot].itemID].UseItem ();
-                myItems[inventorySlot].owned--;
+                PlayerController player = FindObjectOfType<PlayerController> ();
+                if (player.isGrounded == true) {
+                    itemTypes[myItems[inventorySlot].itemID].UseItem ();
+                    myItems[inventorySlot].owned--;
+                    player.anim.Play ("TaicaHeal");
+                    player.curAccDec = 0;
+                }
             }
         }
     }

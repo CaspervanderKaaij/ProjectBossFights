@@ -8,7 +8,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: DarkTaicaEyes
-  m_Shader: {fileID: 46, guid: 0000000000000000f000000000000000, type: 0}
+  m_Shader: {fileID: 4800000, guid: 44b54c59129572f469a949a22bc08cd0, type: 3}
   m_ShaderKeywords: _COLOR_ON _EMISSION _GLOSSYREFLECTIONS_OFF _SPECULARHIGHLIGHTS_OFF
   m_LightmapFlags: 1
   m_EnableInstancingVariants: 0
@@ -119,8 +119,8 @@ Material:
     - _ZWrite: 1
     - __dirty: 0
     m_Colors:
-    - _Color: {r: 1, g: 0, b: 0, a: 1}
-    - _EmissionColor: {r: 13.76636, g: 0, b: 1.0811278, a: 1}
+    - _Color: {r: 0, g: 0, b: 0, a: 1}
+    - _EmissionColor: {r: 1.3041189, g: 0, b: 0, a: 1}
     - _OutlineColor: {r: 0.735849, g: 0.735849, b: 0.735849, a: 1}
     - _ShadowColor: {r: 0, g: 0, b: 0, a: 1}
     - _TreeInstanceColor: {r: 0, g: 0, b: 0, a: 0}

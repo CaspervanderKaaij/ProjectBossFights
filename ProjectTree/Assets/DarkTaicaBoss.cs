@@ -10,7 +10,11 @@ public class DarkTaicaBoss : MonoBehaviour {
     float curAccDec = 0;
     public enum State {
         Normal,
-        Dash
+        Dash,
+        Attack,
+        JumpSlam,
+        Gun,
+        Other
     }
     public State curState = State.Normal;
     [SerializeField] Collider battleArenaBorder;
@@ -19,6 +23,9 @@ public class DarkTaicaBoss : MonoBehaviour {
     [SerializeField] float walkSpeed = 5;
     [SerializeField] float accelerationSpeed = 3;
     [SerializeField] float rotSpeed = 5;
+    [SerializeField] float jumpStrength = 10;
+    [SerializeField] float gravityStrength = 5;
+    [SerializeField] float gravitySpeed = 10;
     [Header ("Dash")]
     [SerializeField] Renderer[] dashInvisRend;
     [SerializeField] GameObject[] dashRends;
@@ -26,6 +33,12 @@ public class DarkTaicaBoss : MonoBehaviour {
     [SerializeField] float dashTime = 1;
     [SerializeField] AudioClip[] dashAudio;
     [SerializeField] GameObject stopDashParticle;
+    [Header ("Attack")]
+    [SerializeField] GameObject[] hitboxes;
+    [SerializeField] AudioClip slamAttackAudio;
+    [Header ("Gun")]
+    [SerializeField] GameObject spearObj;
+    [SerializeField] GameObject gunObj;
     void Start () {
         player = FindObjectOfType<PlayerController> ();
         cc = GetComponent<CharacterController> ();
@@ -36,11 +49,20 @@ public class DarkTaicaBoss : MonoBehaviour {
         switch (curState) {
             case State.Normal:
                 Walk (player.transform.position + (player.transform.forward * 3));
+                Gravity ();
                 FinalMove ();
                 break;
             case State.Dash:
                 Dash ();
                 FinalMove ();
+                break;
+            case State.JumpSlam:
+                Gravity ();
+                JumpSlam ();
+                FinalMove ();
+                break;
+            case State.Gun:
+                Gun ();
                 break;
         }
     }
@@ -64,7 +86,12 @@ public class DarkTaicaBoss : MonoBehaviour {
             }
             Invoke ("NoDashCheck", Random.Range (0.1f, 1));
         }
-
+        if (Input.GetKeyDown (KeyCode.Alpha8)) {
+            StartAttack ();
+        }
+        if (Input.GetKeyDown (KeyCode.Alpha7)) {
+            StartGun ();
+        }
     }
 
     void NoDashCheck () {
@@ -102,9 +129,14 @@ public class DarkTaicaBoss : MonoBehaviour {
             if (IsInvoking ("StopDash") == true) {
                 CancelInvoke ("StopDash");
             }
-            StopDash ();
+            Knockback ();
             transform.position = oldPos;
         }
+
+    }
+
+    public void GetHit () {
+        Knockback ();
     }
 
     Vector3 oldPos;
@@ -121,6 +153,118 @@ public class DarkTaicaBoss : MonoBehaviour {
 
         cam.MediumShake (0.2f);
         Instantiate (stopDashParticle, transform.position + transform.up, Quaternion.identity);
+    }
+
+    void StartAttack () {
+        if (IsGrounded () == true) {
+            curState = State.Attack;
+            anim.Play ("TaicaAtkJab1");
+            StartCoroutine (SetHitboxActive (0, 0.2f, 0.2f));
+            transform.rotation = Quaternion.LookRotation (-(new Vector3 (transform.position.x, player.transform.position.y, transform.position.z) - player.transform.position), Vector3.up);
+        } else {
+            curState = State.JumpSlam;
+            moveV3.x = (transform.forward * curAccDec * walkSpeed).x;
+            moveV3.z = (transform.forward * curAccDec * walkSpeed).z;
+            moveV3.y = jumpStrength / 2;
+            anim.Play ("TaicaJumpSlam");
+        }
+    }
+
+    IEnumerator SetHitboxActive (int hBox, float startupTime, float endTime) {
+        yield return new WaitForSeconds (startupTime);
+        hitboxes[hBox].SetActive (true);
+        yield return new WaitForSeconds (endTime);
+        curState = State.Normal;
+        curAccDec = 0;
+    }
+
+    void Knockback () {
+        anim.Play ("TaicaGetHit");
+        curState = State.Other;
+        Invoke ("SetStateNormal", 0.3f);
+
+        for (int i = 0; i < dashInvisRend.Length; i++) {
+            dashInvisRend[i].enabled = true;
+        }
+
+        for (int i = 0; i < dashRends.Length; i++) {
+            dashRends[i].SetActive (false);
+        }
+    }
+
+    void SetStateNormal () {
+        curState = State.Normal;
+    }
+
+    void Gravity () {
+        if (moveV3.y > 0) {
+            moveV3.y = Mathf.MoveTowards (moveV3.y, gravityStrength, Time.deltaTime * gravitySpeed);
+        } else {
+            moveV3.y = Mathf.MoveTowards (moveV3.y, gravityStrength, Time.deltaTime * gravitySpeed / 2);
+
+        }
+
+        if (Input.GetKeyDown (KeyCode.Alpha9) == true && IsGrounded () == true) {
+            moveV3.y = jumpStrength;
+        }
+        anim.SetBool ("grounded", IsGrounded ());
+    }
+
+    bool IsGrounded () {
+        RaycastHit hit;
+        if (Physics.Raycast (transform.position + Vector3.up, Vector3.down, out hit, 1.3f, LayerMask.GetMask ("Default"), QueryTriggerInteraction.Ignore)) {
+            return true;
+        }
+        return false;
+    }
+
+    void JumpSlam () {
+        if (IsGrounded () == true) {
+            anim.Play ("TaicaJumpSlamHit");
+            StartCoroutine (SetHitboxActive (1, 0, 1));
+            moveV3 = Vector3.zero;
+            curState = State.Attack;
+            anim.SetFloat ("curSpeed", 0);
+
+            cam.MediumShake (0.1f);
+            Instantiate (stopDashParticle, transform.position, Quaternion.identity);
+            SpawnAudio.AudioSpawn (slamAttackAudio, 0.5f, Random.Range (4, 5), 0.5f);
+            FindObjectOfType<TimescaleManager> ().SlowMo (0.15f, 0.05f, 0.1f);
+
+        }
+    }
+
+    void StartGun () {
+        curAccDec = 0;
+        anim.Play ("TaicaStartGun");
+
+        spearObj.SetActive (false);
+        gunObj.SetActive (true);
+
+        curState = State.Gun;
+    }
+
+    void Gun () {
+
+        if (Input.GetKeyDown (KeyCode.Alpha7)) {
+            StopGun ();
+        }
+
+        if (Input.GetKeyDown (KeyCode.Alpha8)) {
+            GunShot ();
+        }
+    }
+
+    void StopGun () {
+        anim.Play ("TaicaEndGun");
+        Invoke ("SetStateNormal", 0.3f);
+
+        spearObj.SetActive (true);
+        gunObj.SetActive (false);
+    }
+
+    void GunShot () {
+        print ("pew");
     }
 
     void FinalMove () {

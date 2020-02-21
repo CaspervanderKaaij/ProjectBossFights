@@ -119,7 +119,7 @@ Material:
     - _ZWrite: 1
     - __dirty: 0
     m_Colors:
-    - _Color: {r: 0.18867922, g: 0.18867922, b: 0.18867922, a: 1}
+    - _Color: {r: 0.2735849, g: 0.2735849, b: 0.2735849, a: 1}
     - _EmissionColor: {r: 1.5157166, g: 0.7221103, b: 0.7221103, a: 1}
     - _OutlineColor: {r: 0.3962264, g: 0.3962264, b: 0.3962264, a: 1}
     - _ShadowColor: {r: 0, g: 0, b: 0, a: 1}
