@@ -26,6 +26,6 @@ Material:
     m_Floats:
     - _Float0: 300
     - _Float1: 300
-    - _InvertAlpha: 0
+    - _InvertAlpha: 1
     - _InvertStrength: -0.1
     m_Colors: []

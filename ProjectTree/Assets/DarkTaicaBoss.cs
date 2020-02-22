@@ -39,6 +39,8 @@ public class DarkTaicaBoss : MonoBehaviour {
     [Header ("Gun")]
     [SerializeField] GameObject spearObj;
     [SerializeField] GameObject gunObj;
+    [SerializeField] GameObject hitEffectParticle;
+    [SerializeField] GameObject bullet;
     void Start () {
         player = FindObjectOfType<PlayerController> ();
         cc = GetComponent<CharacterController> ();
@@ -62,7 +64,7 @@ public class DarkTaicaBoss : MonoBehaviour {
                 FinalMove ();
                 break;
             case State.Gun:
-                Gun ();
+                Gun (player.transform.position);
                 break;
         }
     }
@@ -190,6 +192,9 @@ public class DarkTaicaBoss : MonoBehaviour {
         for (int i = 0; i < dashRends.Length; i++) {
             dashRends[i].SetActive (false);
         }
+
+        spearObj.SetActive (true);
+        gunObj.SetActive (false);
     }
 
     void SetStateNormal () {
@@ -244,14 +249,18 @@ public class DarkTaicaBoss : MonoBehaviour {
         curState = State.Gun;
     }
 
-    void Gun () {
+    void Gun (Vector3 targetPos) {
+
+        targetPos.y = transform.position.y;
+
+        transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.LookRotation(-(transform.position - targetPos),Vector3.up),Time.deltaTime * 25);
 
         if (Input.GetKeyDown (KeyCode.Alpha7)) {
             StopGun ();
         }
 
         if (Input.GetKeyDown (KeyCode.Alpha8)) {
-            GunShot ();
+            GunShot (targetPos);
         }
     }
 
@@ -263,8 +272,16 @@ public class DarkTaicaBoss : MonoBehaviour {
         gunObj.SetActive (false);
     }
 
-    void GunShot () {
-        print ("pew");
+    void GunShot (Vector3 target) {
+        anim.Play ("TaicaGunShoot", 0, 0f);
+
+        FindObjectOfType<TimescaleManager>().SlowMo (0.1f, 0.05f);
+
+        Instantiate (hitEffectParticle, gunObj.transform.position, Quaternion.identity);
+        SpawnAudio.AudioSpawn (dashAudio, 0, Random.Range (2.5f, 3), 1);
+        cam.SmallShake (0.2f);
+        target.y = transform.position.y;
+        Instantiate (bullet, gunObj.transform.position, Quaternion.LookRotation(-(transform.position - target),Vector3.up));
     }
 
     void FinalMove () {

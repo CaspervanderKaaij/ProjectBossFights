@@ -122,6 +122,7 @@ public class PlayerController : MonoBehaviour {
     [SerializeField] bool hasParry = true;
     [SerializeField] bool hasQuickGun = false;
     [SerializeField] bool hasReverse = false;
+    [SerializeField] bool hasDashEX = false;
     public enum ShadowProgress {
         NoShadow,
         Shadow,
@@ -156,6 +157,10 @@ public class PlayerController : MonoBehaviour {
         }
 
         normalMats.SetToGroup ();
+
+        if (hasDashEX == false) {
+            dashVisible[0].GetComponentInChildren<Hurtbox> ().gameObject.SetActive (false);
+        }
 
     }
 
@@ -296,26 +301,27 @@ public class PlayerController : MonoBehaviour {
             movev3 = Vector3.zero;
             anim.Play ("Parry");
             playerCam.SmallShake (0.1f);
-            Invoke ("StopAttack", 0.1f);
+            Invoke ("StopAttack", 0.3f);
             isGrounded = true;
             wasGrounded = true;
             curAccDec = 0;
             movev3.x = 0;
             movev3.z = 0;
 
-            SpawnAudio.SpawnVoice (voiceLines[6], 0, 1, 1, 0);
         }
     }
 
     public void ParrySuccess () {
         playerCam.HardShake (0.1f);
         playerCam.ripple.Emit ();
-        timescaleManager.SlowMo (0.3f, 0.2f);
+        timescaleManager.SlowMo (0.2f, 0.1f);
         Instantiate (hitEffectParticle, hitboxes[0].transform.position, Quaternion.identity);
-        SpawnAudio.SpawnVoice (voiceLines[0], 0, 1, 1, 0);
+        SpawnAudio.SpawnVoice (voiceLines[0], 0, 1, 1f, 0);
         parryPP.weight = 1;
         Invoke ("SetParryPPWeight", 0);
-        SpawnAudio.AudioSpawn (slamAttackAudio, 0.5f, Random.Range (4, 5), 0.5f);
+        SpawnAudio.AudioSpawn (slamAttackAudio, 0.5f, Random.Range (4, 5), 0.4f);
+
+        anim.Play ("ParryHit");
     }
 
     float AnalAngle () {
@@ -344,14 +350,13 @@ public class PlayerController : MonoBehaviour {
         anim.transform.localEulerAngles = new Vector3 (anim.transform.localEulerAngles.x, anim.transform.localEulerAngles.y, zDifference);
     }
 
-    Vector3 lastPos = Vector3.zero;
     void Dash () {
         Vector3 helper = transform.TransformDirection (0, 0, dashSpeed * speedMuliplier);
         movev3.x = helper.x;
         movev3.z = helper.z;
         movev3.y = 0;
 
-        if (lastPos != Vector3.zero && Vector3.Distance (transform.position, lastPos) < 5 * Time.deltaTime) {
+        if (hasDashEX == false && Physics.Raycast (transform.position + transform.up, transform.forward, 0.75f, LayerMask.GetMask ("Default"), QueryTriggerInteraction.Ignore) == true) {
             curState = State.Knockback;
             SetDashInvisible (false);
             movev3.x = -transform.forward.x * 10;
@@ -368,7 +373,10 @@ public class PlayerController : MonoBehaviour {
             playerCam.MediumShake (0.15f);
 
         }
-        lastPos = transform.position;
+
+        if (hasDashEX == true) {
+            hitbox.enabled = false;
+        }
     }
 
     [HideInInspector] public float curAccDec = 0;
@@ -724,7 +732,7 @@ public class PlayerController : MonoBehaviour {
                     anim.Play ("GunShot", 0, 0f);
                     gunWeapon.GetInput ();
                     if (hasQuickGun == false) {
-                    willpower -= shootWPCost;
+                        willpower -= shootWPCost;
                         Invoke ("WaitShoot", 0.3f);
                         timescaleManager.SlowMo (0.1f, 0.05f);
                     } else {
@@ -978,6 +986,10 @@ public class PlayerController : MonoBehaviour {
             }
             Instantiate (stopDashParticle, transform.position + transform.up, Quaternion.identity);
 
+            if (hasDashEX == true && IsInvoking("StopInvincible") == false) {
+                hitbox.enabled = true;
+            }
+
         }
     }
 
@@ -1089,6 +1101,9 @@ public class PlayerController : MonoBehaviour {
                     hitbox.friends[2] = 4;
                 }
                 isReverse = !isReverse;
+                playerCam.ReverseColors (Time.deltaTime);
+                timescaleManager.SlowMo (0.2f, 0);
+                playerCam.ripple.Emit ();
             }
         }
     }

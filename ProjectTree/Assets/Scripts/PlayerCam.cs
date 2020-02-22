@@ -14,6 +14,7 @@ public class PlayerCam : MonoBehaviour {
     [HideInInspector] public RippleEffect ripple;
     [SerializeField] ParticleSystem speedlines;
     [SerializeField] FadeImg flash;
+    PostProcessExample ppEx;
 
     public LimitCamArea limiter = null;
     void Start () {
@@ -21,6 +22,8 @@ public class PlayerCam : MonoBehaviour {
         transform.position = goalPos;
         ripple = GetComponent<RippleEffect> ();
         angleGoal = transform.eulerAngles;
+
+        ppEx = GetComponent<PostProcessExample>();
     }
 
     public void UpdateMe () {
@@ -52,6 +55,16 @@ public class PlayerCam : MonoBehaviour {
             transform.position = v3Helper;
             goalPos = transform.position;
         }
+    }
+
+    public void ReverseColors(float time){
+        ppEx.enabled = true;
+        CancelInvoke("StopReverse");
+        Invoke("StopReverse",time);
+    }
+
+    void StopReverse(){
+        ppEx.enabled = false;
     }
 
     void Shake () {
