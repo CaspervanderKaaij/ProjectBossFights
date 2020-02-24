@@ -483,15 +483,15 @@ MonoBehaviour:
   normalMats: {fileID: 7864866774164137155}
   reverseMats: {fileID: 4697503798904431190}
   hasGun: 1
-  hasWallJump: 1
-  hasDoubleJump: 1
+  hasWallJump: 0
+  hasDoubleJump: 0
   hasDash: 1
   hasSpear: 1
   hasParry: 1
-  hasQuickGun: 1
-  hasReverse: 1
-  hasDashEX: 1
-  shadow: 1
+  hasQuickGun: 0
+  hasReverse: 0
+  hasDashEX: 0
+  shadow: 0
   angleGoal: 0
   curAccDec: 0
 --- !u!114 &8566275654110312141

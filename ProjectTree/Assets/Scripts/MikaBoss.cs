@@ -65,6 +65,8 @@ public class MikaBoss : MonoBehaviour {
     [SerializeField] Camera introCam;
     [SerializeField] AudioClip boxingBellSound;
     [SerializeField] GameObject introHandOrb;
+    [Header("ReEntry")]
+    [SerializeField] AudioClip reEntryMusic;
 
     void Start () {
         myHitbox = GetComponent<Collider> ();
@@ -81,7 +83,8 @@ public class MikaBoss : MonoBehaviour {
 
         cc = FindObjectOfType<PlayerController> ().GetComponent<CharacterController> ();
 
-        StartCoroutine (StartEv ());
+        // StartCoroutine (StartEv ());
+        started = true;
 
     }
 
@@ -130,7 +133,7 @@ public class MikaBoss : MonoBehaviour {
 
     void BarrierBack () {
         barrierState = BarrierState.NoOrbs;
-        if(curState == State.Dazed){
+        if (curState == State.Dazed) {
             curState = State.Idle;
         }
     }
@@ -152,10 +155,13 @@ public class MikaBoss : MonoBehaviour {
     }
 
     float camX = 20;
+    [SerializeField] Vector3 camOffset = Vector3.zero;
     void SetCam () {
         cam.angleGoal.x = camX;
-        cam.angleGoal.y = Quaternion.LookRotation (transform.position - cam.transform.position, Vector3.up).eulerAngles.y;
-        cam.offset = cam.transform.forward * -10 + cam.transform.right * 2;
+        // cam.angleGoal.y = Quaternion.LookRotation (transform.position - cam.transform.position, Vector3.up).eulerAngles.y;
+        cam.angleGoal.y = 180;
+        //  cam.offset = cam.transform.forward * -10 + cam.transform.right * 2;
+        cam.offset = camOffset;
     }
 
     void DebugInput () {
@@ -182,6 +188,10 @@ public class MikaBoss : MonoBehaviour {
         }
         if (Input.GetKeyDown (KeyCode.Alpha0) == true) {
             StartAttack (State.Attacking, "BlackHole");
+        }
+
+        if (Input.GetKeyDown (KeyCode.Tab) == true) {
+            StartAttack (State.Attacking, "ReEntryStart");
         }
         /*
 
@@ -535,7 +545,7 @@ public class MikaBoss : MonoBehaviour {
         //fist hurtbox
         anim.transform.localScale = Vector3.zero;
         CreateSpatialistLine (transform.position, portals[curPortal].transform.position, spatialistAttackTime, true, spatialistMikaMat);
-        cam.SpeedLines(0.2f,0);
+        cam.SpeedLines (0.2f, 0);
         yield return new WaitForSeconds (spatialistChargeTime);
         for (int i = 0; i < pairsToSpawn; i += 2) {
             curPortal = Random.Range (0, pairsToSpawn * 2);
@@ -543,7 +553,7 @@ public class MikaBoss : MonoBehaviour {
             yield return new WaitForSeconds (spatialistChargeTime * 2);
             //hurtbox
             CreateSpatialistLine (portals[curPortal].transform.position, portals[(int) Mathf.Repeat (curPortal + pairsToSpawn, pairsToSpawn * 2)].transform.position, spatialistAttackTime / 2, true, spatialistMikaMat);
-            cam.SpeedLines(0.1f,0);
+            cam.SpeedLines (0.1f, 0);
             portals[curPortal].transform.localScale *= 1.5f;
             yield return new WaitForSeconds (spatialistChargeTime);
 
@@ -551,7 +561,7 @@ public class MikaBoss : MonoBehaviour {
         CreateSpatialistLine (portals[curPortal].transform.position, transform.position, spatialistAttackTime, false, spatialistLineMat);
         yield return new WaitForSeconds (spatialistChargeTime);
         CreateSpatialistLine (portals[curPortal].transform.position, transform.position, spatialistAttackTime, true, spatialistMikaMat);
-        cam.SpeedLines(0.2f,0);
+        cam.SpeedLines (0.2f, 0);
 
         for (int i = 0; i < portals.Count; i++) {
             Destroy (portals[i]);
@@ -646,6 +656,21 @@ public class MikaBoss : MonoBehaviour {
         }
         yield return new WaitForSeconds (0);
         StartCoroutine ("PushPlayerToBH");
+    }
+
+
+    IEnumerator ReEntryStart(){
+        MusicManager music = FindObjectOfType<MusicManager>();
+        cam.Flash(Color.white,3f);
+        if(music != null){
+            music.StopMusic(10);
+        }
+        yield return new WaitForSeconds(1);
+        if(music != null){
+            music.FadeToNewMusic(reEntryMusic);
+        }
+        yield return new WaitForSeconds(1);
+        StopAttack();
     }
 }
 

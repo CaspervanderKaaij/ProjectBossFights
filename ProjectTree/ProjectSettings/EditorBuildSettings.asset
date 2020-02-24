@@ -35,4 +35,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/GreyBoxing/HeinzShop.unity
     guid: c421c3a28e552ce49bb7473e3cb053d0
+  - enabled: 1
+    path: Assets/Scenes/MikaBoss.unity
+    guid: dc6d9620e41559e4cb1d64813fbfe27c
   m_configObjects: {}
