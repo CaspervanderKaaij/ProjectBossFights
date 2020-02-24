@@ -13,15 +13,15 @@ Material:
   m_LightmapFlags: 0
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
-  m_CustomRenderQueue: 2450
+  m_CustomRenderQueue: 3001
   stringTagMap: {}
   disabledShaderPasses: []
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
     - _Noise:
-        m_Texture: {fileID: 2800000, guid: e28dc97a9541e3642a48c0e3886688c5, type: 3}
-        m_Scale: {x: 10, y: 1}
+        m_Texture: {fileID: 2800000, guid: cd460ee4ac5c1e746b7a734cc7cc64dd, type: 3}
+        m_Scale: {x: 8, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Noise1:
         m_Texture: {fileID: 2800000, guid: c60ce9d4c710434479c26cd5a98f7a9c, type: 3}
@@ -38,5 +38,5 @@ Material:
     m_Colors:
     - _Color0: {r: 4.396586, g: 1.2252781, b: 2.738857, a: 0}
     - _Panner: {r: 0, g: -0.42, b: 0, a: 0}
-    - _Panning: {r: 0, g: 0.16, b: 0, a: 0}
+    - _Panning: {r: 0, g: -0.16, b: 0, a: 0}
     - _Panning1: {r: 0, g: -0.24, b: 0, a: 0}
