@@ -152,8 +152,7 @@ public class DarkTaicaBoss : MonoBehaviour {
 
     public void GetHit () {
         Knockback ();
-        Invoke ("NoAttack", 0.5f);
-        CancelInvoke("SetHitboxActive");
+        StopCoroutine("SetHitboxActive");
         if(curAIMode == AIMode.Ranged){
             curAIMode = AIMode.Aggresive;
             noShootMode = true;
@@ -503,10 +502,7 @@ public class DarkTaicaBoss : MonoBehaviour {
                 break;
 
             case PlayerController.State.Attack:
-                Walk (player.transform.position);
-                if (curAccDec == 0) {
-                    StartAttack ();
-                }
+                Walk (transform.position);
                 break;
         }
     }
@@ -517,7 +513,7 @@ public class DarkTaicaBoss : MonoBehaviour {
             phase2Active = true;
         }
 
-        if(hitbox.hp > maxHP - (maxHP / 10)){
+        if(hitbox.hp == maxHP){
             curAIMode = AIMode.Defensive;
         } else if(hitbox.hp > maxHP / 2){
             curAIMode = AIMode.Aggresive;
