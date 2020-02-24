@@ -14,7 +14,7 @@ Shader "PocketDimension"
 	SubShader
 	{
 		Tags{ "RenderType" = "Opaque"  "Queue" = "Geometry+0" "IsEmissive" = "true"  }
-		Cull Back
+		Cull Off
 		CGPROGRAM
 		#include "UnityShaderVariables.cginc"
 		#pragma target 3.0
@@ -90,7 +90,7 @@ Shader "PocketDimension"
 }
 /*ASEBEGIN
 Version=17400
-841;73;800;646;956.8668;75.47683;1.136129;True;False
+912;81;589;646;956.8668;75.47683;1.136129;True;False
 Node;AmplifyShaderEditor.RangedFloatNode;10;-900.3981,349.4946;Inherit;False;Property;_Timescale;Timescale;3;0;Create;True;0;0;False;0;1;0;0;0;0;1;FLOAT;0
 Node;AmplifyShaderEditor.ScreenPosInputsNode;1;-612.3116,29.91394;Float;False;0;False;0;5;FLOAT4;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
 Node;AmplifyShaderEditor.Vector2Node;4;-495.7361,254.8346;Inherit;False;Property;_Voronoi;Voronoi;0;0;Create;True;0;0;False;0;0,6.32;0,0;0;3;FLOAT2;0;FLOAT;1;FLOAT;2
@@ -100,7 +100,7 @@ Node;AmplifyShaderEditor.OneMinusNode;5;-36.16502,257.1826;Inherit;False;1;0;FLO
 Node;AmplifyShaderEditor.ColorNode;7;-379.3994,-380.3704;Inherit;False;Property;_Color0;Color 0;1;1;[HDR];Create;True;0;0;False;0;0,0,0,0;0,0,0,0;True;0;5;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
 Node;AmplifyShaderEditor.ColorNode;8;-326.2626,-189.3652;Inherit;False;Property;_Color1;Color 1;2;1;[HDR];Create;True;0;0;False;0;0,0,0,0;0,0,0,0;True;0;5;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
 Node;AmplifyShaderEditor.LerpOp;6;-50.5257,-90.27242;Inherit;False;3;0;COLOR;0,0,0,0;False;1;COLOR;0,0,0,0;False;2;FLOAT;0;False;1;COLOR;0
-Node;AmplifyShaderEditor.StandardSurfaceOutputNode;0;189.5689,2.872257;Float;False;True;-1;2;ASEMaterialInspector;0;0;Unlit;PocketDimension;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;Back;0;False;-1;0;False;-1;False;0;False;-1;0;False;-1;False;0;Opaque;0.5;True;False;0;False;Opaque;;Geometry;All;14;all;True;True;True;True;0;False;-1;False;0;False;-1;255;False;-1;255;False;-1;0;False;-1;0;False;-1;0;False;-1;0;False;-1;0;False;-1;0;False;-1;0;False;-1;0;False;-1;False;2;15;10;25;False;0.5;False;0;0;False;-1;0;False;-1;0;0;False;-1;0;False;-1;0;False;-1;0;False;-1;0;False;0;0,0,0,0;VertexOffset;True;False;Cylindrical;False;Relative;0;;-1;-1;-1;-1;0;False;0;0;False;-1;-1;0;False;-1;0;0;0;False;0.1;False;-1;0;False;-1;15;0;FLOAT3;0,0,0;False;1;FLOAT3;0,0,0;False;2;FLOAT3;0,0,0;False;3;FLOAT;0;False;4;FLOAT;0;False;6;FLOAT3;0,0,0;False;7;FLOAT3;0,0,0;False;8;FLOAT;0;False;9;FLOAT;0;False;10;FLOAT;0;False;13;FLOAT3;0,0,0;False;11;FLOAT3;0,0,0;False;12;FLOAT3;0,0,0;False;14;FLOAT4;0,0,0,0;False;15;FLOAT3;0,0,0;False;0
+Node;AmplifyShaderEditor.StandardSurfaceOutputNode;0;189.5689,2.872257;Float;False;True;-1;2;ASEMaterialInspector;0;0;Unlit;PocketDimension;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;Off;0;False;-1;0;False;-1;False;0;False;-1;0;False;-1;False;0;Opaque;0.5;True;False;0;False;Opaque;;Geometry;All;14;all;True;True;True;True;0;False;-1;False;0;False;-1;255;False;-1;255;False;-1;0;False;-1;0;False;-1;0;False;-1;0;False;-1;0;False;-1;0;False;-1;0;False;-1;0;False;-1;False;2;15;10;25;False;0.5;False;0;0;False;-1;0;False;-1;0;0;False;-1;0;False;-1;0;False;-1;0;False;-1;0;False;0;0,0,0,0;VertexOffset;True;False;Cylindrical;False;Relative;0;;-1;-1;-1;-1;0;False;0;0;False;-1;-1;0;False;-1;0;0;0;False;0.1;False;-1;0;False;-1;15;0;FLOAT3;0,0,0;False;1;FLOAT3;0,0,0;False;2;FLOAT3;0,0,0;False;3;FLOAT;0;False;4;FLOAT;0;False;6;FLOAT3;0,0,0;False;7;FLOAT3;0,0,0;False;8;FLOAT;0;False;9;FLOAT;0;False;10;FLOAT;0;False;13;FLOAT3;0,0,0;False;11;FLOAT3;0,0,0;False;12;FLOAT3;0,0,0;False;14;FLOAT4;0,0,0,0;False;15;FLOAT3;0,0,0;False;0
 WireConnection;9;0;10;0
 WireConnection;2;0;1;0
 WireConnection;2;1;9;0
@@ -111,4 +111,4 @@ WireConnection;6;1;8;0
 WireConnection;6;2;5;0
 WireConnection;0;2;6;0
 ASEEND*/
-//CHKSM=C15DC55C1379FC74CC4C4F97B4923A5DB10D8D55
+//CHKSM=AF067DD15018C55B89A5B6D6BF6B5E940FFED01C
