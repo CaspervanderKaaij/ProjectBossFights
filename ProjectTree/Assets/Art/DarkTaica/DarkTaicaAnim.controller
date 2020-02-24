@@ -252,7 +252,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 6550828368153358841, guid: b9cf076fa728b7b40b335735eee8aef0,
+  m_Motion: {fileID: -6483928023762034991, guid: b9cf076fa728b7b40b335735eee8aef0,
     type: 3}
   m_Tag: 
   m_SpeedParameter: 
@@ -291,7 +291,8 @@ AnimatorState:
   m_Name: TaicaJumpSlam
   m_Speed: 1
   m_CycleOffset: 0
-  m_Transitions: []
+  m_Transitions:
+  - {fileID: -439079199708259182}
   m_StateMachineBehaviours: []
   m_Position: {x: 50, y: 50, z: 0}
   m_IKOnFeet: 0
@@ -379,6 +380,31 @@ AnimatorState:
   m_MirrorParameter: 
   m_CycleOffsetParameter: 
   m_TimeParameter: 
+--- !u!1101 &-439079199708259182
+AnimatorStateTransition:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: 
+  m_Conditions:
+  - m_ConditionMode: 1
+    m_ConditionEvent: grounded
+    m_EventTreshold: 0
+  m_DstStateMachine: {fileID: 0}
+  m_DstState: {fileID: 5852807628298430931}
+  m_Solo: 0
+  m_Mute: 0
+  m_IsExit: 0
+  serializedVersion: 3
+  m_TransitionDuration: 0
+  m_TransitionOffset: 0
+  m_ExitTime: 0.14285809
+  m_HasExitTime: 0
+  m_HasFixedDuration: 1
+  m_InterruptionSource: 0
+  m_OrderedInterruption: 1
+  m_CanTransitionToSelf: 1
 --- !u!91 &9100000
 AnimatorController:
   m_ObjectHideFlags: 0
@@ -695,7 +721,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: -3086397144944069398, guid: b9cf076fa728b7b40b335735eee8aef0,
+  m_Motion: {fileID: 9214116226085074546, guid: b9cf076fa728b7b40b335735eee8aef0,
     type: 3}
   m_Tag: 
   m_SpeedParameter: 
@@ -748,7 +774,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: -891110200170824215, guid: b9cf076fa728b7b40b335735eee8aef0,
+  m_Motion: {fileID: -3926647338558462585, guid: b9cf076fa728b7b40b335735eee8aef0,
     type: 3}
   m_Tag: 
   m_SpeedParameter: 
