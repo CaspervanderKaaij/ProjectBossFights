@@ -67,6 +67,10 @@ public class MikaBoss : MonoBehaviour {
     [SerializeField] GameObject introHandOrb;
     [Header("ReEntry")]
     [SerializeField] AudioClip reEntryMusic;
+    [SerializeField] AutoPos hpRevealer;
+    [SerializeField] GameObject reentryUpLines;
+    [SerializeField] GameObject reentryPortal;
+
 
     void Start () {
         myHitbox = GetComponent<Collider> ();
@@ -669,8 +673,14 @@ public class MikaBoss : MonoBehaviour {
         if(music != null){
             music.FadeToNewMusic(reEntryMusic);
         }
-        yield return new WaitForSeconds(1);
-        StopAttack();
+
+        hpRevealer.enabled = true;
+        cam.CustomShake(3,1);
+        Instantiate(reentryUpLines,centerPos,Quaternion.identity);
+        yield return new WaitForSeconds(3);
+        Instantiate(reentryPortal,centerPos - Vector3.up * 10,Quaternion.identity);
+        yield return new WaitForSeconds(3);
+        //StopAttack();
     }
 }
 
