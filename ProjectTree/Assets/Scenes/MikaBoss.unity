@@ -1173,7 +1173,7 @@ Transform:
   m_GameObject: {fileID: 391890106}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -0.7917328, y: -10.5000305, z: 772.7916}
-  m_LocalScale: {x: 134.35797, y: 158.3979, z: 134.35796}
+  m_LocalScale: {x: 293.1153, y: 345.56076, z: 293.11523}
   m_Children: []
   m_Father: {fileID: 960090590}
   m_RootOrder: 0
@@ -1216,7 +1216,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 0f5bf58ec144a044397def9e4bd85083, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 3300cb3b6aef37446a61fa86099a6f06, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 1
   m_FlipY: 1
@@ -9426,7 +9426,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   v3: {x: 0, y: 185, z: 0}
   myType: 3
-  speed: 30
+  speed: 70
   unscaled: 0
 --- !u!1 &1244587106
 GameObject:
@@ -20554,7 +20554,7 @@ PrefabInstance:
     - target: {fileID: 4947752480797127781, guid: 50852725bbfa6924b8f3cecf60eb8d0d,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4947752480797127780, guid: 50852725bbfa6924b8f3cecf60eb8d0d,
         type: 3}
@@ -20625,6 +20625,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalScale.z
       value: 0.6483403
+      objectReference: {fileID: 0}
+    - target: {fileID: 4947752480525124409, guid: 50852725bbfa6924b8f3cecf60eb8d0d,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 3366250354456424204, guid: 50852725bbfa6924b8f3cecf60eb8d0d, type: 3}

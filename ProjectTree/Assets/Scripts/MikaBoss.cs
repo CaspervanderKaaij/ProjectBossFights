@@ -670,20 +670,30 @@ public class MikaBoss : MonoBehaviour {
         if (music != null) {
             music.StopMusic (10);
         }
-        yield return new WaitForSeconds (1);
-        if (music != null) {
-            music.FadeToNewMusic (reEntryMusic);
-        }
+        yield return new WaitForSeconds (4);
 
         hpRevealer.enabled = true;
+        yield return new WaitForSeconds (3);
         cam.CustomShake (3, 1);
         Instantiate (reentryUpLines, centerPos, Quaternion.identity);
+        yield return new WaitForSeconds (2);
+         Instantiate(reentryPortal,centerPos - Vector3.up * 300,Quaternion.identity);
+        camX = 50;
+        cam.CustomShake (3, 5);
+        yield return new WaitForSeconds (1.5f);
+        camX = camXBase;
         yield return new WaitForSeconds (1);
-        // Instantiate(reentryPortal,centerPos - Vector3.up * 10,Quaternion.identity);
-        yield return new WaitForSeconds (3);
+        cam.ReverseColors(0.01f);
+        cam.ripple.Emit();
+        FindObjectOfType<TimescaleManager>().SlowMo(0.6f,0);
         Instantiate (reentryFlames, centerPos, Quaternion.identity);
         Instantiate(reentryRocks,centerPos,Quaternion.identity * reentryRocks.transform.rotation);
         Destroy(sky);
+        cam.CustomShake (float.PositiveInfinity, 5);
+        yield return new WaitForSeconds(1);
+        if (music != null) {
+            music.FadeToNewMusic (reEntryMusic);
+        }
         //StopAttack();
     }
 }
