@@ -23,6 +23,6 @@ Material:
     - _Timescale: 1
     - __dirty: 0
     m_Colors:
-    - _Color0: {r: 0.029411765, g: 0, b: 0.033333335, a: 0}
+    - _Color0: {r: 0.084905684, g: 0, b: 0.084905684, a: 0}
     - _Color1: {r: 0, g: 0, b: 0, a: 0}
     - _Voronoi: {r: 0, g: 2.27, b: 0, a: 0}

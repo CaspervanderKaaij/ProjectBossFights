@@ -45,7 +45,6 @@ public class MikaBoss : MonoBehaviour {
     [SerializeField] GameObject realitySlashHitbox;
     [Header ("Black Hole")]
     [SerializeField] GameObject blackholePrefab;
-    [SerializeField] GameObject blackHoleEXPrefab;
     [Header ("Spatialist Friend")]
     [SerializeField] GameObject spatialistPortal;
     [SerializeField] Material spatialistLineMat;
@@ -60,17 +59,20 @@ public class MikaBoss : MonoBehaviour {
     [SerializeField] GameObject gluttonySnekwurm;
     [Header ("CenterOfTheUniverse")]
     [SerializeField] GameObject centeroftheuniverseProjectile;
+    [SerializeField] GameObject centeroftheuniversePrefab;
     [Header ("Intro")]
     [SerializeField] GameObject introCamObj;
     [SerializeField] Camera introCam;
     [SerializeField] AudioClip boxingBellSound;
     [SerializeField] GameObject introHandOrb;
-    [Header("ReEntry")]
+    [Header ("ReEntry")]
     [SerializeField] AudioClip reEntryMusic;
     [SerializeField] AutoPos hpRevealer;
     [SerializeField] GameObject reentryUpLines;
     [SerializeField] GameObject reentryPortal;
-
+    [SerializeField] GameObject reentryFlames;
+    [SerializeField] GameObject reentryRocks;
+    [SerializeField] GameObject sky;
 
     void Start () {
         myHitbox = GetComponent<Collider> ();
@@ -627,8 +629,8 @@ public class MikaBoss : MonoBehaviour {
         StartCoroutine ("PushPlayerToBH");
         cam.SmallShake (2);
         cam.SpeedLines (8, 0);
-        GameObject bHole = Instantiate (blackHoleEXPrefab, transform.position, Quaternion.identity);
-        bHole.transform.localScale = Vector3.zero;
+        centeroftheuniversePrefab.SetActive(true);
+        centeroftheuniversePrefab.transform.localScale = Vector3.zero;
 
         yield return new WaitForSeconds (1f);
         for (int i = 0; i < 14; i++) {
@@ -638,7 +640,7 @@ public class MikaBoss : MonoBehaviour {
 
         anim.transform.position += Vector3.up * -5;
         anim.Play ("MikaBlackHoleStop", 0, 0.8f);
-        Destroy (bHole);
+        centeroftheuniversePrefab.SetActive(false);
         StopCoroutine ("PushPlayerToBH");
         StopAttack ();
     }
@@ -662,24 +664,26 @@ public class MikaBoss : MonoBehaviour {
         StartCoroutine ("PushPlayerToBH");
     }
 
-
-    IEnumerator ReEntryStart(){
-        MusicManager music = FindObjectOfType<MusicManager>();
-        cam.Flash(Color.white,3f);
-        if(music != null){
-            music.StopMusic(10);
+    IEnumerator ReEntryStart () {
+        MusicManager music = FindObjectOfType<MusicManager> ();
+        cam.Flash (Color.white, 3f);
+        if (music != null) {
+            music.StopMusic (10);
         }
-        yield return new WaitForSeconds(1);
-        if(music != null){
-            music.FadeToNewMusic(reEntryMusic);
+        yield return new WaitForSeconds (1);
+        if (music != null) {
+            music.FadeToNewMusic (reEntryMusic);
         }
 
         hpRevealer.enabled = true;
-        cam.CustomShake(3,1);
-        Instantiate(reentryUpLines,centerPos,Quaternion.identity);
-        yield return new WaitForSeconds(3);
-        Instantiate(reentryPortal,centerPos - Vector3.up * 10,Quaternion.identity);
-        yield return new WaitForSeconds(3);
+        cam.CustomShake (3, 1);
+        Instantiate (reentryUpLines, centerPos, Quaternion.identity);
+        yield return new WaitForSeconds (1);
+        // Instantiate(reentryPortal,centerPos - Vector3.up * 10,Quaternion.identity);
+        yield return new WaitForSeconds (3);
+        Instantiate (reentryFlames, centerPos, Quaternion.identity);
+        Instantiate(reentryRocks,centerPos,Quaternion.identity * reentryRocks.transform.rotation);
+        Destroy(sky);
         //StopAttack();
     }
 }
