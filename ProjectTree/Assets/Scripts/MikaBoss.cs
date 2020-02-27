@@ -73,6 +73,9 @@ public class MikaBoss : MonoBehaviour {
     [SerializeField] GameObject reentryFlames;
     [SerializeField] GameObject reentryRocks;
     [SerializeField] GameObject sky;
+    [SerializeField] AudioClip reentryCinImpactSound;
+    [SerializeField] AudioClip slideWhistle;
+    [SerializeField] AudioClip portalSound;
 
     void Start () {
         myHitbox = GetComponent<Collider> ();
@@ -629,7 +632,7 @@ public class MikaBoss : MonoBehaviour {
         StartCoroutine ("PushPlayerToBH");
         cam.SmallShake (2);
         cam.SpeedLines (8, 0);
-        centeroftheuniversePrefab.SetActive(true);
+        centeroftheuniversePrefab.SetActive (true);
         centeroftheuniversePrefab.transform.localScale = Vector3.zero;
 
         yield return new WaitForSeconds (1f);
@@ -640,7 +643,7 @@ public class MikaBoss : MonoBehaviour {
 
         anim.transform.position += Vector3.up * -5;
         anim.Play ("MikaBlackHoleStop", 0, 0.8f);
-        centeroftheuniversePrefab.SetActive(false);
+        centeroftheuniversePrefab.SetActive (false);
         StopCoroutine ("PushPlayerToBH");
         StopAttack ();
     }
@@ -666,6 +669,7 @@ public class MikaBoss : MonoBehaviour {
 
     IEnumerator ReEntryStart () {
         MusicManager music = FindObjectOfType<MusicManager> ();
+        SpawnAudio.AudioSpawn(reentryCinImpactSound,0.8f,1.5f,1);
         cam.Flash (Color.white, 3f);
         if (music != null) {
             music.StopMusic (10);
@@ -673,28 +677,43 @@ public class MikaBoss : MonoBehaviour {
         yield return new WaitForSeconds (4);
 
         hpRevealer.enabled = true;
+        SpawnAudio.AudioSpawn(slideWhistle,0,1,1);
         yield return new WaitForSeconds (3);
         cam.CustomShake (3, 1);
         Instantiate (reentryUpLines, centerPos, Quaternion.identity);
-        yield return new WaitForSeconds (2);
-         Instantiate(reentryPortal,centerPos - Vector3.up * 300,Quaternion.identity);
-        camX = 50;
+        yield return new WaitForSeconds (1);
+        SpawnAudio.AudioSpawn(portalSound,0,1,1);
+        yield return new WaitForSeconds (1);
+        Instantiate (reentryPortal, centerPos - Vector3.up * 300, Quaternion.identity);
+        //  camX = 50;
         cam.CustomShake (3, 5);
         yield return new WaitForSeconds (1.5f);
-        camX = camXBase;
-        yield return new WaitForSeconds (1);
-        cam.ReverseColors(0.01f);
-        cam.ripple.Emit();
-        FindObjectOfType<TimescaleManager>().SlowMo(0.6f,0);
-        Instantiate (reentryFlames, centerPos, Quaternion.identity);
-        Instantiate(reentryRocks,centerPos,Quaternion.identity * reentryRocks.transform.rotation);
-        Destroy(sky);
-        cam.CustomShake (float.PositiveInfinity, 5);
-        yield return new WaitForSeconds(1);
+        // camX = camXBase;
+        yield return new WaitForSeconds (0.75f);
+        SpawnAudio.AudioSpawn(reentryCinImpactSound,0,1.5f,1);
+        yield return new WaitForSeconds (0.25f);
         if (music != null) {
             music.FadeToNewMusic (reEntryMusic);
         }
-        //StopAttack();
+        cam.ripple.Emit ();
+        yield return new WaitForSeconds (0.3f);
+        cam.ReverseColors (0.1f);
+        player.jumpStrength*= 1.5f;
+        cam.ripple.Emit ();
+        FindObjectOfType<TimescaleManager> ().SlowMo (0.6f, 0.1f);
+        Instantiate (reentryFlames, centerPos, Quaternion.identity);
+        Instantiate (reentryRocks, centerPos, Quaternion.identity * reentryRocks.transform.rotation);
+        Destroy (sky);
+        AlwaysShake ();
+        yield return new WaitForSeconds (1);
+        StopAttack ();
+    }
+    void AlwaysShake () {
+        cam.CustomShake (0.3f, 5);
+        Invoke ("AlwaysShake", 0.1f);
+        player.SetHairWindVel(Vector3.up,10);
+
+        cam.angleGoal.z = Mathf.PingPong(Time.time * 2,20) + 10;
     }
 }
 

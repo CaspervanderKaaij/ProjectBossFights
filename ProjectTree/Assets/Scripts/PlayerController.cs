@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.PostProcessing;
 using UnityEngine.UI;
+using UnityChan;
 [RequireComponent (typeof (CharacterController))]
 
 public class PlayerController : MonoBehaviour {
@@ -89,6 +90,7 @@ public class PlayerController : MonoBehaviour {
     [SerializeField] ParticleSystem walkParticles;
     [SerializeField] GameObject hitEffectParticle;
     [SerializeField] GameObject WdRipple;
+    [SerializeField] RandomWind wind;
     [Header ("Voice Lines")]
     public AudioClip[] voiceLines;
 
@@ -1197,6 +1199,11 @@ public class PlayerController : MonoBehaviour {
 
     void SetHPBar () {
         hpBar.curPercent = (hitbox.hp / maxHP) * 100;
+    }
+
+    public void SetHairWindVel(Vector3 dir,float str){
+        wind.direction = dir;
+        wind.strength = str;
     }
 
     //DEBUG

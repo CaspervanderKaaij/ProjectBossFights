@@ -15,7 +15,8 @@ namespace UnityChan
 	{
 		private SpringBone[] springBones;
 		public bool isWindActive = true;
-		[SerializeField] float strength = 1;
+		public float strength = 1;
+		public Vector3 direction;
 
 		// Use this for initialization
 		void Start ()
@@ -28,7 +29,8 @@ namespace UnityChan
 		{
 			Vector3 force = Vector3.zero;
 			if (isWindActive) {
-				force = new Vector3 (Mathf.PerlinNoise (Time.time, 0.0f) * 0.005f * strength, 0, 0);
+				float per = Mathf.PerlinNoise (Time.time, 0.0f) * 0.005f * strength;
+				force = direction.normalized * per;
 			}
 
 			for (int i = 0; i < springBones.Length; i++) {

@@ -41,7 +41,7 @@ ParticleSystem:
   m_GameObject: {fileID: 2956478224630788314}
   serializedVersion: 6
   lengthInSec: 5
-  simulationSpeed: 2
+  simulationSpeed: 18.11
   stopAction: 0
   cullingMode: 0
   ringBufferMode: 0
@@ -665,7 +665,7 @@ ParticleSystem:
     boxThickness: {x: 0, y: 0, z: 0}
     radiusThickness: 0.47
     donutRadius: 0.2
-    m_Position: {x: 0, y: 0, z: 0}
+    m_Position: {x: 0, y: 0, z: 26.09}
     m_Rotation: {x: 0, y: 0, z: 0}
     m_Scale: {x: 1, y: 1, z: 1}
     placementMode: 0
@@ -1541,7 +1541,7 @@ ParticleSystem:
     y:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 3.44
+      scalar: 17.18
       minScalar: 0
       maxCurve:
         serializedVersion: 2
