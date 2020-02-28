@@ -76,6 +76,9 @@ public class MikaBoss : MonoBehaviour {
     [SerializeField] AudioClip reentryCinImpactSound;
     [SerializeField] AudioClip slideWhistle;
     [SerializeField] AudioClip portalSound;
+    [Header ("LevelSplitter")]
+    [SerializeField] GameObject arena;
+    [SerializeField] GameObject splitArena;
 
     void Start () {
         myHitbox = GetComponent<Collider> ();
@@ -201,6 +204,10 @@ public class MikaBoss : MonoBehaviour {
 
         if (Input.GetKeyDown (KeyCode.Tab) == true) {
             StartAttack (State.Attacking, "ReEntryStart");
+        }
+
+        if (Input.GetKeyDown (KeyCode.LeftAlt) == true) {
+            StartAttack (State.Attacking, "LevelSplitter");
         }
         /*
 
@@ -669,7 +676,7 @@ public class MikaBoss : MonoBehaviour {
 
     IEnumerator ReEntryStart () {
         MusicManager music = FindObjectOfType<MusicManager> ();
-        SpawnAudio.AudioSpawn(reentryCinImpactSound,0.8f,1.5f,1);
+        SpawnAudio.AudioSpawn (reentryCinImpactSound, 0.8f, 1.5f, 1);
         cam.Flash (Color.white, 3f);
         if (music != null) {
             music.StopMusic (10);
@@ -677,12 +684,12 @@ public class MikaBoss : MonoBehaviour {
         yield return new WaitForSeconds (4);
 
         hpRevealer.enabled = true;
-        SpawnAudio.AudioSpawn(slideWhistle,0,1,1);
+        SpawnAudio.AudioSpawn (slideWhistle, 0, 1, 1);
         yield return new WaitForSeconds (3);
         cam.CustomShake (3, 1);
         Instantiate (reentryUpLines, centerPos, Quaternion.identity);
         yield return new WaitForSeconds (1);
-        SpawnAudio.AudioSpawn(portalSound,0,1,1);
+        SpawnAudio.AudioSpawn (portalSound, 0, 1, 1);
         yield return new WaitForSeconds (1);
         Instantiate (reentryPortal, centerPos - Vector3.up * 300, Quaternion.identity);
         //  camX = 50;
@@ -690,7 +697,7 @@ public class MikaBoss : MonoBehaviour {
         yield return new WaitForSeconds (1.5f);
         // camX = camXBase;
         yield return new WaitForSeconds (0.75f);
-        SpawnAudio.AudioSpawn(reentryCinImpactSound,0,1.5f,1);
+        SpawnAudio.AudioSpawn (reentryCinImpactSound, 0, 1.5f, 1);
         yield return new WaitForSeconds (0.25f);
         if (music != null) {
             music.FadeToNewMusic (reEntryMusic);
@@ -698,7 +705,7 @@ public class MikaBoss : MonoBehaviour {
         cam.ripple.Emit ();
         yield return new WaitForSeconds (0.3f);
         cam.ReverseColors (0.1f);
-        player.jumpStrength*= 1.5f;
+        player.jumpStrength *= 1.5f;
         cam.ripple.Emit ();
         FindObjectOfType<TimescaleManager> ().SlowMo (0.6f, 0.1f);
         Instantiate (reentryFlames, centerPos, Quaternion.identity);
@@ -711,9 +718,32 @@ public class MikaBoss : MonoBehaviour {
     void AlwaysShake () {
         cam.CustomShake (0.3f, 5);
         Invoke ("AlwaysShake", 0.1f);
-        player.SetHairWindVel(Vector3.up,10);
+        player.SetHairWindVel (Vector3.up, 10);
 
-        cam.angleGoal.z = Mathf.PingPong(Time.time * 2,20) + 10;
+        cam.angleGoal.z = Mathf.PingPong (Time.time * 2, 20) + 10;
+    }
+
+    IEnumerator LevelSplitter () {
+        yield return new WaitForSeconds (0.5f);
+        realitySlashHitboxes.Clear ();
+        for (int i = 0; i < 2; i++) {
+            GameObject g = Instantiate (realitySlashHitbox, centerPos, Quaternion.Euler (0, 0, 0));
+            if(i != 0){
+                g.transform.Rotate(0,90,0);
+            }
+            curAttackObjects.Add (g);
+            g.transform.Rotate (180, 0, 90);
+            realitySlashHitboxes.Add (g);
+        }
+        FindObjectOfType<TimescaleManager> ().SlowMo (0.5f, 0.1f);
+        yield return new WaitForSeconds (0.4f);
+        for (int i = 0; i < 2; i++) {
+            Destroy (realitySlashHitboxes[i], 1);
+        }
+        yield return new WaitForSeconds (5.9f);
+        cam.HardShake (0.1f);
+        arena.SetActive (false);
+        splitArena.SetActive (true);
     }
 }
 

@@ -11,27 +11,28 @@ public class MovingPlatform : LandAction {
     }
 
     public override void Activate () {
+        player = FindObjectOfType<PlayerController> ();
         player.angleGoal -= lastY - transform.eulerAngles.y;
 
-        if(player.transform.parent == null){
-            GameObject g = new GameObject();
+        if (player.transform.parent == null) {
+            GameObject g = new GameObject ();
             g.transform.position = transform.position;
             g.transform.eulerAngles = transform.eulerAngles;
-            g.AddComponent<FixedUpdateParenter>().parent = transform;
-            player.transform.SetParent(g.transform);
+            g.AddComponent<FixedUpdateParenter> ().parent = transform;
+            player.transform.SetParent (g.transform);
         }
 
     }
 
     public override void End () {
         GameObject g = player.transform.parent.gameObject;
-        player.transform.SetParent(null);
-        Destroy(g);
+        player.transform.SetParent (null);
+        Destroy (g);
 
     }
 
     float lastY;
-   void LateUpdate(){
+    void LateUpdate () {
         lastY = transform.eulerAngles.y;
     }
 
