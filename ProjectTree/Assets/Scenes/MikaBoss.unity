@@ -26,7 +26,7 @@ RenderSettings:
   m_AmbientIntensity: 1
   m_AmbientMode: 1
   m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
-  m_SkyboxMaterial: {fileID: 10304, guid: 0000000000000000f000000000000000, type: 0}
+  m_SkyboxMaterial: {fileID: 0}
   m_HaloStrength: 0.5
   m_FlareStrength: 1
   m_FlareFadeSpeed: 3
@@ -16415,7 +16415,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
-      - m_Target: {fileID: 1760100231}
+      - m_Target: {fileID: 1760100233}
         m_MethodName: set_enabled
         m_Mode: 6
         m_Arguments:
@@ -16424,7 +16424,7 @@ MonoBehaviour:
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
-          m_BoolArgument: 1
+          m_BoolArgument: 0
         m_CallState: 2
   waitTime: 20
 --- !u!1 &1410455422 stripped
@@ -22348,7 +22348,7 @@ PrefabInstance:
     - target: {fileID: 8021481934493619258, guid: 3a6d987cd31eb7047914c0c3428d9e46,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -1.58
+      value: -1.4
       objectReference: {fileID: 0}
     - target: {fileID: 8021481934493619258, guid: 3a6d987cd31eb7047914c0c3428d9e46,
         type: 3}
@@ -22424,6 +22424,21 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalPosition.z
       value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8021481933331570080, guid: 3a6d987cd31eb7047914c0c3428d9e46,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8021481933331570077, guid: 3a6d987cd31eb7047914c0c3428d9e46,
+        type: 3}
+      propertyPath: InitialModule.startSize.scalar
+      value: 50.67
+      objectReference: {fileID: 0}
+    - target: {fileID: 8021481933331570082, guid: 3a6d987cd31eb7047914c0c3428d9e46,
+        type: 3}
+      propertyPath: m_SortingOrder
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3a6d987cd31eb7047914c0c3428d9e46, type: 3}
