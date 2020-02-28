@@ -121,7 +121,7 @@ Material:
     m_Colors:
     - _Color: {r: 0.24528301, g: 0.24528301, b: 0.24528301, a: 1}
     - _EmissionColor: {r: 1.5157166, g: 0.7221103, b: 0.7221103, a: 1}
-    - _OutlineColor: {r: 0, g: 0, b: 0, a: 1}
+    - _OutlineColor: {r: 0.33962262, g: 0.33962262, b: 0.33962262, a: 1}
     - _ShadowColor: {r: 0, g: 0, b: 0, a: 1}
     - _TreeInstanceColor: {r: 0, g: 0, b: 0, a: 0}
     - _TreeInstanceScale: {r: 0, g: 0, b: 0, a: 0}

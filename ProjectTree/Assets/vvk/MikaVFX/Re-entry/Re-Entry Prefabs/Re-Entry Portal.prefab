@@ -278,6 +278,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6866030143614587369}
   - component: {fileID: 1463709562302978633}
+  - component: {fileID: 5638662369110313792}
   m_Layer: 0
   m_Name: Re-Entry Portal
   m_TagString: Untagged
@@ -316,6 +317,33 @@ MonoBehaviour:
   myType: 0
   speed: 1
   unscaled: 0
+--- !u!114 &5638662369110313792
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7571206081764090874}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a83514596895b3d4cbc95dc8e566cf45, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ev:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1463709562302978633}
+        m_MethodName: SetSpeed
+        m_Mode: 4
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 10
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  waitTime: 3
 --- !u!1 &8896425281681799481
 GameObject:
   m_ObjectHideFlags: 0

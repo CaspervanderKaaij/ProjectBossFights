@@ -38,4 +38,8 @@ public class AutoPos : MonoBehaviour {
             return Time.deltaTime;
         }
     }
+
+    public void SetSpeed(float newSpeed){
+        speed = newSpeed;
+    }
 }
