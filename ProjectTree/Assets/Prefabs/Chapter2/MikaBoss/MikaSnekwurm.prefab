@@ -1974,6 +1974,7 @@ MonoBehaviour:
   delay: 50
   spawnParticle: {fileID: 6055357856525942466, guid: 29211feb8802d30428437c63315803e6,
     type: 3}
+  spawnAudio: {fileID: 8300000, guid: a7066a682d66b224c8ed80cfa5c56649, type: 3}
 --- !u!1 &5814934132784869869
 GameObject:
   m_ObjectHideFlags: 0

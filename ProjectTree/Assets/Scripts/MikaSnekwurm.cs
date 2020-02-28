@@ -9,6 +9,7 @@ public class MikaSnekwurm : MonoBehaviour {
     Transform player;
     [SerializeField] int delay = 50;
     [SerializeField] GameObject spawnParticle;
+    [SerializeField] AudioClip spawnAudio;
     void Start () {
         player = FindObjectOfType<PlayerController> ().transform;
 
@@ -22,7 +23,10 @@ public class MikaSnekwurm : MonoBehaviour {
             parts[i].GetComponent<MeshRenderer> ().enabled = true;
             parts[i].GetComponent<LineRenderer> ().enabled = true;
             Instantiate (spawnParticle, parts[i].transform.position, Quaternion.identity);
+
+            SpawnAudio.AudioSpawn(spawnAudio,0.1f,Random.Range(0.9f,1.2f),0.3f);
         }
+        SpawnAudio.AudioSpawn(spawnAudio,0.1f,1,0.7f);
         transform.GetChild (0).GetComponent<Collider> ().enabled = true;
         for (int i = 0; i < parts.Length; i++) {
             parts[i].GetComponent<Collider> ().enabled = true;
@@ -43,7 +47,8 @@ public class MikaSnekwurm : MonoBehaviour {
             yield return new WaitForSeconds (0.05f);
             parts[parts.Length - i - 1].GetComponent<MeshRenderer> ().enabled = false;
             parts[parts.Length - i - 1].GetComponent<LineRenderer> ().enabled = false;
-            Instantiate (spawnParticle, parts[parts.Length - i - 1].transform.position, Quaternion.identity);
+            SpawnAudio.AudioSpawn(spawnAudio,0,1,1);
+            SpawnAudio.AudioSpawn(spawnAudio,0.1f,Random.Range(0.9f,1.2f),0.1f);
         }
         yield return new WaitForSeconds (0.05f);
         transform.GetChild(0).GetComponent<MeshRenderer>().enabled = false;
