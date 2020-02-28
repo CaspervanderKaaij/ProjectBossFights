@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Arcs
+  m_Name: Arcs 2
   m_Shader: {fileID: 4800000, guid: 6448fd48f5565c44d9de963e56b92524, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 0
@@ -44,7 +44,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Mask:
-        m_Texture: {fileID: 2800000, guid: 3d3909521181b1d47ba4d4f93dd3b3bc, type: 3}
+        m_Texture: {fileID: 2800000, guid: e534fa5e8d6bad340bbc9196dabe6f51, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MetallicGlossMap:
@@ -64,7 +64,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
-    - _BloomMultiplier: 1
+    - _BloomMultiplier: 2.14
     - _BumpScale: 1
     - _Cutoff: 0.5
     - _DetailNormalMapScale: 1
@@ -83,5 +83,5 @@ Material:
     - _ZWrite: 1
     - __dirty: 0
     m_Colors:
-    - _Color: {r: 3.606835, g: 5.412815, b: 21.5283, a: 1}
+    - _Color: {r: 2.297397, g: 2.297397, b: 2.297397, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}

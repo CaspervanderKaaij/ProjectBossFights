@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Arcs
+  m_Name: Arcs 1
   m_Shader: {fileID: 4800000, guid: 6448fd48f5565c44d9de963e56b92524, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 0
