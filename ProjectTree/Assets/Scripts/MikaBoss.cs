@@ -41,6 +41,7 @@ public class MikaBoss : MonoBehaviour {
     [SerializeField] GameObject jumpslashHitbox;
     [SerializeField] GameObject blackholeSlashHitbox;
     [SerializeField] GameObject teleportParicle;
+    [SerializeField] AudioClip teleportSound;
     [Header ("Reality Slash")]
     [SerializeField] GameObject realitySlashHitbox;
     [Header ("Black Hole")]
@@ -407,6 +408,7 @@ public class MikaBoss : MonoBehaviour {
     IEnumerator TeleSlash () {
         DisableOrbs (false);
         Instantiate (teleportParicle, transform.position, Quaternion.identity);
+        SpawnAudio.AudioSpawn (teleportSound, 0.3f, Random.Range (0.8f, 1.2f), 0.4f);
         Vector3 oldScale = anim.transform.localScale;
         anim.transform.localScale = Vector3.zero;
         protectionCircle.gameObject.SetActive (false);
@@ -416,6 +418,8 @@ public class MikaBoss : MonoBehaviour {
         }
         Vector3 savedPos = player.transform.position + (Vector3.up * 1) - player.transform.forward * 5;
         Instantiate (teleportParicle, savedPos, Quaternion.identity);
+        SpawnAudio.AudioSpawn (teleportSound, 0.3f, Random.Range (1.8f, 2.2f), 0.4f);
+
         transform.position = savedPos;
         anim.transform.localScale = oldScale;
         anim.Play ("MikaTeleslashCharge");
@@ -430,9 +434,13 @@ public class MikaBoss : MonoBehaviour {
         cam.MediumShake (0.2f);
         yield return new WaitForSeconds (0.8f);
         Instantiate (teleportParicle, transform.position, Quaternion.identity);
+        SpawnAudio.AudioSpawn (teleportSound, 0.3f, Random.Range (1.8f, 2.2f), 0.4f);
+
         anim.transform.localScale = Vector3.zero;
         yield return new WaitForSeconds (0.5f);
         Instantiate (teleportParicle, centerPos, Quaternion.identity);
+        SpawnAudio.AudioSpawn (teleportSound, 0.3f, Random.Range (0.8f, 1.2f), 0.4f);
+
         yield return new WaitForSeconds (0.1f);
         anim.transform.localScale = oldScale;
         DisableOrbs (true);
@@ -728,8 +736,8 @@ public class MikaBoss : MonoBehaviour {
         realitySlashHitboxes.Clear ();
         for (int i = 0; i < 2; i++) {
             GameObject g = Instantiate (realitySlashHitbox, centerPos, Quaternion.Euler (0, 0, 0));
-            if(i != 0){
-                g.transform.Rotate(0,90,0);
+            if (i != 0) {
+                g.transform.Rotate (0, 90, 0);
             }
             curAttackObjects.Add (g);
             g.transform.Rotate (180, 0, 90);

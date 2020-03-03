@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c6f81cb7fe448cd4d9a01b6502a73432, type: 3}
-  m_Name: Chapter1Intro
+  m_Name: HeinzBoss
   m_EditorClassIdentifier: 
   scenes:
   - HeinzShop
