@@ -93,6 +93,7 @@ public class TimescaleManager : MonoBehaviour {
             noPauseTime = noPauseWait;
             curState = State.Paused;
             Destroy (optionSpawned);
+            PauseAllAudio(true);
         }
     }
     float noPauseTime = 0;
@@ -102,6 +103,7 @@ public class TimescaleManager : MonoBehaviour {
             noPauseTime = noPauseWait;
             curState = State.Options;
             optionSpawned = Instantiate (optionScreen);
+            PauseAllAudio(true);
         }
     }
 
@@ -111,6 +113,24 @@ public class TimescaleManager : MonoBehaviour {
             curState = State.None;
             Destroy (optionSpawned);
             isPaused = false;
+            PauseAllAudio(false);
+        }
+    }
+
+    void PauseAllAudio (bool pause) {
+        print(pause);
+        List<AudioSource> allAudio = new List<AudioSource> (FindObjectsOfType<AudioSource> ());
+        if (FindObjectOfType<MusicManager> () != null) {
+            allAudio.Remove (FindObjectOfType<MusicManager> ().GetComponent<AudioSource> ());
+        }
+        if (pause == true) {
+            for (int i = 0; i < allAudio.Count; i++) {
+                allAudio[i].Pause ();
+            }
+        } else {
+            for (int i = 0; i < allAudio.Count; i++) {
+                allAudio[i].UnPause ();
+            }
         }
     }
 }

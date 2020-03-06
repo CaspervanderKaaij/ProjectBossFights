@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Audio;
 
 public class MikaBoss : MonoBehaviour {
     Collider myHitbox;
@@ -44,6 +45,7 @@ public class MikaBoss : MonoBehaviour {
     [SerializeField] AudioClip teleportSound;
     [Header ("Reality Slash")]
     [SerializeField] GameObject realitySlashHitbox;
+    // [SerializeField] AudioClip
     [Header ("Black Hole")]
     [SerializeField] GameObject blackholePrefab;
     [Header ("Spatialist Friend")]
@@ -66,6 +68,8 @@ public class MikaBoss : MonoBehaviour {
     [SerializeField] Camera introCam;
     [SerializeField] AudioClip boxingBellSound;
     [SerializeField] GameObject introHandOrb;
+
+    AudioMixerGroup mainAudio;
     [Header ("ReEntry")]
     [SerializeField] AudioClip reEntryMusic;
     [SerializeField] AutoPos hpRevealer;
@@ -80,6 +84,9 @@ public class MikaBoss : MonoBehaviour {
     [Header ("LevelSplitter")]
     [SerializeField] GameObject arena;
     [SerializeField] GameObject splitArena;
+    [SerializeField] AudioClip splitArenaClip;
+    [SerializeField] AudioClip splitArenaClipCinematic;
+    [SerializeField] AudioClip splitArenaSlideClip;
 
     void Start () {
         myHitbox = GetComponent<Collider> ();
@@ -96,22 +103,29 @@ public class MikaBoss : MonoBehaviour {
 
         cc = FindObjectOfType<PlayerController> ().GetComponent<CharacterController> ();
 
-        // StartCoroutine (StartEv ());
-        started = true;
+        StartCoroutine (StartEv ());
+       // started = true;
 
     }
 
     bool started = false;
     IEnumerator StartEv () {
-        yield return new WaitForSeconds (2f);
+        player.curState = PlayerController.State.Dialogue;
+        yield return new WaitForSeconds (22f);
+
         introCamObj.SetActive (true);
         anim.Play ("MikaIntro", 0, 0.7f);
         yield return new WaitForSeconds (3);
         introCamObj.SetActive (false);
         introHandOrb.SetActive (false);
         cam.Flash (Color.white, 5);
+
+        //add reverb
+       // mainAudio.audioMixer.SetFloat();
         SpawnAudio.AudioSpawn (boxingBellSound, 0, 1, 0.3f);
         yield return new WaitForSeconds (0.2f);
+        player.curState = PlayerController.State.Normal;
+
         SpawnAudio.AudioSpawn (boxingBellSound, 0, 1, 0.3f);
         yield return new WaitForSeconds (0.2f);
         SpawnAudio.AudioSpawn (boxingBellSound, 0, 1, 0.3f);
@@ -363,6 +377,7 @@ public class MikaBoss : MonoBehaviour {
     int memoryInfernoCOunt = 1;
     float memoryInfernoSpeedMulitplier = 2;
     IEnumerator MemoryInferno () {
+        MusicManager music = FindObjectOfType<MusicManager> ();
         camX = 40;
         float startY = anim.transform.eulerAngles.y;
         if (hp.hp < (maxHp / 3) * 2) {
@@ -752,6 +767,11 @@ public class MikaBoss : MonoBehaviour {
         cam.HardShake (0.1f);
         arena.SetActive (false);
         splitArena.SetActive (true);
+        SpawnAudio.AudioSpawn(splitArenaSlideClip,0,0.6f,1);
+        yield return new WaitForSeconds(6.15f);
+        SpawnAudio.AudioSpawn(splitArenaClip,0,5,0.5f,0.2f);
+        SpawnAudio.AudioSpawn(splitArenaClipCinematic,0,2,1);
+
     }
 }
 

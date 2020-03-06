@@ -1,10 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityChan;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.PostProcessing;
 using UnityEngine.UI;
-using UnityChan;
 [RequireComponent (typeof (CharacterController))]
 
 public class PlayerController : MonoBehaviour {
@@ -133,6 +133,7 @@ public class PlayerController : MonoBehaviour {
     public ShadowProgress shadow = ShadowProgress.NoShadow;
 
     void Start () {
+
         if (FindObjectOfType<StartSaveInitializer> () != null) {
             FindObjectOfType<StartSaveInitializer> ().OnEnable ();
         }
@@ -382,6 +383,7 @@ public class PlayerController : MonoBehaviour {
     }
 
     [HideInInspector] public float curAccDec = 0;
+    LandAction lastLand = null;
     void MoveForward () {
 
         if (isGrounded == true) {
@@ -398,6 +400,11 @@ public class PlayerController : MonoBehaviour {
 
             anim.SetFloat ("curSpeed", AnalMagnitude ());
             anim.SetFloat ("speedMuliplier", speedMuliplier);
+
+            if (land != lastLand && land != null) {
+                land.Activate ();
+            }
+            lastLand = land;
         } else if (curState != State.WallJump) {
             float[] inputs = new float[2];
             inputs[0] = Mathf.Clamp (GetHorInput () * 2, -1, 1);
@@ -988,7 +995,7 @@ public class PlayerController : MonoBehaviour {
             }
             Instantiate (stopDashParticle, transform.position + transform.up, Quaternion.identity);
 
-            if (hasDashEX == true && IsInvoking("StopInvincible") == false) {
+            if (hasDashEX == true && IsInvoking ("StopInvincible") == false) {
                 hitbox.enabled = true;
             }
 
@@ -1201,7 +1208,7 @@ public class PlayerController : MonoBehaviour {
         hpBar.curPercent = (hitbox.hp / maxHP) * 100;
     }
 
-    public void SetHairWindVel(Vector3 dir,float str){
+    public void SetHairWindVel (Vector3 dir, float str) {
         wind.direction = dir;
         wind.strength = str;
     }
