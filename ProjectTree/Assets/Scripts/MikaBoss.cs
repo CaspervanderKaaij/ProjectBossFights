@@ -64,12 +64,14 @@ public class MikaBoss : MonoBehaviour {
     [SerializeField] GameObject centeroftheuniverseProjectile;
     [SerializeField] GameObject centeroftheuniversePrefab;
     [Header ("Intro")]
+    [SerializeField] bool skipIntro = false;
     [SerializeField] GameObject introCamObj;
     [SerializeField] Camera introCam;
     [SerializeField] AudioClip boxingBellSound;
     [SerializeField] GameObject introHandOrb;
+    [SerializeField] GameObject introParticle;
 
-    AudioMixerGroup mainAudio;
+    [SerializeField] AudioMixerGroup mainAudio;
     [Header ("ReEntry")]
     [SerializeField] AudioClip reEntryMusic;
     [SerializeField] AutoPos hpRevealer;
@@ -103,8 +105,11 @@ public class MikaBoss : MonoBehaviour {
 
         cc = FindObjectOfType<PlayerController> ().GetComponent<CharacterController> ();
 
-        StartCoroutine (StartEv ());
-       // started = true;
+        if (skipIntro == false) {
+            StartCoroutine (StartEv ());
+        } else {
+            SkipIntro ();
+        }
 
     }
 
@@ -121,7 +126,8 @@ public class MikaBoss : MonoBehaviour {
         cam.Flash (Color.white, 5);
 
         //add reverb
-       // mainAudio.audioMixer.SetFloat();
+        mainAudio.audioMixer.SetFloat ("sfxReverb", 0);
+        // mainAudio.audioMixer.SetFloat("sfxReverb",-10000);
         SpawnAudio.AudioSpawn (boxingBellSound, 0, 1, 0.3f);
         yield return new WaitForSeconds (0.2f);
         player.curState = PlayerController.State.Normal;
@@ -131,6 +137,13 @@ public class MikaBoss : MonoBehaviour {
         SpawnAudio.AudioSpawn (boxingBellSound, 0, 1, 0.3f);
         started = true;
 
+    }
+
+    void SkipIntro () {
+        started = true;
+        introParticle.GetComponent<StartEvent> ().ev.Invoke ();
+        Destroy (introParticle);
+        mainAudio.audioMixer.SetFloat ("sfxReverb", 0);
     }
 
     void Update () {
@@ -731,6 +744,7 @@ public class MikaBoss : MonoBehaviour {
         player.jumpStrength *= 1.5f;
         cam.ripple.Emit ();
         FindObjectOfType<TimescaleManager> ().SlowMo (0.6f, 0.1f);
+        mainAudio.audioMixer.SetFloat("sfxReverb",-10000);
         Instantiate (reentryFlames, centerPos, Quaternion.identity);
         Instantiate (reentryRocks, centerPos, Quaternion.identity * reentryRocks.transform.rotation);
         Destroy (sky);
@@ -767,10 +781,10 @@ public class MikaBoss : MonoBehaviour {
         cam.HardShake (0.1f);
         arena.SetActive (false);
         splitArena.SetActive (true);
-        SpawnAudio.AudioSpawn(splitArenaSlideClip,0,0.6f,1);
-        yield return new WaitForSeconds(6.15f);
-        SpawnAudio.AudioSpawn(splitArenaClip,0,5,0.5f,0.2f);
-        SpawnAudio.AudioSpawn(splitArenaClipCinematic,0,2,1);
+        SpawnAudio.AudioSpawn (splitArenaSlideClip, 0, 0.6f, 1);
+        yield return new WaitForSeconds (6.15f);
+        SpawnAudio.AudioSpawn (splitArenaClip, 0, 5, 0.5f, 0.2f);
+        SpawnAudio.AudioSpawn (splitArenaClipCinematic, 0, 2, 1);
 
     }
 }
