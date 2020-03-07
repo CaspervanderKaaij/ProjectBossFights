@@ -7,7 +7,7 @@ using UnityEngine.UI;
 public class Dialogue : MonoBehaviour {
     [SerializeField] Text text;
     [SerializeField] Text talker;
-    public Image textBack;
+    public GameObject textBack;
     public DialogueHolder curHolder;
     [HideInInspector] public int curDia;
     PlayerController player;
@@ -32,7 +32,7 @@ public class Dialogue : MonoBehaviour {
         if (curHolder != null) {
             talker.text = curHolder.dialogue[curDia].talker;
             player.hudCanvas.enabled = false;
-            textBack.enabled = true;
+            textBack.SetActive(true);
             if (curHolder.dialogue[curDia].method == DiaVars.NextDiaMethod.Press) {
                 if (Input.GetButtonUp (player.shootInput) == true && IsInvoking ("NoInput") == false) {
                     if (IsInvoking ("SetTextPerLetter") == false) {
@@ -61,10 +61,10 @@ public class Dialogue : MonoBehaviour {
                     }
                 }
             }
-        } else if (textBack.enabled == true) {
+        } else if (textBack.activeSelf == true) {
             talker.text = "";
             text.text = "";
-            textBack.enabled = false;
+            textBack.SetActive(false);
             player.hudCanvas.enabled = true;
             player.curState = PlayerController.State.Normal;
             endEv.Invoke ();
@@ -96,7 +96,7 @@ public class Dialogue : MonoBehaviour {
 
     void SelfBased () {
         if (curHolder != null) {
-            textBack.enabled = true;
+            textBack.SetActive(true);
             SetTextPerLetter ();
             if (Input.GetButtonUp ("Shoot") == true && IsInvoking ("NoInput") == false) {
                 if (firstInput == false) {
@@ -110,9 +110,9 @@ public class Dialogue : MonoBehaviour {
                     firstInput = false;
                 }
             }
-        } else if (textBack.enabled == true) {
+        } else if (textBack.activeSelf == true) {
             text.text = "";
-            textBack.enabled = false;
+            textBack.SetActive(false);
             endEv.Invoke ();
         }
     }

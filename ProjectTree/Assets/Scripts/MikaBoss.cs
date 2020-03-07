@@ -521,7 +521,13 @@ public class MikaBoss : MonoBehaviour {
 
     IEnumerator BlackHole () {
         anim.Play ("MikaBlackHoleStart");
-        anim.transform.position += Vector3.up * 5;
+        for (int i = 0; i < 1; i++) {
+            anim.transform.position += Vector3.up * Time.deltaTime * 30;
+            if (anim.transform.position.y < centerPos.y + 5) {
+                i--;
+            }
+            yield return new WaitForEndOfFrame ();
+        }
         yield return new WaitForSeconds (1);
 
         anim.Play ("MikaBlackHole");
@@ -532,10 +538,19 @@ public class MikaBoss : MonoBehaviour {
         GameObject bHole = Instantiate (blackholePrefab, transform.position, Quaternion.identity);
         bHole.transform.localScale = Vector3.zero;
         yield return new WaitForSeconds (8);
-        anim.transform.position += Vector3.up * -5;
         anim.Play ("MikaBlackHoleStop", 0, 0.8f);
         Destroy (bHole);
         StopCoroutine ("PushPlayerToBH");
+        FindObjectOfType<TimescaleManager>().SlowMo(0.3f,0.2f);
+        yield return new WaitForSeconds(0.35f);
+        for (int i = 0; i < 1; i++) {
+            anim.transform.position += Vector3.up * Time.deltaTime * -30;
+            if (anim.transform.position.y >= centerPos.y) {
+                i--;
+            }
+            yield return new WaitForEndOfFrame ();
+        }
+        anim.transform.localPosition = Vector3.zero;
         StopAttack ();
 
     }
@@ -744,7 +759,7 @@ public class MikaBoss : MonoBehaviour {
         player.jumpStrength *= 1.5f;
         cam.ripple.Emit ();
         FindObjectOfType<TimescaleManager> ().SlowMo (0.6f, 0.1f);
-        mainAudio.audioMixer.SetFloat("sfxReverb",-10000);
+        mainAudio.audioMixer.SetFloat ("sfxReverb", -10000);
         Instantiate (reentryFlames, centerPos, Quaternion.identity);
         Instantiate (reentryRocks, centerPos, Quaternion.identity * reentryRocks.transform.rotation);
         Destroy (sky);

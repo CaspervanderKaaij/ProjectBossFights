@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Audio;
 
 public class TimescaleManager : MonoBehaviour {
     public bool isPaused = false;
@@ -14,6 +15,8 @@ public class TimescaleManager : MonoBehaviour {
     }
     public State curState = State.None;
     [SerializeField] string pauseButton = "Pause";
+    [SerializeField] AudioMixerSnapshot noPausedSnap;
+    [SerializeField] AudioMixerSnapshot pausedSnap;
     [Header ("OptionScreen")]
     [SerializeField] GameObject optionScreen;
     GameObject optionSpawned;
@@ -118,7 +121,6 @@ public class TimescaleManager : MonoBehaviour {
     }
 
     void PauseAllAudio (bool pause) {
-        print(pause);
         List<AudioSource> allAudio = new List<AudioSource> (FindObjectsOfType<AudioSource> ());
         if (FindObjectOfType<MusicManager> () != null) {
             allAudio.Remove (FindObjectOfType<MusicManager> ().GetComponent<AudioSource> ());
@@ -127,10 +129,12 @@ public class TimescaleManager : MonoBehaviour {
             for (int i = 0; i < allAudio.Count; i++) {
                 allAudio[i].Pause ();
             }
+            pausedSnap.TransitionTo(0);
         } else {
             for (int i = 0; i < allAudio.Count; i++) {
                 allAudio[i].UnPause ();
             }
+            noPausedSnap.TransitionTo(0);
         }
     }
 }
