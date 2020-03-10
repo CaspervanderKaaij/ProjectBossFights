@@ -23,6 +23,7 @@ public class DarkTaicaBoss : MonoBehaviour {
     [SerializeField] bool phase2Active = false;
     Hitbox hitbox;
     [SerializeField] float maxHP = 1200;
+    [SerializeField] AudioSource music;
     [Header ("Movement Stats")]
     [SerializeField] float walkSpeed = 5;
     [SerializeField] float accelerationSpeed = 3;
@@ -56,6 +57,7 @@ public class DarkTaicaBoss : MonoBehaviour {
     }
 
     void Update () {
+        SetMusicPitch();
         switch (curState) {
             case State.Normal:
                 // Walk (player.transform.position + (player.transform.forward * 3));
@@ -77,6 +79,10 @@ public class DarkTaicaBoss : MonoBehaviour {
                 AIBehaviour ();
                 break;
         }
+    }
+
+    void SetMusicPitch(){
+        music.pitch = 0.8f + ((maxHP / hitbox.hp) / 10);
     }
 
     void Walk (Vector3 goalPos) {
@@ -516,6 +522,9 @@ public class DarkTaicaBoss : MonoBehaviour {
         if(hitbox.hp == maxHP){
             curAIMode = AIMode.Defensive;
         } else if(hitbox.hp > maxHP / 2){
+            if(music.isPlaying == false){
+                music.Play();
+            }
             curAIMode = AIMode.Aggresive;
         } else if(hitbox.hp > maxHP / 4){
             if(noShootMode == false){

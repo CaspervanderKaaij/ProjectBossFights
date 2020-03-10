@@ -17,6 +17,7 @@ public class TimescaleManager : MonoBehaviour {
     [SerializeField] string pauseButton = "Pause";
     [SerializeField] AudioMixerSnapshot noPausedSnap;
     [SerializeField] AudioMixerSnapshot pausedSnap;
+    [SerializeField] Camera uiCam;
     [Header ("OptionScreen")]
     [SerializeField] GameObject optionScreen;
     GameObject optionSpawned;
@@ -97,6 +98,7 @@ public class TimescaleManager : MonoBehaviour {
             curState = State.Paused;
             Destroy (optionSpawned);
             PauseAllAudio(true);
+            uiCam.enabled = false;
         }
     }
     float noPauseTime = 0;
@@ -107,6 +109,7 @@ public class TimescaleManager : MonoBehaviour {
             curState = State.Options;
             optionSpawned = Instantiate (optionScreen);
             PauseAllAudio(true);
+            uiCam.enabled = false;
         }
     }
 
@@ -117,6 +120,7 @@ public class TimescaleManager : MonoBehaviour {
             Destroy (optionSpawned);
             isPaused = false;
             PauseAllAudio(false);
+            uiCam.enabled = true;
         }
     }
 

@@ -8,7 +8,7 @@ public class FadeImg : MonoBehaviour {
     [SerializeField] Color startColor;
     Image image;
     SpriteRenderer sprite;
-    bool scaledTime = false;
+    [SerializeField] bool scaledTime = false;
     [SerializeField] float speed;
     [SerializeField] float waitTime = 0.1f;
     [SerializeField] UnityEvent endEvent;
@@ -21,7 +21,9 @@ public class FadeImg : MonoBehaviour {
         } else {
             sprite.color = startColor;
         }
+        if(waitTime > 0){
         Invoke ("Wait", waitTime);
+        }
     }
 
     public void StartFlash(float sped,Color clr){
