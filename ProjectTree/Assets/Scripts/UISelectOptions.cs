@@ -14,7 +14,14 @@ public class UISelectOptions : UISelect {
         WindowMode,
         AntiAlias,
         Quality,
-        Nightcore
+        Nightcore,
+        OneHitDieMode,
+        HeinzHead,
+        SnakeSpear,
+        FreeCam,
+        Godmode,
+        HedgehogMode,
+        Quit
     }
     public Option option = Option.AntiAlias;
     [ConditionalField ("option", false, Option.Resolution)] public Text resText;
@@ -37,9 +44,66 @@ public class UISelectOptions : UISelect {
             case Option.WindowMode:
                 WindowMode ();
                 break;
+            case Option.Quit:
+                Application.Quit ();
+                break;
+            case Option.OneHitDieMode:
+                OneHitDieMode ();
+                break;
+            case Option.Godmode:
+                GodMode ();
+                break;
+            case Option.HedgehogMode:
+                HedgehogMode ();
+                break;
+            case Option.HeinzHead:
+                HeinzHeadMode ();
+                break;
+            case Option.SnakeSpear:
+            SnakeSpear();
+            break;
         }
     }
 
+    void OneHitDieMode () {
+        SaveStuff data = SaveSystem.LoadStuff ();
+        data.oneHitDieMode = !data.oneHitDieMode;
+        SaveSystem.Save (data);
+    }
+
+    void SnakeSpear(){
+        SaveStuff data = SaveSystem.LoadStuff ();
+        data.snekwurmSpear = !data.snekwurmSpear;
+        SaveSystem.Save (data);
+    }
+
+    void GodMode () {
+        SaveStuff data = SaveSystem.LoadStuff ();
+        data.godMode = !data.godMode;
+        SaveSystem.Save (data);
+    }
+
+    void HedgehogMode () {
+        SaveStuff data = SaveSystem.LoadStuff ();
+        data.hedgehogMode = !data.hedgehogMode;
+        if (FindObjectOfType<PlayerController> () != null) {
+            if (data.hedgehogMode == true) {
+                FindObjectOfType<PlayerController> ().speedMuliplier = 2;
+            } else {
+                FindObjectOfType<PlayerController> ().speedMuliplier = 1;
+            }
+        }
+        SaveSystem.Save (data);
+    }
+
+    void HeinzHeadMode () {
+        SaveStuff data = SaveSystem.LoadStuff ();
+        data.heinzHeadMode = !data.heinzHeadMode;
+        if (FindObjectOfType<PlayerController> () != null) {
+            FindObjectOfType<PlayerController> ().heinzHead.SetActive (data.heinzHeadMode);
+        }
+        SaveSystem.Save (data);
+    }
     void AntiAlias () {
         if (Camera.main.GetComponent<PostProcessLayer> ().antialiasingMode != PostProcessLayer.Antialiasing.None) {
             Camera.main.GetComponent<PostProcessLayer> ().antialiasingMode = PostProcessLayer.Antialiasing.None;
@@ -88,18 +152,18 @@ public class UISelectOptions : UISelect {
 
     bool isNightcore = false;
     void Nightcore () {
-        isNightcore = !SaveSystem.LoadStuff().nightcore;
+        isNightcore = !SaveSystem.LoadStuff ().nightcore;
         if (isNightcore == true) {
             mixer.SetFloat ("nightcore", 1.25f);
             if (FindObjectOfType<TimescaleManager> () != null) {
                 FindObjectOfType<TimescaleManager> ().normalScale = 1.5f;
-                FindObjectOfType<TimescaleManager> ().UpdateScale();
+                FindObjectOfType<TimescaleManager> ().UpdateScale ();
             }
         } else {
             mixer.SetFloat ("nightcore", 1);
             if (FindObjectOfType<TimescaleManager> () != null) {
                 FindObjectOfType<TimescaleManager> ().normalScale = 1f;
-                FindObjectOfType<TimescaleManager> ().UpdateScale();
+                FindObjectOfType<TimescaleManager> ().UpdateScale ();
             }
         }
 
@@ -126,7 +190,7 @@ public class UISelectOptions : UISelect {
                 qualityText.text = QualitySettings.names[curQuality];
                 break;
             case Option.Resolution:
-            curRes = SaveSystem.LoadStuff().resolution;
+                curRes = SaveSystem.LoadStuff ().resolution;
                 switch (curRes) {
                     case 0:
                         resText.text = "720p";

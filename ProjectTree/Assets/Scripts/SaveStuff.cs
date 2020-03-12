@@ -17,9 +17,13 @@ public class SaveStuff
 
     [Header("Game Rules")]
     public bool nightcore = false;
-    public bool godMode = false;
     public bool oneHitDieMode = false;
-    public bool infiniteWillpower = false;
-    public bool infiniteSkillpoints = false;
+    public bool godMode = false;
+    public bool heinzHeadMode = false;
+    public bool snekwurmSpear = false;
+    public bool hedgehogMode = false;
+    
+    [Header("Other")]
+    public float timeSpentPlaying = 0;
 
 }

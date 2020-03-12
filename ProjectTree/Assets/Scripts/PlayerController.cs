@@ -72,6 +72,9 @@ public class PlayerController : MonoBehaviour {
     public bool canBuffer = false;
     int bufferedAttack = 0;
     [SerializeField] GameObject spear;
+    [SerializeField] GameObject snekSpear;
+    [SerializeField] GameObject backspear;
+    [SerializeField] GameObject backSnekSpear;
     [SerializeField] AudioClip slamAttackAudio;
     [SerializeField] TrailRenderer[] attackTrails;
     [Header ("Hitboxes")]
@@ -81,6 +84,7 @@ public class PlayerController : MonoBehaviour {
     [Header ("Shooting")]
     public GunWeapon gunWeapon;
     [SerializeField] GameObject shootMagicCircle;
+    [SerializeField] GameObject backMagicCircle;
     [SerializeField] float shootWPCost = 5;
     [SerializeField] LineRenderer shooterLineRend;
     [Header ("Particles")]
@@ -130,7 +134,10 @@ public class PlayerController : MonoBehaviour {
         Shadow,
         Reverse
     }
+
+    [Header ("Other")]
     public ShadowProgress shadow = ShadowProgress.NoShadow;
+    public GameObject heinzHead;
 
     void Start () {
 
@@ -165,6 +172,12 @@ public class PlayerController : MonoBehaviour {
             dashVisible[0].GetComponentInChildren<Hurtbox> ().gameObject.SetActive (false);
         }
 
+        SaveStuff data = SaveSystem.LoadStuff ();
+        heinzHead.SetActive (data.heinzHeadMode);
+        if (data.hedgehogMode == true) {
+            speedMuliplier = 2;
+        }
+
     }
 
     void SetStartPos () {
@@ -180,7 +193,7 @@ public class PlayerController : MonoBehaviour {
             transform.eulerAngles = new Vector3 (0, transform.eulerAngles.y, 0);
             anim.transform.localEulerAngles = new Vector3 (anim.transform.localEulerAngles.x, anim.transform.localEulerAngles.y, 0);
             shootMagicCircle.SetActive (false);
-            speedMuliplier = Mathf.MoveTowards (speedMuliplier, 1, Time.deltaTime / 300);
+            backMagicCircle.SetActive(true);
             switch (curState) {
                 case State.Normal:
                     if (dashInvisible[0].activeSelf == false) {
@@ -370,8 +383,8 @@ public class PlayerController : MonoBehaviour {
             playerCam._enabled = true;
             anim.Play ("GetHit");
             SpawnAudio.SpawnVoice (voiceLines[Random.Range (6, 9)], 0, 1, 1, 0f);
-            spear.SetActive (false);
             shootMagicCircle.SetActive (false);
+            backMagicCircle.SetActive(true);
             Instantiate (stopDashParticle, transform.position + transform.up, Quaternion.identity);
             playerCam.MediumShake (0.15f);
 
@@ -603,7 +616,7 @@ public class PlayerController : MonoBehaviour {
         }
         RaycastHit hit;
         movev3 = Vector3.zero;
-        spear.SetActive (false);
+        SetSpearActive(true);
         curAccDec = 0;
         if (anim.GetCurrentAnimatorStateInfo (0).IsName ("WallSlide") == false) {
             anim.Play ("WallSlide");
@@ -713,9 +726,10 @@ public class PlayerController : MonoBehaviour {
     }
 
     void ShootInput () {
-        spear.SetActive (false);
+        SetSpearActive(true);
         curModeText.text = "Shoot Mode";
         shootMagicCircle.SetActive ((curState == State.Gun));
+        backMagicCircle.SetActive(!(curState == State.Gun));
         if (curState == State.Gun) {
             shooterLineRend.SetPosition (0, shootMagicCircle.transform.position);
             if (UseMouse () == false) {
@@ -829,7 +843,7 @@ public class PlayerController : MonoBehaviour {
 
     void SpearInput () {
         curModeText.text = "Spear Mode";
-        spear.SetActive (true);
+        SetSpearActive(false);
         if (Input.GetButtonDown (shootInput) == true && isGrounded == true) {
             GetAttackInput (0);
         }
@@ -1003,35 +1017,46 @@ public class PlayerController : MonoBehaviour {
     }
 
     public void GetHit () {
-        curState = State.Knockback;
-        if (hitbox.hp / maxHP < 0.3f && lowHPPostProccesing.activeSelf == false) {
-            getHitPP.weight = 1;
-            Invoke ("SetHitPPWeight", 0);
-            playerCam.HardShake (0.3f);
-            timescaleManager.SlowMo (0.5f, 0);
-            SpawnAudio.AudioSpawn (getHitAudio, 0, 1, 2);
-            playerCam.ripple.Emit ();
-        } else {
-            playerCam.MediumShake (0.3f);
-            timescaleManager.SlowMo (0.2f, 0f);
-        }
-        playerCam.SpeedLines (0.1f, 0);
-        Instantiate (getHitParticle, transform.position + transform.up, Quaternion.identity);
-        SetDashInvisible (false);
-        movev3.x = -transform.forward.x * 10;
-        movev3.z = -transform.forward.z * 10;
-        Invoke ("StopKnockback", 0.2f);
-        curAccDec = 0;
-        playerCam._enabled = true;
-        anim.Play ("GetHit");
-        SpawnAudio.SpawnVoice (voiceLines[Random.Range (6, 9)], 0, 1, 1, 0f);
-        spear.SetActive (false);
+        if (SaveSystem.LoadStuff ().oneHitDieMode == false) {
+            if (SaveSystem.LoadStuff ().godMode == false) {
+                curState = State.Knockback;
+                if (hitbox.hp / maxHP < 0.3f && lowHPPostProccesing.activeSelf == false) {
+                    getHitPP.weight = 1;
+                    Invoke ("SetHitPPWeight", 0);
+                    playerCam.HardShake (0.3f);
+                    timescaleManager.SlowMo (1, 0);
+                    SpawnAudio.AudioSpawn (getHitAudio, 0, 1, 2);
+                    playerCam.ripple.Emit ();
+                    playerCam.transform.LookAt (transform.position);
+                } else {
+                    playerCam.MediumShake (0.2f);
+                    timescaleManager.SlowMo (0.3f, 0f);
+                }
+                playerCam.SpeedLines (0.1f, 0);
+                Instantiate (getHitParticle, transform.position + transform.up, Quaternion.identity);
+                SetDashInvisible (false);
+                movev3.x = -transform.forward.x * 10;
+                movev3.z = -transform.forward.z * 10;
+                Invoke ("StopKnockback", 0.2f);
+                curAccDec = 0;
+                playerCam._enabled = true;
+                anim.Play ("GetHit");
+                SpawnAudio.SpawnVoice (voiceLines[Random.Range (6, 9)], 0, 1, 1, 0f);
+               // spear.SetActive (false);
+               // snekSpear.SetActive(false);
+               SetSpearActive(true);
 
-        GetComponent<Hitbox> ().enabled = false;
-        StopCoroutine ("HitFlash");
-        StartCoroutine ("HitFlash");
-        CancelInvoke ("StopInvincible");
-        Invoke ("StopInvincible", 1);
+                GetComponent<Hitbox> ().enabled = false;
+                StopCoroutine ("HitFlash");
+                StartCoroutine ("HitFlash");
+                CancelInvoke ("StopInvincible");
+                Invoke ("StopInvincible", 1);
+            } else {
+                hitbox.hp = maxHP;
+            }
+        } else if (curState != State.Death) {
+            hitbox.deathEv.Invoke ();
+        }
 
     }
 
@@ -1061,22 +1086,30 @@ public class PlayerController : MonoBehaviour {
     }
 
     public void Die () {
-        curState = State.Death;
-        anim.Play ("Death", 0);
-        Camera.main.cullingMask = (1 << 9) | (1 << 10);
-        playerCam.HardShake (0.2f);
-        playerCam._enabled = false;
-        movev3 = Vector3.zero;
-        SpawnAudio.SpawnVoice (voiceLines[6], 0, 1f, 1, 1.5f);
-        SpawnAudio.AudioSpawn (slamAttackAudio, 0.5f, 1, 1);
-        SetDashInvisible (false);
-        spear.SetActive (false);
-        hitbox.enabled = false;
-        GetComponent<Hitbox> ().enabled = false;
-        if (GameObject.FindGameObjectWithTag ("BackgroundCam") != null) {
-            GameObject.FindGameObjectWithTag ("BackgroundCam").SetActive (false);
+        if (SaveSystem.LoadStuff ().godMode == false) {
+            hitbox.hp = 0;
+            curState = State.Death;
+            anim.Play ("Death", 0);
+            Camera.main.cullingMask = (1 << 9) | (1 << 10);
+            playerCam.HardShake (0.2f);
+            playerCam._enabled = false;
+            movev3 = Vector3.zero;
+            SpawnAudio.SpawnVoice (voiceLines[6], 0, 1f, 1, 1.5f);
+            SpawnAudio.AudioSpawn (slamAttackAudio, 0.5f, 1, 1);
+            SetDashInvisible (false);
+            //spear.SetActive (false);
+            //snekSpear.SetActive(false);
+            SetSpearActive(true);
+            hitbox.enabled = false;
+            hpBar.curPercent = 0;
+            GetComponent<Hitbox> ().enabled = false;
+            if (GameObject.FindGameObjectWithTag ("BackgroundCam") != null) {
+                GameObject.FindGameObjectWithTag ("BackgroundCam").SetActive (false);
+            }
+            Camera.main.clearFlags = CameraClearFlags.SolidColor;
+        } else {
+            hitbox.hp = maxHP;
         }
-        Camera.main.clearFlags = CameraClearFlags.SolidColor;
     }
 
     void StopKnockback () {
@@ -1161,7 +1194,9 @@ public class PlayerController : MonoBehaviour {
         diaUI.curHolder = holder;
         diaUI.firstInput = true;
         if (curWeapon != Weapon.Spear) {
-            spear.SetActive (false);
+           // spear.SetActive (false);
+           // snekSpear.SetActive(false);
+           SetSpearActive(true);
         }
         angleGoal = transform.eulerAngles.y;
         curAccDec = 0;
@@ -1170,6 +1205,9 @@ public class PlayerController : MonoBehaviour {
     }
 
     void SetWillpowerBar () {
+        if (SaveSystem.LoadStuff ().godMode == true) {
+            willpower = 100;
+        }
         if (isGrounded == true) {
             willpower = Mathf.MoveTowards (willpower, 100, Time.deltaTime * willpowerRefillSpeed);
         }
@@ -1196,12 +1234,28 @@ public class PlayerController : MonoBehaviour {
         }
 
         //couldn't find a good place to put this, didn't feel like adding one
-        if (spear.activeSelf == true) {
+        if (spear.activeSelf == true || snekSpear.activeSelf == true) {
             anim.SetLayerWeight (1, 0);
         } else {
             anim.SetLayerWeight (1, 1);
         }
 
+    }
+
+    void SetSpearActive(bool onBack){
+        if (SaveSystem.LoadStuff ().snekwurmSpear == false) {
+            spear.SetActive (!onBack);
+            backspear.SetActive(onBack);
+
+            snekSpear.SetActive(false);
+            backSnekSpear.SetActive(false);
+        } else {
+            snekSpear.SetActive (!onBack);
+            backSnekSpear.SetActive(onBack);
+
+            spear.SetActive(false);
+            backspear.SetActive(false);
+        }
     }
 
     void SetHPBar () {

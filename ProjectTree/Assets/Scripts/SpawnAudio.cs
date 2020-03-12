@@ -60,6 +60,7 @@ public class SpawnAudio : MonoBehaviour {
     public static GameObject SpawnVoice (AudioClip clip, float startTime, float pitch, float volume, float delay) {
         GameObject g = new GameObject ();
         AudioSource s = g.AddComponent<AudioSource> ();
+        s.priority = 200;
         s.clip = clip;
         s.pitch = pitch;
         s.time = startTime;

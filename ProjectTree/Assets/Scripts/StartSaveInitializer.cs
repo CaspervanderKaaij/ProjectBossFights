@@ -95,4 +95,10 @@ public class StartSaveInitializer : MonoBehaviour {
         }
     }
 
+    void OnApplicationQuit() {
+        SaveStuff stuff = SaveSystem.LoadStuff();
+        stuff.timeSpentPlaying += Time.unscaledTime;
+        SaveSystem.Save(stuff);
+    }
+
 }

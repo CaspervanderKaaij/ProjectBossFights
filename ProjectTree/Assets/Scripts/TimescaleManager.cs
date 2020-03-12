@@ -17,7 +17,7 @@ public class TimescaleManager : MonoBehaviour {
     [SerializeField] string pauseButton = "Pause";
     [SerializeField] AudioMixerSnapshot noPausedSnap;
     [SerializeField] AudioMixerSnapshot pausedSnap;
-    [SerializeField] Camera uiCam;
+    public Camera uiCam;
     [Header ("OptionScreen")]
     [SerializeField] GameObject optionScreen;
     GameObject optionSpawned;
@@ -97,8 +97,9 @@ public class TimescaleManager : MonoBehaviour {
             noPauseTime = noPauseWait;
             curState = State.Paused;
             Destroy (optionSpawned);
-            PauseAllAudio(true);
+            PauseAllAudio (true,true);
             uiCam.enabled = false;
+
         }
     }
     float noPauseTime = 0;
@@ -108,8 +109,9 @@ public class TimescaleManager : MonoBehaviour {
             noPauseTime = noPauseWait;
             curState = State.Options;
             optionSpawned = Instantiate (optionScreen);
-            PauseAllAudio(true);
+            PauseAllAudio (true,true);
             uiCam.enabled = false;
+
         }
     }
 
@@ -119,12 +121,13 @@ public class TimescaleManager : MonoBehaviour {
             curState = State.None;
             Destroy (optionSpawned);
             isPaused = false;
-            PauseAllAudio(false);
+            PauseAllAudio (false,true);
             uiCam.enabled = true;
+
         }
     }
 
-    void PauseAllAudio (bool pause) {
+    public void PauseAllAudio (bool pause, bool setSnapshots) {
         List<AudioSource> allAudio = new List<AudioSource> (FindObjectsOfType<AudioSource> ());
         if (FindObjectOfType<MusicManager> () != null) {
             allAudio.Remove (FindObjectOfType<MusicManager> ().GetComponent<AudioSource> ());
@@ -133,12 +136,14 @@ public class TimescaleManager : MonoBehaviour {
             for (int i = 0; i < allAudio.Count; i++) {
                 allAudio[i].Pause ();
             }
-            pausedSnap.TransitionTo(0);
+            if(setSnapshots == true)
+            pausedSnap.TransitionTo (0);
         } else {
             for (int i = 0; i < allAudio.Count; i++) {
                 allAudio[i].UnPause ();
             }
-            noPausedSnap.TransitionTo(0);
+            if(setSnapshots == true)
+            noPausedSnap.TransitionTo (0);
         }
     }
 }

@@ -8,6 +8,7 @@ public class UIInputManager : MonoBehaviour {
     [Header ("Input")]
     [SerializeField] string horInput = "Item1";
     [SerializeField] string vertInput = "Item3";
+    [SerializeField] float speed = 15;
     void Start () {
         selectables.Clear ();
         selectables.AddRange (transform.parent.GetComponentsInChildren<UISelect> ());
@@ -15,8 +16,13 @@ public class UIInputManager : MonoBehaviour {
         curSelected = selectables[0];
     }
 
+    public void UpdateSelectables(){
+        selectables.Clear ();
+        selectables.AddRange (transform.parent.GetComponentsInChildren<UISelect> ());
+    }
+
     void Update () {
-        transform.position = Vector3.Lerp (transform.position, curSelected.transform.position, Time.unscaledDeltaTime * 15);
+        transform.position = Vector3.Lerp (transform.position, curSelected.transform.position, Time.unscaledDeltaTime * speed);
         CheckIsOvers ();
         GetInput ();
     }
