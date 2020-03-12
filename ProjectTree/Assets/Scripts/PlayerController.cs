@@ -983,6 +983,8 @@ public class PlayerController : MonoBehaviour {
         for (int i = 0; i < dashVisible.Length; i++) {
             dashVisible[i].SetActive (isDash);
         }
+
+        heinzHead.SetActive (SaveSystem.LoadStuff ().heinzHeadMode);
     }
 
     void WaitShoot () {
