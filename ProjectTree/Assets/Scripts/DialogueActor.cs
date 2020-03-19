@@ -29,7 +29,7 @@ public class DialogueActor : MonoBehaviour {
             if (events[i].textNum == ui.curDia) {
                 switch (events[i].evType) {
                     case DiaEvent.EventType.MoveTowards:
-                        StartCoroutine(MoveTow(i));
+                        StartCoroutine (MoveTow (i));
                         break;
                     case DiaEvent.EventType.SetAnimation:
                         SetAnim (i);
@@ -39,6 +39,9 @@ public class DialogueActor : MonoBehaviour {
                         break;
                     case DiaEvent.EventType.PlaySound:
                         PlayS (i);
+                        break;
+                    case DiaEvent.EventType.CopyTransform:
+                        CopyTrans (i);
                         break;
                 }
             }
@@ -52,12 +55,26 @@ public class DialogueActor : MonoBehaviour {
     void SetAnim (int ev) {
         events[ev].anim.Play (events[ev].animName);
     }
+
+    void CopyTrans (int ev) {
+        if (events[ev].trans != null) {
+            events[ev].trans.position = events[ev].toCopy.position;
+            events[ev].trans.rotation = events[ev].toCopy.rotation;
+            events[ev].trans.localScale = events[ev].toCopy.localScale;
+
+            if(events[ev].parentToToCopy == true){
+                events[ev].trans.SetParent(events[ev].toCopy);
+            } else {
+                events[ev].trans.SetParent(null);
+            }
+        }
+    }
     IEnumerator MoveTow (int ev) {
         if (ui.curDia == events[ev].textNum) {
             events[ev].trans.position = Vector3.MoveTowards (events[ev].trans.position, events[ev].pos, Time.deltaTime * events[ev].speed);
             events[ev].trans.rotation = Quaternion.Lerp (events[ev].trans.rotation, Quaternion.Euler (events[ev].pos), Time.deltaTime * events[ev].rotSpeed);
-            yield return new WaitForEndOfFrame();
-            StartCoroutine(MoveTow(ev));
+            yield return new WaitForEndOfFrame ();
+            StartCoroutine (MoveTow (ev));
         } else {
             events[ev].trans.position = events[ev].pos;
             events[ev].trans.eulerAngles = events[ev].rot;
@@ -74,6 +91,7 @@ public class DiaEvent {
     public int textNum = 0;
     public enum EventType {
         Teleport,
+        CopyTransform,
         SetAnimation,
         MoveTowards,
         PlaySound,
@@ -92,6 +110,8 @@ public class DiaEvent {
     [ConditionalField ("evType", false, EventType.SetAnimation)] public Animator anim;
     //play sound
     [ConditionalField ("evType", false, EventType.PlaySound)] public AudioClip clip;
+    [ConditionalField ("evType", false, EventType.CopyTransform)] public Transform toCopy;
+    [ConditionalField ("evType", false, EventType.CopyTransform)] public bool parentToToCopy;
     [Space]
     [SerializeField] UnityEvent ev;
 }

@@ -137,13 +137,13 @@ public class PlayerController : MonoBehaviour {
 
     [Header ("Other")]
     public ShadowProgress shadow = ShadowProgress.NoShadow;
-    public GameObject heinzHead;
+    public Renderer heinzHead;
 
     void Start () {
 
-        if (FindObjectOfType<StartSaveInitializer> () != null) {
-            FindObjectOfType<StartSaveInitializer> ().OnEnable ();
-        }
+        //if (FindObjectOfType<StartSaveInitializer> () != null) {
+        //   FindObjectOfType<StartSaveInitializer> ().OnEnable ();
+        //  }
         cc = GetComponent<CharacterController> ();
         angleGoal = transform.eulerAngles.y;
         playerCam = cameraTransform.GetComponent<PlayerCam> ();
@@ -173,7 +173,7 @@ public class PlayerController : MonoBehaviour {
         }
 
         SaveStuff data = SaveSystem.LoadStuff ();
-        heinzHead.SetActive (data.heinzHeadMode);
+        heinzHead.enabled = data.heinzHeadMode;
         if (data.hedgehogMode == true) {
             speedMuliplier = 2;
         }
@@ -193,7 +193,7 @@ public class PlayerController : MonoBehaviour {
             transform.eulerAngles = new Vector3 (0, transform.eulerAngles.y, 0);
             anim.transform.localEulerAngles = new Vector3 (anim.transform.localEulerAngles.x, anim.transform.localEulerAngles.y, 0);
             shootMagicCircle.SetActive (false);
-            backMagicCircle.SetActive(true);
+            backMagicCircle.SetActive (true);
             switch (curState) {
                 case State.Normal:
                     if (dashInvisible[0].activeSelf == false) {
@@ -263,12 +263,13 @@ public class PlayerController : MonoBehaviour {
                     FinalMove ();
                     if (isGrounded == true) {
                         GetAttackInput (3);
-                        playerCam.MediumShake (0.1f);
+                        playerCam.MediumShake (0.3f);
                         // playerCam.ripple.Emit ();
                         Instantiate (WdRipple, hitboxes[1].transform.position, Quaternion.Euler (90, 0, 0));
                         Instantiate (stopDashParticle, transform.position, Quaternion.identity);
                         SpawnAudio.AudioSpawn (slamAttackAudio, 0.5f, Random.Range (4, 5), 0.5f);
-                        timescaleManager.SlowMo (0.15f, 0.05f, 0.1f);
+                        //timescaleManager.SlowMo (0.15f, 0.05f, 0.1f);
+                        playerCam.transform.Rotate (10, 0, 0);
 
                     } else {
                         DashInput ();
@@ -316,20 +317,23 @@ public class PlayerController : MonoBehaviour {
             curWeapon = Weapon.Spear;
             movev3 = Vector3.zero;
             anim.Play ("Parry");
-            playerCam.SmallShake (0.1f);
             Invoke ("StopAttack", 0.3f);
             isGrounded = true;
             wasGrounded = true;
             curAccDec = 0;
-            movev3.x = 0;
-            movev3.z = 0;
+
+            playerCam.ripple.Emit ();
+
+            SetSpearActive (false);
 
         }
     }
 
     public void ParrySuccess () {
         playerCam.HardShake (0.1f);
-        playerCam.ripple.Emit ();
+        // playerCam.ripple.Emit ();
+        //playerCam.Flash (new Color(0,0,0,1), 5);
+
         timescaleManager.SlowMo (0.2f, 0.1f);
         Instantiate (hitEffectParticle, hitboxes[0].transform.position, Quaternion.identity);
         SpawnAudio.SpawnVoice (voiceLines[0], 0, 1, 1f, 0);
@@ -338,6 +342,8 @@ public class PlayerController : MonoBehaviour {
         SpawnAudio.AudioSpawn (slamAttackAudio, 0.5f, Random.Range (4, 5), 0.4f);
 
         anim.Play ("ParryHit");
+
+        playerCam.transform.Rotate (-10, 0, 5);
     }
 
     float AnalAngle () {
@@ -384,7 +390,7 @@ public class PlayerController : MonoBehaviour {
             anim.Play ("GetHit");
             SpawnAudio.SpawnVoice (voiceLines[Random.Range (6, 9)], 0, 1, 1, 0f);
             shootMagicCircle.SetActive (false);
-            backMagicCircle.SetActive(true);
+            backMagicCircle.SetActive (true);
             Instantiate (stopDashParticle, transform.position + transform.up, Quaternion.identity);
             playerCam.MediumShake (0.15f);
 
@@ -616,7 +622,7 @@ public class PlayerController : MonoBehaviour {
         }
         RaycastHit hit;
         movev3 = Vector3.zero;
-        SetSpearActive(true);
+        SetSpearActive (true);
         curAccDec = 0;
         if (anim.GetCurrentAnimatorStateInfo (0).IsName ("WallSlide") == false) {
             anim.Play ("WallSlide");
@@ -726,10 +732,10 @@ public class PlayerController : MonoBehaviour {
     }
 
     void ShootInput () {
-        SetSpearActive(true);
+        SetSpearActive (true);
         curModeText.text = "Shoot Mode";
         shootMagicCircle.SetActive ((curState == State.Gun));
-        backMagicCircle.SetActive(!(curState == State.Gun));
+        backMagicCircle.SetActive (!(curState == State.Gun));
         if (curState == State.Gun) {
             shooterLineRend.SetPosition (0, shootMagicCircle.transform.position);
             if (UseMouse () == false) {
@@ -843,7 +849,7 @@ public class PlayerController : MonoBehaviour {
 
     void SpearInput () {
         curModeText.text = "Spear Mode";
-        SetSpearActive(false);
+        SetSpearActive (false);
         if (Input.GetButtonDown (shootInput) == true && isGrounded == true) {
             GetAttackInput (0);
         }
@@ -966,8 +972,9 @@ public class PlayerController : MonoBehaviour {
 
     public void HitSuccessEffects (int hitter) {
         playerCam.MediumShake (0.3f);
+        playerCam.transform.Rotate (Random.Range (-7, 7), 0, Random.Range (-7, 7));
         Instantiate (hitEffectParticle, hitboxes[hitter].transform.position, Quaternion.identity);
-        timescaleManager.SlowMo (0.1f, 0f);
+        timescaleManager.SlowMo (0.15f, 0.05f);
         SpawnAudio.AudioSpawn (hitEffectAudio, 0f, Random.Range (4.95f, 6.45f), 1);
         SpawnAudio.AudioSpawn (hitEffectAudio, 0f, Random.Range (0.95f, 1.45f), 1);
         SpawnAudio.AudioSpawn (dashAudio[1], 0.3f, Random.Range (4.5f, 5.5f), 1);
@@ -984,7 +991,7 @@ public class PlayerController : MonoBehaviour {
             dashVisible[i].SetActive (isDash);
         }
 
-        heinzHead.SetActive (SaveSystem.LoadStuff ().heinzHeadMode);
+        heinzHead.enabled = SaveSystem.LoadStuff ().heinzHeadMode;
     }
 
     void WaitShoot () {
@@ -1044,9 +1051,9 @@ public class PlayerController : MonoBehaviour {
                 playerCam._enabled = true;
                 anim.Play ("GetHit");
                 SpawnAudio.SpawnVoice (voiceLines[Random.Range (6, 9)], 0, 1, 1, 0f);
-               // spear.SetActive (false);
-               // snekSpear.SetActive(false);
-               SetSpearActive(true);
+                // spear.SetActive (false);
+                // snekSpear.SetActive(false);
+                SetSpearActive (true);
 
                 GetComponent<Hitbox> ().enabled = false;
                 StopCoroutine ("HitFlash");
@@ -1101,7 +1108,7 @@ public class PlayerController : MonoBehaviour {
             SetDashInvisible (false);
             //spear.SetActive (false);
             //snekSpear.SetActive(false);
-            SetSpearActive(true);
+            SetSpearActive (true);
             hitbox.enabled = false;
             hpBar.curPercent = 0;
             GetComponent<Hitbox> ().enabled = false;
@@ -1196,9 +1203,9 @@ public class PlayerController : MonoBehaviour {
         diaUI.curHolder = holder;
         diaUI.firstInput = true;
         if (curWeapon != Weapon.Spear) {
-           // spear.SetActive (false);
-           // snekSpear.SetActive(false);
-           SetSpearActive(true);
+            // spear.SetActive (false);
+            // snekSpear.SetActive(false);
+            SetSpearActive (true);
         }
         angleGoal = transform.eulerAngles.y;
         curAccDec = 0;
@@ -1244,19 +1251,19 @@ public class PlayerController : MonoBehaviour {
 
     }
 
-    void SetSpearActive(bool onBack){
+    void SetSpearActive (bool onBack) {
         if (SaveSystem.LoadStuff ().snekwurmSpear == false) {
             spear.SetActive (!onBack);
-            backspear.SetActive(onBack);
+            backspear.SetActive (onBack);
 
-            snekSpear.SetActive(false);
-            backSnekSpear.SetActive(false);
+            snekSpear.SetActive (false);
+            backSnekSpear.SetActive (false);
         } else {
             snekSpear.SetActive (!onBack);
-            backSnekSpear.SetActive(onBack);
+            backSnekSpear.SetActive (onBack);
 
-            spear.SetActive(false);
-            backspear.SetActive(false);
+            spear.SetActive (false);
+            backspear.SetActive (false);
         }
     }
 

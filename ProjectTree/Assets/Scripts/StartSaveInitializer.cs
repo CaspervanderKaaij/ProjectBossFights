@@ -9,7 +9,7 @@ public class StartSaveInitializer : MonoBehaviour {
     public AudioMixer mixer;
     PlayerController player;
     SaveStuff data;
-    public void OnEnable () {
+    public void OnEnable () {//if this does not activate, add something in the scene that activates it in start
         player = FindObjectOfType<PlayerController> ();
         data = SaveSystem.LoadStuff ();
 

@@ -100,7 +100,7 @@ public class UISelectOptions : UISelect {
         SaveStuff data = SaveSystem.LoadStuff ();
         data.heinzHeadMode = !data.heinzHeadMode;
         if (FindObjectOfType<PlayerController> () != null) {
-            FindObjectOfType<PlayerController> ().heinzHead.SetActive (data.heinzHeadMode);
+            FindObjectOfType<PlayerController> ().heinzHead.enabled = data.heinzHeadMode;
         }
         SaveSystem.Save (data);
     }

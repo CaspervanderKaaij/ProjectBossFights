@@ -32,7 +32,7 @@ public class Dialogue : MonoBehaviour {
         if (curHolder != null) {
             talker.text = curHolder.dialogue[curDia].talker;
             player.hudCanvas.enabled = false;
-            textBack.SetActive(true);
+            textBack.SetActive (true);
             if (curHolder.dialogue[curDia].method == DiaVars.NextDiaMethod.Press) {
                 if (Input.GetButtonUp (player.shootInput) == true && IsInvoking ("NoInput") == false) {
                     if (IsInvoking ("SetTextPerLetter") == false) {
@@ -64,7 +64,7 @@ public class Dialogue : MonoBehaviour {
         } else if (textBack.activeSelf == true) {
             talker.text = "";
             text.text = "";
-            textBack.SetActive(false);
+            textBack.SetActive (false);
             player.hudCanvas.enabled = true;
             player.curState = PlayerController.State.Normal;
             endEv.Invoke ();
@@ -96,7 +96,7 @@ public class Dialogue : MonoBehaviour {
 
     void SelfBased () {
         if (curHolder != null) {
-            textBack.SetActive(true);
+            textBack.SetActive (true);
             SetTextPerLetter ();
             if (Input.GetButtonUp ("Shoot") == true && IsInvoking ("NoInput") == false) {
                 if (firstInput == false) {
@@ -112,8 +112,8 @@ public class Dialogue : MonoBehaviour {
             }
         } else if (textBack.activeSelf == true) {
             text.text = "";
-            textBack.SetActive(false);
-            endEv.Invoke ();
+            textBack.SetActive (false);
+            endEv.Invoke();
         }
     }
 

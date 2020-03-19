@@ -5,7 +5,7 @@ using UnityEngine.Audio;
 
 public class SpawnAudio : MonoBehaviour {
     public static void AudioSpawn (AudioClip clip, float startTime, float pitch, float volume) {
-        GameObject g = new GameObject ();
+        GameObject g = new GameObject (clip.name);
         AudioSource s = g.AddComponent<AudioSource> ();
         s.clip = clip;
         s.pitch = pitch;
@@ -22,7 +22,7 @@ public class SpawnAudio : MonoBehaviour {
     }
 
     public static void AudioSpawn (AudioClip clip, float startTime, float pitch, float volume,float delay) {
-        GameObject g = new GameObject ();
+        GameObject g = new GameObject (clip.name);
         AudioSource s = g.AddComponent<AudioSource> ();
         s.clip = clip;
         s.pitch = pitch;
@@ -40,7 +40,7 @@ public class SpawnAudio : MonoBehaviour {
 
     public static void AudioSpawn (AudioClip[] clip, float startTime, float pitch, float volume) {
         for (int i = 0; i < clip.Length; i++) {
-            GameObject g = new GameObject ();
+            GameObject g = new GameObject ("audioSFX");
             AudioSource s = g.AddComponent<AudioSource> ();
             s.clip = clip[i];
             s.pitch = pitch;
@@ -58,7 +58,7 @@ public class SpawnAudio : MonoBehaviour {
     }
 
     public static GameObject SpawnVoice (AudioClip clip, float startTime, float pitch, float volume, float delay) {
-        GameObject g = new GameObject ();
+        GameObject g = new GameObject (clip.name);
         AudioSource s = g.AddComponent<AudioSource> ();
         s.priority = 200;
         s.clip = clip;
