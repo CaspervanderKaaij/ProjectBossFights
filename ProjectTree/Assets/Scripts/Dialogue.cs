@@ -12,7 +12,7 @@ public class Dialogue : MonoBehaviour {
     [HideInInspector] public int curDia;
     PlayerController player;
     [HideInInspector] public bool firstInput = false;
-    [SerializeField] UnityEvent endEv;
+    public UnityEvent endEv;
     //[SerializeField] AudioClip[] voiceAudio;
     [SerializeField] DiaTalkerValues[] voices;
     void Start () {
@@ -27,7 +27,6 @@ public class Dialogue : MonoBehaviour {
                 player.hudCanvas.enabled = false;
             }
             textBack.SetActive (true);
-            curHolder.dialogue[curDia].waitTime = curHolder.dialogue[curDia]._waitTime;
             switch (curHolder.dialogue[curDia].method) {
                 case DiaVars.NextDiaMethod.Press:
                     UpdatePress ();
@@ -42,6 +41,7 @@ public class Dialogue : MonoBehaviour {
                     textBack.SetActive (false);
                     break;
                 case DiaVars.NextDiaMethod.NoBackWait:
+                    curHolder.dialogue[curDia].waitTime = curHolder.dialogue[curDia]._waitTime;
                     if (IsInvoking ("NextLine") == false) {
                         Invoke ("NextLine", curHolder.dialogue[curDia].waitTime);
                     }
@@ -57,6 +57,11 @@ public class Dialogue : MonoBehaviour {
                 }
             }
         } else if (text.text != " ") {
+            End();
+        }
+    }
+
+    public void End(){
             talker.text = "";
             text.text = " ";
             textBack.SetActive (false);
@@ -65,7 +70,6 @@ public class Dialogue : MonoBehaviour {
                 player.curState = PlayerController.State.Normal;
             }
             endEv.Invoke ();
-        }
     }
 
     void UpdatePress () {

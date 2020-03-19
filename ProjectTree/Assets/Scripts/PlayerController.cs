@@ -1081,8 +1081,10 @@ public class PlayerController : MonoBehaviour {
     public IEnumerator HitFlash () {
         if (GetComponent<Hitbox> ().enabled == false) {
             if (dashInvisible[0].activeSelf == true) {
+                if(timescaleManager.isPaused == false){
                 for (int i = 0; i < dashInvisible.Length; i++) {
                     dashInvisible[i].SetActive (false);
+                }
                 }
             } else if (curState != State.Dash) {
                 for (int i = 0; i < dashInvisible.Length; i++) {
