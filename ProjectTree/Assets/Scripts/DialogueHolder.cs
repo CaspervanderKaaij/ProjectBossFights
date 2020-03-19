@@ -14,10 +14,13 @@ public class DiaVars {
     public float letterSpeed = 0.05f;
     public enum NextDiaMethod {
         Press,
-        Wait
+        Wait,
+        NoBackPress,
+        NoBackWait
     }
     public NextDiaMethod method;
     public int talkerID;
     [ConditionalField("method",false,NextDiaMethod.Wait)] public float waitTime = 1;
+    [ConditionalField("method",false,NextDiaMethod.NoBackWait)] public float _waitTime = 1;
 
 }

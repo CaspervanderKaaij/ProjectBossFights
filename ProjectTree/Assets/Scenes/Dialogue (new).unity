@@ -283,7 +283,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 83497243}
   m_LocalRotation: {x: -0, y: 0.36457357, z: -0, w: 0.9311746}
-  m_LocalPosition: {x: -1.36, y: 0.482, z: 1.845}
+  m_LocalPosition: {x: -1.93, y: 0.756, z: 1.23}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 2079066116}
@@ -420,6 +420,7 @@ MonoBehaviour:
     clip: {fileID: 0}
     toCopy: {fileID: 0}
     parentToToCopy: 0
+    newMusic: {fileID: 0}
     ev:
       m_PersistentCalls:
         m_Calls: []
@@ -437,6 +438,7 @@ MonoBehaviour:
     clip: {fileID: 0}
     toCopy: {fileID: 0}
     parentToToCopy: 0
+    newMusic: {fileID: 0}
     ev:
       m_PersistentCalls:
         m_Calls: []
@@ -454,6 +456,7 @@ MonoBehaviour:
     clip: {fileID: 0}
     toCopy: {fileID: 0}
     parentToToCopy: 0
+    newMusic: {fileID: 0}
     ev:
       m_PersistentCalls:
         m_Calls: []
@@ -1289,6 +1292,105 @@ MonoBehaviour:
   - {fileID: 749413830}
   debug: 1
   threshold: 0.01
+--- !u!1 &517026018
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 517026020}
+  - component: {fileID: 517026019}
+  m_Layer: 0
+  m_Name: Set Music
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &517026019
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 517026018}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0385fd1f3b694cc478ca7fba547b8ff6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  holder: {fileID: 1715875317}
+  events:
+  - trans: {fileID: 0}
+    textNum: 0
+    evType: 5
+    newPos: {x: 0, y: 0, z: 0}
+    newRot: {x: 0, y: 0, z: 0}
+    pos: {x: 0, y: 0, z: 0}
+    rot: {x: 0, y: 0, z: 0}
+    speed: 0
+    rotSpeed: 0
+    animName: 
+    anim: {fileID: 0}
+    clip: {fileID: 0}
+    toCopy: {fileID: 0}
+    parentToToCopy: 0
+    newMusic: {fileID: 8300000, guid: 0c37453d764aae047a70583ad0c03df9, type: 3}
+    ev:
+      m_PersistentCalls:
+        m_Calls: []
+  - trans: {fileID: 0}
+    textNum: 1
+    evType: 5
+    newPos: {x: 0, y: 0, z: 0}
+    newRot: {x: 0, y: 0, z: 0}
+    pos: {x: 0, y: 0, z: 0}
+    rot: {x: 0, y: 0, z: 0}
+    speed: 0
+    rotSpeed: 0
+    animName: 
+    anim: {fileID: 0}
+    clip: {fileID: 0}
+    toCopy: {fileID: 0}
+    parentToToCopy: 0
+    newMusic: {fileID: 8300000, guid: 3c376f170eb364b409523c3bf67afeee, type: 3}
+    ev:
+      m_PersistentCalls:
+        m_Calls: []
+  - trans: {fileID: 0}
+    textNum: 2
+    evType: 5
+    newPos: {x: 0, y: 0, z: 0}
+    newRot: {x: 0, y: 0, z: 0}
+    pos: {x: 0, y: 0, z: 0}
+    rot: {x: 0, y: 0, z: 0}
+    speed: 0
+    rotSpeed: 0
+    animName: 
+    anim: {fileID: 0}
+    clip: {fileID: 0}
+    toCopy: {fileID: 0}
+    parentToToCopy: 0
+    newMusic: {fileID: 8300000, guid: 593f41fa558d2b6479603bc153b8928b, type: 3}
+    ev:
+      m_PersistentCalls:
+        m_Calls: []
+--- !u!4 &517026020
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 517026018}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -8.869213, y: 1.3197758, z: 4.297005}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 9
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &578830269
 GameObject:
   m_ObjectHideFlags: 0
@@ -3859,24 +3961,29 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dialogue:
-  - dia: The next scene will be the Heinz Boss Fight!
+  - dia: 'I wanted to let you fight Heinz.
+
+      Sadly enough, he died of old age a few minutes ago.'
     talker: 
-    letterSpeed: 0.05
+    letterSpeed: 0.01
     method: 0
     talkerID: 0
     waitTime: 1
-  - dia: But first, this video is sponsored by Raid Shadow Legends!
+    _waitTime: 1
+  - dia: 
     talker: 
-    letterSpeed: 0.05
-    method: 0
+    letterSpeed: 0.01
+    method: 3
     talkerID: 0
-    waitTime: 1
+    waitTime: 3
+    _waitTime: 6
   - dia: jk here's the boss.
     talker: 
-    letterSpeed: 0.05
-    method: 0
+    letterSpeed: 0.01
+    method: 1
     talkerID: 0
-    waitTime: 1
+    waitTime: 3
+    _waitTime: 1
 --- !u!1001 &1945882142
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3961,6 +4068,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1968721479}
   - component: {fileID: 1968721480}
+  - component: {fileID: 1968721481}
   m_Layer: 0
   m_Name: CamPos2
   m_TagString: Untagged
@@ -3975,13 +4083,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1968721478}
-  m_LocalRotation: {x: -0.08466755, y: 0.11102742, z: 0.009493853, w: 0.9901587}
-  m_LocalPosition: {x: -0.546, y: 0.866, z: 2.048}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.21, y: 1.957, z: -0.596}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 2079066116}
   m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: -9.775001, y: 12.7960005, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!20 &1968721480
 Camera:
   m_ObjectHideFlags: 0
@@ -4025,6 +4133,21 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
+--- !u!114 &1968721481
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1968721478}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ba251873a473c8469ecff263950b810, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  goal: {fileID: 1707243786832188987}
+  offset: {x: 0, y: 0, z: 0}
+  lookatCam: 0
 --- !u!1 &2079066115
 GameObject:
   m_ObjectHideFlags: 0
@@ -5016,6 +5139,7 @@ MonoBehaviour:
     clip: {fileID: 0}
     toCopy: {fileID: 0}
     parentToToCopy: 0
+    newMusic: {fileID: 0}
     ev:
       m_PersistentCalls:
         m_Calls: []
@@ -5894,6 +6018,7 @@ MonoBehaviour:
     clip: {fileID: 0}
     toCopy: {fileID: 83497244}
     parentToToCopy: 1
+    newMusic: {fileID: 0}
     ev:
       m_PersistentCalls:
         m_Calls: []
@@ -5911,6 +6036,7 @@ MonoBehaviour:
     clip: {fileID: 0}
     toCopy: {fileID: 1968721479}
     parentToToCopy: 1
+    newMusic: {fileID: 0}
     ev:
       m_PersistentCalls:
         m_Calls: []
@@ -5928,6 +6054,7 @@ MonoBehaviour:
     clip: {fileID: 0}
     toCopy: {fileID: 441844620}
     parentToToCopy: 1
+    newMusic: {fileID: 0}
     ev:
       m_PersistentCalls:
         m_Calls: []
@@ -6186,11 +6313,12 @@ MonoBehaviour:
     rot: {x: 0, y: 0, z: 0}
     speed: 0
     rotSpeed: 0
-    animName: Run
+    animName: Idle
     anim: {fileID: 3166231813146682364}
     clip: {fileID: 0}
     toCopy: {fileID: 0}
     parentToToCopy: 0
+    newMusic: {fileID: 0}
     ev:
       m_PersistentCalls:
         m_Calls: []
@@ -6203,11 +6331,12 @@ MonoBehaviour:
     rot: {x: 0, y: 0, z: 0}
     speed: 0
     rotSpeed: 0
-    animName: TaicaHeal
+    animName: Death
     anim: {fileID: 3166231813146682364}
     clip: {fileID: 0}
     toCopy: {fileID: 0}
     parentToToCopy: 0
+    newMusic: {fileID: 0}
     ev:
       m_PersistentCalls:
         m_Calls: []

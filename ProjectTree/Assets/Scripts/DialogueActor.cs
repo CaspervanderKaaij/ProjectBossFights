@@ -43,6 +43,9 @@ public class DialogueActor : MonoBehaviour {
                     case DiaEvent.EventType.CopyTransform:
                         CopyTrans (i);
                         break;
+                    case DiaEvent.EventType.SetMusic:
+                        SetMusic (i);
+                        break;
                 }
             }
         }
@@ -56,16 +59,28 @@ public class DialogueActor : MonoBehaviour {
         events[ev].anim.Play (events[ev].animName);
     }
 
+    void SetMusic (int ev) {
+        if (FindObjectOfType<MusicManager> () != null) {
+            MusicManager musicMan = FindObjectOfType<MusicManager> ();
+            if (events[ev].newMusic != null) {
+                musicMan.StopMusic (9999);
+                musicMan.FadeToNewMusic (events[ev].newMusic);
+            } else {
+                musicMan.StopMusic (1);
+            }
+        }
+    }
+
     void CopyTrans (int ev) {
         if (events[ev].trans != null) {
             events[ev].trans.position = events[ev].toCopy.position;
             events[ev].trans.rotation = events[ev].toCopy.rotation;
             events[ev].trans.localScale = events[ev].toCopy.localScale;
 
-            if(events[ev].parentToToCopy == true){
-                events[ev].trans.SetParent(events[ev].toCopy);
+            if (events[ev].parentToToCopy == true) {
+                events[ev].trans.SetParent (events[ev].toCopy);
             } else {
-                events[ev].trans.SetParent(null);
+                events[ev].trans.SetParent (null);
             }
         }
     }
@@ -95,6 +110,7 @@ public class DiaEvent {
         SetAnimation,
         MoveTowards,
         PlaySound,
+        SetMusic
     }
     public EventType evType = EventType.Teleport;
     //teleport
@@ -112,6 +128,7 @@ public class DiaEvent {
     [ConditionalField ("evType", false, EventType.PlaySound)] public AudioClip clip;
     [ConditionalField ("evType", false, EventType.CopyTransform)] public Transform toCopy;
     [ConditionalField ("evType", false, EventType.CopyTransform)] public bool parentToToCopy;
+    [ConditionalField ("evType", false, EventType.SetMusic)] public AudioClip newMusic;
     [Space]
     [SerializeField] UnityEvent ev;
 }

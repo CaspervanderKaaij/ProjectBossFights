@@ -19,39 +19,34 @@ public class Dialogue : MonoBehaviour {
         player = FindObjectOfType<PlayerController> ();
     }
 
-    void Update () {
-        if (player != null) {
-            PlayerBased ();
-        } else {
-            SelfBased ();
-        }
-    }
-
     public float noInputTime = 1;
-    void PlayerBased () {
+    void Update () {
         if (curHolder != null) {
             talker.text = curHolder.dialogue[curDia].talker;
-            player.hudCanvas.enabled = false;
+            if (player != null) {
+                player.hudCanvas.enabled = false;
+            }
             textBack.SetActive (true);
-            if (curHolder.dialogue[curDia].method == DiaVars.NextDiaMethod.Press) {
-                if (Input.GetButtonUp (player.shootInput) == true && IsInvoking ("NoInput") == false) {
-                    if (IsInvoking ("SetTextPerLetter") == false) {
-                        if (firstInput == false) {
-                            NextLine ();
-                        } else {
-                            firstInput = false;
-                        }
-                    } else {
-                        if (firstInput == false) {
-                            CancelInvoke ("SetTextPerLetter");
-                            text.text = curHolder.dialogue[curDia].dia;
-                        } else {
-                            firstInput = false;
-                        }
+            curHolder.dialogue[curDia].waitTime = curHolder.dialogue[curDia]._waitTime;
+            switch (curHolder.dialogue[curDia].method) {
+                case DiaVars.NextDiaMethod.Press:
+                    UpdatePress ();
+                    break;
+                case DiaVars.NextDiaMethod.Wait:
+                    if (IsInvoking ("NextLine") == false) {
+                        Invoke ("NextLine", curHolder.dialogue[curDia].waitTime);
                     }
-                }
-            } else if (IsInvoking ("NextLine") == false) {
-                Invoke ("NextLine", curHolder.dialogue[curDia].waitTime);
+                    break;
+                case DiaVars.NextDiaMethod.NoBackPress:
+                    UpdatePress ();
+                    textBack.SetActive (false);
+                    break;
+                case DiaVars.NextDiaMethod.NoBackWait:
+                    if (IsInvoking ("NextLine") == false) {
+                        Invoke ("NextLine", curHolder.dialogue[curDia].waitTime);
+                    }
+                    textBack.SetActive (false);
+                    break;
             }
 
             if (curHolder != null) {
@@ -61,14 +56,37 @@ public class Dialogue : MonoBehaviour {
                     }
                 }
             }
-        } else if (textBack.activeSelf == true) {
+        } else if (text.text != " ") {
             talker.text = "";
-            text.text = "";
+            text.text = " ";
             textBack.SetActive (false);
-            player.hudCanvas.enabled = true;
-            player.curState = PlayerController.State.Normal;
+            if (player != null) {
+                player.hudCanvas.enabled = true;
+                player.curState = PlayerController.State.Normal;
+            }
             endEv.Invoke ();
         }
+    }
+
+    void UpdatePress () {
+
+        if (Input.GetButtonUp ("Shoot") == true && IsInvoking ("NoInput") == false) {
+            if (IsInvoking ("SetTextPerLetter") == false) {
+                if (firstInput == false) {
+                    NextLine ();
+                } else {
+                    firstInput = false;
+                }
+            } else {
+                if (firstInput == false) {
+                    CancelInvoke ("SetTextPerLetter");
+                    text.text = curHolder.dialogue[curDia].dia;
+                } else {
+                    firstInput = false;
+                }
+            }
+        }
+
     }
 
     void NextLine () {
@@ -91,29 +109,6 @@ public class Dialogue : MonoBehaviour {
         } else {
             CancelInvoke ("SetTextPerLetter");
             firstInput = false;
-        }
-    }
-
-    void SelfBased () {
-        if (curHolder != null) {
-            textBack.SetActive (true);
-            SetTextPerLetter ();
-            if (Input.GetButtonUp ("Shoot") == true && IsInvoking ("NoInput") == false) {
-                if (firstInput == false) {
-                    text.text = "";
-                    Invoke ("NoInput", noInputTime);
-                    curDia++;
-                    if (curDia + 1 > curHolder.dialogue.Length) {
-                        curHolder = null;
-                    }
-                } else {
-                    firstInput = false;
-                }
-            }
-        } else if (textBack.activeSelf == true) {
-            text.text = "";
-            textBack.SetActive (false);
-            endEv.Invoke();
         }
     }
 
